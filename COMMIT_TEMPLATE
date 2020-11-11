@@ -1,0 +1,12 @@
+# Title - a single line describing the purpose of a commit(50 characters max)
+
+# A more detailed paragraph describing the commit(usually not necessary)
+
+# A bullet pointed summary of the work done in the merge.
+
+
+# Add a reference to the issue being solved.
+
+# Resolves #123
+#  or (if the issue is not closed by the commit)
+# See #123
