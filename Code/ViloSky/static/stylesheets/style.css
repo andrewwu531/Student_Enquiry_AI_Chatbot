@@ -12,9 +12,10 @@ body {
     backdrop-filter: blur(20px) !important;
 }
 
-.nav-item{
+.navbar-nav li a{
     font-size: 50px;
     font-family: Roboto;
+    font-weight: normal !important;
     color: white !important;
 }
 .navbar-fixed-left {
