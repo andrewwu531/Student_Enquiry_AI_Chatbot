@@ -17,7 +17,9 @@ body {
   backdrop-filter: blur(20px) !important;
 }
 
-.wideDiv{
+.widediv{
+  margin: auto;
+  min-width: 50%;
   max-width: 900px;
   min-height: 600px;
 }
@@ -58,3 +60,65 @@ body {
     padding-left: 160px;
   }
   
+  /*Div options*/
+  .center {
+    margin: auto;
+    width: 50%;
+  }
+
+  /*Text options*/
+  .largeText{
+    font-size: 50px;
+  }
+  .whiteText{
+    color: white;
+  }
+
+  .centerText{
+    text-align: center;
+  }
+  /*Button formats*/
+  /*Primary positive button*/
+  .btn-primary {      
+    font-size: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 80px;
+    font-weight: bold;
+    border: none;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: button-fadeout;
+    animation-name: button-fadeout;
+
+  }
+  .btn-primary:hover{
+    -webkit-animation-duration: 1s;
+    animation-duration: 1;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: button-fadein;
+    animation-name: button-fadein;
+  }
+
+  @-webkit-keyframes button-fadein {
+    0% {background-color: rgba(155,81,224,0.8)}
+    100% {background-color: rgba(155,81,224,1.0)}
+  }
+      
+  @keyframes button-fadein{
+    0% {background-color: rgba(155,81,224,0.8)}
+    100% {background-color: rgba(155,81,224,1.0)}
+  }
+
+  @-webkit-keyframes button-fadeout {
+    0% {background-color: rgba(155,81,224,1.0)}
+    100% {background-color: rgba(155,81,224,0.8)}
+  }
+      
+  @keyframes button-fadeout{
+    0% {background-color: rgba(155,81,224,1.0)}
+    100% {background-color: rgba(155,81,224,0.8)}
+  }

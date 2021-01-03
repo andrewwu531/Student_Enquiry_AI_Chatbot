@@ -24,16 +24,28 @@
             <ul class="navbar-nav">
                 <div class="row">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Features</a>
+                <a class="nav-link" href="{% url 'login' %}">Login</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Pricing</a>
+                <a class="nav-link" href="{% url 'register' %}">Register</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                <a class="nav-link" href="#">Dashboard</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Report</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">MyDetails</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">MyActions</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Logout</a>
               </li>
             </ul>
           </div>
