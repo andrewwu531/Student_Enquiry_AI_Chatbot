@@ -21,6 +21,7 @@ body {
   height: 100vh;
   z-index: 999;
   background: rgba(130,130,130,0.8);
+  backdrop-filter: blur(20px);
   color: #fff;
   transition: all 0.3s;
 }
