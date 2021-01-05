@@ -187,6 +187,9 @@ a.article:hover {
     text-align: center;
   }
   /*Button formats*/
+  .btn-small{
+    max-width: 50%;
+  }
   /*Primary positive button*/
   .btn-primary {      
     font-size: 20px;
