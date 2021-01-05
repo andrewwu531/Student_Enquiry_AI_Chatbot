@@ -14,7 +14,7 @@ body {
 }
 
 #sidebar {
-  width: 250px;
+  width: 260px;
   position: fixed;
   top: 0;
   left: 0;
@@ -150,8 +150,30 @@ a.article:hover {
     min-width: 50%;
     max-width: 900px;
     min-height: 600px;
+    animation-name: appear;
+    animation-duration: 0.2s;
+    animation-iteration-count: 1;
+    box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
   }
   
+  @keyframes appear{
+    0%{
+      transform: translatey(-20px);
+      opacity: 0;
+    }
+    100%{
+      transform: translatey(0px);
+      opacity: 1; 
+    }
+  }
+
+  /*Image options*/
+  .centerImg{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
 
   /*Text options*/
   .largeText{

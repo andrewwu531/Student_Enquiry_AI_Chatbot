@@ -27,7 +27,7 @@
         <!-- Sidebar  -->
         <nav class="customnav" id="sidebar">
             <div class="sidebar-header">
-                <h3>Vilosky</h3>
+              <img src="{% static 'images/logo.png' %}" alt="Vilosky" width="150" height="95">
             </div>
 
             <ul class="list-unstyled components">
@@ -41,7 +41,7 @@
                   <a class="nav-link" href="{% url 'register' %}">Register</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Dashboard</a>
+                  <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="#">Report</a>
