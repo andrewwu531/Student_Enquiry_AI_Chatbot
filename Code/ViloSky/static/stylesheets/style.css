@@ -144,6 +144,10 @@ a.article:hover {
   .divbackground{
     background-color: rgba(130, 130, 130, 0.7) !important;
     backdrop-filter: blur(20px) !important;
+    animation-name: appear;
+    animation-duration: 0.2s;
+    animation-iteration-count: 1;
+    box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
   }
   
   .widediv{
@@ -151,10 +155,6 @@ a.article:hover {
     min-width: 50%;
     max-width: 900px;
     min-height: 600px;
-    animation-name: appear;
-    animation-duration: 0.2s;
-    animation-iteration-count: 1;
-    box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
   }
   
   @keyframes appear{
