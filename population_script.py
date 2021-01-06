@@ -14,9 +14,9 @@ def populate():
 
     users = [
     {
-        'first_name': 'Catherine',
-        'last_name': 'Peirs',
-        'email': 'cathpeirs@gmail.com',
+        'first_name': 'Gemma',
+        'last_name': 'Reid',
+        'email': 'greid@gmail.com',
         'password': 'zXyz+S3_1qQ'
     },
     {
@@ -53,61 +53,111 @@ def populate():
 
     profiles = [
         {
-            'user_id': 'cathpeirs@gmail.com',
-            'd.o.b.': datetime.date(1980, 10, 5),
-            'user_type': 'standard',
+            'user': 'greid@gmail.com',
+            'date_of_birth': datetime.date(1980, 10, 5),
+            'is_vilo_sky_admin': False,
+            'is_hr_rep':False,
             'company': 'Tesco Bank',
-            'sector': 'Financial Services',
-            'status': 'employed',
-            'time_in_sector': '10 years'
+            'employment_sector': 'Banking&Finance',
+            'employment_status': 'unemployed/volounteer',
+            'time_worked_in_industry': '3-5 years',
+            'qualifications': [
+                {'level': 'MS', 'subject':'Mathematics & Finance'},
+                {'level' : 'HighSchool', 'subject': 'Mathematics'},
+                {'level' : 'HighSchool', 'subject': 'Physics'},
+                {'level' : 'HighSchool', 'subject': 'Chemistry'}
+                ]
         },
         {
-            'user_id': 'muhammadA123@gmail.com',
-            'd.o.b.': datetime.date(1989, 6, 11),
-            'user_type': 'standard',
-            'company': 'n/a',
-            'sector': 'Hospitality',
-            'status': 'unemployed',
-            'time_in_sector': '5 years'  
+            'user': 'muhammadA123@gmail.com',
+            'date_of_birth': datetime.date(1989, 6, 11),
+            'is_vilosky_admin': False,
+            'is_hr_rep':False,
+            'company': 'Urban Outfitters',
+            'employment_sector': 'Retail',
+            'emploment_status': 'unemployed',
+            'time_worked_in_industry': '12 months',
+            'qualifications': [
+                {'level': 'Modern Apprentice', 'subject':'Retail Skills'},
+                {'level' : 'HighSchool', 'subject': 'English'},
+                {'level' : 'HighSchool', 'subject': 'Drama'},
+                {'level' : 'HighSchool', 'subject': 'Musics'}
+                ]  
         },
         {
-            'user_id': 'ovensS99@yahoo.co.uk',
-            'd.o.b.': datetime.date(1976, 7, 21),
-            'user_type': 'hr',
+            'user': 'ovensS99@yahoo.co.uk',
+            'date_of_birth': datetime.date(1976, 7, 21),
+            'is_viloky_admin':False,
+            'is_hr_rep':True,
             'company': 'JP Morgan',
-            'sector': 'Investment Banking',
-            'status': 'employed',
-            'time_in_sector': '20 years'
+            'employment_sector': 'IT',
+            'employment_status': 'employed',
+            'time_worked_in_industry': '5-10 years',
+            'qualifications': [
+                {'level': 'UD', 'subject':'Computer Science'},
+                {'level' : 'HighSchool', 'subject': 'Mathematics'},
+                {'level' : 'HighSchool', 'subject': 'Physics'},
+                {'level' : 'HighSchool', 'subject': 'Computer Science'}
+                ]
         },
         {
-           'user_id': 'marinelli76@hotmail.com',
-            'd.o.b.': datetime.date(1992, 12, 6),
-            'user_type': 'standard',
-            'company': 'Barrhead Travel',
-            'sector': 'Travel',
-            'status': 'full time',
-            'time_in_sector': '6 months' 
+           'user': 'marinelli76@hotmail.com',
+            'date_of_birth': datetime.date(1992, 12, 6),
+            'is_vilosky_admin': False,
+            'is_hr_rep':False,
+            'company': None,
+            'employment_sector': 'Construction',
+            'employment_status': 'unemployed',
+            'time_worked_in_industry': '0',
+            'qualifications': [
+                {'level' : 'HighSchool', 'subject': 'Woodwork'},
+                {'level' : 'HighSchool', 'subject': 'Physics'},
+                {'level' : 'HighSchool', 'subject': 'Spanish'},
+                {'level' : 'HighSchool', 'subject': 'Physical Education'}
+                ]
         },
         {
-           'user_id': 'suzieMul23@gmail.com',
-            'd.o.b.': datetime.date(1995, 11, 2),
-            'user_type': 'admin',
+           'user': 'suzieMul23@gmail.com',
+            'date_of_birth': datetime.date(1995, 11, 2),
+            'is_vilosky_admin' : True,
+            'is_hr_rep': False,
             'company': 'ViloSky',
-            'sector': 'Consulting',
-            'status': 'employed',
-            'time_in_sector': '4 years' 
+            'employment_sector': 'Consulting',
+            'employment_status': 'employed',
+            'time_worked_in_sector': '1-2 years',
+            'qualifications': [
+                {'level' : 'MS', 'subject': 'Law'},
+                {'level' : 'HighSchool', 'subject': 'English'},
+                {'level' : 'HighSchool', 'subject': 'Spanish'},
+                {'level' : 'HighSchool', 'subject': 'Biology'}
+                ]
         }
     ]
 
-    #initialise user profiles
+    #initialise user profiles and qualidications
     for profile in profiles:
-        p = UserProfile.pobjects.get_or_create(
-            user_id = profile['user_id'],
-            dob = profile['d.o.b'],
-            user_type = profile['user_type'],
+        p = UserProfile.objects.get_or_create(
+            user = profile['user'],
+            date_of_birth = profile['date_of_birth'],
+            is_vilo_sky_admin = profile['is_vilosky_admin'],
+            is_hr_rep = profile['is_hr_rep'],
             company = profile['company'],
-            sector = profile['sector'],
-            status = profile['status'],
-            time_in_sector = profile['time_in_sector']
+            employment_sector = profile['employment_sector'],
+            employment_status = profile['employment_status'],
+            time_worked_in_industry = profile['time_worked_in_industry']
         )
+
         p.save()
+
+        #adding qualifications per profile
+        for qualification in profile['qualifications']:
+            q = Qualification.objects.get_or_create(
+                user = profile['user'],
+                level = qualification['level'],
+                subject = qualification['subject']
+            )
+            q.save()
+
+    
+
+    
