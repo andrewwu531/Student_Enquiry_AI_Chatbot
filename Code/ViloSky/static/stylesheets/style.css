@@ -168,6 +168,9 @@ a.article:hover {
     }
   }
 
+  .margin{
+    margin-left: 50px;
+  }
   /*Image options*/
   .centerImg{
     display: block;

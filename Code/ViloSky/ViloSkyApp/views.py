@@ -19,3 +19,9 @@ def dashboard(request):
     
 def mydetails(request):
     return render(request, 'mydetails.html', {}) 
+
+def myactions(request):
+    return render(request, 'myactions.html', {}) 
+
+def report(request):
+    return render(request, 'report.html', {}) 

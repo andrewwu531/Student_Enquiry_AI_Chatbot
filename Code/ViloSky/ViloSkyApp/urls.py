@@ -10,4 +10,6 @@ urlpatterns = [
     path('register/',views.register, name='register'),
     path('dashboard/',views.dashboard, name='dashboard'),
     path('mydetails/',views.mydetails, name='mydetails'),
+    path('myactions/',views.myactions, name='myactions'),
+    path('report/',views.report, name='report'),
 ]
