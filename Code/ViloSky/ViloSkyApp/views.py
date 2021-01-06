@@ -16,3 +16,6 @@ def register(request):
 
 def dashboard(request):
     return render(request, 'dashboard.html', {}) 
+    
+def mydetails(request):
+    return render(request, 'mydetails.html', {}) 
