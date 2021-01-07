@@ -1,12 +1,12 @@
 import os
 import datetime
 os.environ.setdefault('DJANGO_SETTINGS_MODULE','ViloSky.settings')
-
 import django
 django.setup()
 
-from ViloSkyApp.models import User, UserProfile, Qualifications
+from ViloSkyApp.models import User, UserProfile, Qualifications, Links, Paragraphs
 from django.contrib.auth import get_user_model
+
 
 User = get_user_model()
 
@@ -157,6 +157,75 @@ def populate():
                 subject = qualification['subject']
             )
             q.save()
+
+    #should paragraphs have an ID?
+    paragraphs = [
+        {
+            'admin': 'Suzie Mulligan',
+            'text': 'Hi, it\'s great to meet you. We hope ypu find the following advice useful.'
+        },
+        {
+           'admin': 'Suzie Mulligan',
+            'text': 'Having been out of work for 3-5 years now it is understandable that your confidence would be low, but you have all the skills and experience you need to re-establish your career.' 
+        },
+        {
+            'admin': 'Suzie Mulligan',
+            'text': 'As you are interested in a Risk Management role in Banking & Finance, we think the following networks would be very useful for you: '
+        },
+        {
+            'admin': 'Suzie Mulligan',
+            'text': 'The following template might also help plan your childcare and carer responsibilities when you are back at work: '
+        },
+        {
+            'admin': 'Suzie Mulligan',
+            'text': 'As you are looking for flexibility and a shorter working week (20hrs), we suggest the following job search sites: '
+        },
+        {
+            'admin': 'Suzie Mulligan',
+            'text': 'The following organisations are also well known for supporting flexible working and women returners so it is well worth checking their individual career pages too: '
+        },
+        {
+            'admin': 'Suzie Mulligan',
+            'text': 'To support ongoing career progression and to help with challenges such as learning new skills, regaining confidence and adapting to workplace cultures, we are strong advocates of creating a support network.'
+        },
+        {
+            'admin': 'Suzie Mulligan',
+            'text': 'We would like to offer you a free coaching session or put you in touch with one of our associate coaches/mentors so please send us a note if you would like to discuss that further - info@vilosky.com.' 
+        }
+    ]
+
+    for paragraph in paragraphs:
+        pg = Paragraph.objects.get_or_create(created_by = paragraph['admin'], static_text = paragraph['text'])
+        pg.save()
+
+   #links
+    links = [
+        {
+            'paragraph' :'',
+            'url': 'https://www.wibf.org.uk'
+        },
+        {
+            'paragraph': '',
+            'url': 'https://womenreturners.com '
+        },
+        {
+            'paragraph':'',
+            'url': 'Time planner.pdf/xls'
+        },
+        {
+            'paragraph': '',
+            'url': 'https://timewise.co.uk/'
+        },
+        {
+            'paragraph':'',
+            'url': 'https://www.2to3days.com/'
+        }
+    ]
+
+    for link in links:
+        l = Link.objects.get_or_create(paragraph = link['paragraph'], url = link['url'])
+        l.save()
+
 
     
 
