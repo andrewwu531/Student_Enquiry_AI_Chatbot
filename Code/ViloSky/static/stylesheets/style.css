@@ -5,6 +5,7 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
+    color: black;
 }
 
 /*sidebar*/
@@ -137,16 +138,22 @@ a.article:hover {
 
   
   /*Div options*/
+
+  .leftborder{
+    border-left-style: solid;
+    border-width: 1px;
+  }
   .center {
     margin: auto;
     width: 50%;
   }
   .divbackground{
-    background-color: rgba(130, 130, 130, 0.7) !important;
-    backdrop-filter: blur(20px) !important;
+    background-color: rgba(210, 210, 210, 0.75) !important;
+    backdrop-filter: blur(30px) !important;
     animation-name: appear;
     animation-duration: 0.2s;
     animation-iteration-count: 1;
+    padding: 10px;
     box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19) !important;
   }
   
@@ -180,6 +187,9 @@ a.article:hover {
   }
 
   /*Text options*/
+  p{
+    color: black;
+  }
   .largeText{
     font-size: 50px;
   }
@@ -189,6 +199,17 @@ a.article:hover {
 
   .centerText{
     text-align: center;
+  }
+
+  .linktext{
+    font-size: 30px;
+  }
+
+  .worklink{
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: black;
   }
   /*Button formats*/
   .btn-small{
@@ -243,5 +264,12 @@ a.article:hover {
   .txtbox{
     border-radius: 80px;
     border: none;
-    background-color: rgb(196,196,196);
+    background-color: rgb(155, 155, 155);
+  }
+
+  /*Checkbox*/
+  .actioninput{
+    width: 50px;
+    height: 50px;
+    border-radius: 80px !important;
   }
