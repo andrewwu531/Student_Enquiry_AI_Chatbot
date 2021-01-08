@@ -1,5 +1,7 @@
 <html lang="en">
-<!--source for sidebar : https://bootstrapious.com/tutorial/sidebar/index2.html-->
+<!--source for sidebar : https://bootstrapious.com/tutorial/sidebar/index2.html
+https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2RhnKP51_P0zGRG-L2vw93iY4IrUbDCiEKYqvy9kuQEsaM#voorbeelden
+-->
 {% load static %}  
 <head>
     <meta charset="utf-8">
@@ -62,10 +64,19 @@
         <div id="content">
                 <div class="container-fluid">
 
-                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <!--<button type="button" id="sidebarCollapse" class="btn btn-info">
                         <i class="fas fa-align-left"></i>
                         <span>Toggle Sidebar</span>
+                    </button>-->
+
+                    <button type="button" class="hamburger animated fadeInLeft is-open" data-toggle="offcanvas">
+                      <span class="hamb-top"></span>
+                      <span class="hamb-middle"></span>
+                      <span class="hamb-bottom"></span>
                     </button>
+
+
+
                 </div>
             {% block bodyblock %}
             {% endblock %}
@@ -82,16 +93,41 @@
  <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
  <script type="text/javascript">
   $(document).ready(function () {
-      $("#sidebar").mCustomScrollbar({
+
+    $("#sidebar").mCustomScrollbar({
           theme: "minimal"
       });
 
-      $('#sidebarCollapse').on('click', function () {
-          $('#sidebar, #content').toggleClass('active');
+  var trigger = $('.hamburger'),
+      overlay = $('.overlay'),
+     isClosed = true;
+    trigger.click(function () {
+      hamburger_cross();      
+    });
+
+    function hamburger_cross() {
+
+      if (isClosed == true) {          
+        $('#sidebar, #content').toggleClass('active');
           $('.collapse.in').toggleClass('in');
           $('a[aria-expanded=true]').attr('aria-expanded', 'false');
-      });
-  });
+        trigger.removeClass('is-open');
+        trigger.addClass('is-closed');
+        isClosed = false;
+      } else {   
+        $('#sidebar, #content').toggleClass('active');
+          $('.collapse.in').toggleClass('in');
+          $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        trigger.removeClass('is-closed');
+        trigger.addClass('is-open');
+        isClosed = true;
+      }
+  }
+  
+  $('[data-toggle="offcanvas"]').click(function () {
+        $('#wrapper').toggleClass('toggled');
+  });  
+});
 </script>
 
 </body>
