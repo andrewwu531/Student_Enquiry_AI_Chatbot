@@ -1,10 +1,11 @@
 import os
 import datetime
 os.environ.setdefault('DJANGO_SETTINGS_MODULE','ViloSky.settings')
+
 import django
 django.setup()
 
-from ViloSkyApp.models import User, UserProfile, Qualifications, Links, Paragraphs
+from Code.ViloSky.ViloSkyApp.models import CustomUser, UserProfile, Qualifications, Link, Paragraph
 from django.contrib.auth import get_user_model
 
 
@@ -162,71 +163,118 @@ def populate():
     paragraphs = [
         {
             'admin': 'Suzie Mulligan',
-            'text': 'Hi, it\'s great to meet you. We hope ypu find the following advice useful.'
+            'text': 'Hi, it\'s great to meet you. We hope you find the following advice useful.',
+            'keywords': [
+                {'key':'', 'score': 0},
+            ],
+            'links': []
         },
         {
            'admin': 'Suzie Mulligan',
-            'text': 'Having been out of work for 3-5 years now it is understandable that your confidence would be low, but you have all the skills and experience you need to re-establish your career.' 
+            'text': 'Having been out of work for 3-5 years now it is understandable that your confidence would be low, but you have all the skills and experience you need to re-establish your career.' ,
+            'keywords': [
+                {'key': '3-5 years', 'score': 5},
+            ],
+            'links': []
         },
         {
             'admin': 'Suzie Mulligan',
-            'text': 'As you are interested in a Risk Management role in Banking & Finance, we think the following networks would be very useful for you: '
+            'text': 'As you are interested in a Risk Management role in Banking & Finance, we think the following networks would be very useful for you: ',
+            'keywords': [
+                {'key': 'Risk Manegement', 'score': 10},
+                {'key': 'Banking & Financy', 'score': 7},
+            ],
+            'links': [ 
+                {'url': 'https://www.wibf.org.uk'},
+                {'url': 'https://womenreturners.com '},
+            ]
         },
         {
             'admin': 'Suzie Mulligan',
-            'text': 'The following template might also help plan your childcare and carer responsibilities when you are back at work: '
+            'text': 'The following template might also help plan your childcare and carer responsibilities when you are back at work: ',
+            'keywords': [
+                {'key': 'childcare', 'score': 10},
+                {'key': 'carer responsibilites', 'score': 8},
+            ],
+            'links':[
+                {'url': 'Time planner.pdf/xls'},
+            ]
         },
         {
             'admin': 'Suzie Mulligan',
             'text': 'As you are looking for flexibility and a shorter working week (20hrs), we suggest the following job search sites: '
+            'keywords': [
+                {'key': 'flexibility', 'score': 10},
+                {'key': 'work/life banace', 'score': 7},
+                {'key': 'low stress', 'score': 5},
+                {'key': 'ease', 'score': 7},
+                {'key': '20', 'score': 10}
+            ],
+            'links':[
+                {'url': 'https://timewise.co.uk/'},
+                {'url': 'https://www.2to3days.com/'}
+            ]
         },
         {
             'admin': 'Suzie Mulligan',
-            'text': 'The following organisations are also well known for supporting flexible working and women returners so it is well worth checking their individual career pages too: '
+            'text': 'The following organisations are also well known for supporting flexible working and women returners so it is well worth checking their individual career pages too: ',
+            'keywords':[
+                {'key': 'flexibility', score : 10},
+                #triggered if someone has been out of work for any amount of time?
+                {'key': ''}
+            ],
+            'links':[]
         },
         {
             'admin': 'Suzie Mulligan',
             'text': 'To support ongoing career progression and to help with challenges such as learning new skills, regaining confidence and adapting to workplace cultures, we are strong advocates of creating a support network.'
+            'keywords':[
+                {'key': 'learn new skills', 'score': 8},
+                {'key': 'develop confidence', 'score': 8},
+                {'key': 're-establish career', 'score': 10},
+                {'key': 'confidence':, 'score': 9},
+                {'key': 'workplace culture', 'score': 7}
+            ],
+            'links':[]
         },
         {
             'admin': 'Suzie Mulligan',
             'text': 'We would like to offer you a free coaching session or put you in touch with one of our associate coaches/mentors so please send us a note if you would like to discuss that further - info@vilosky.com.' 
+            'keywords':[],
+            'links': []
         }
     ]
 
+    #unsure what to put for paragraph field
     for paragraph in paragraphs:
         pg = Paragraph.objects.get_or_create(created_by = paragraph['admin'], static_text = paragraph['text'])
+        
+        #each paragraoh has a series of key words
+        for keyword in paragraph['keywords']:
+            kw = Keyword.objects.get_or_create(paragraph = , key = keyword['key'], score = keyword['score'])
+            kw.save()
+        
+        #each paragraph has a series of links
+        for link in paragraph['links']:
+        l = Link.objects.get_or_create(paragraph = link['paragraph'], url = link['url'])
+        l.save()
+        
         pg.save()
 
-   #links
-    links = [
-        {
-            'paragraph' :'',
-            'url': 'https://www.wibf.org.uk'
-        },
+   
+   reports = [
         {
             'paragraph': '',
-            'url': 'https://womenreturners.com '
-        },
-        {
-            'paragraph':'',
-            'url': 'Time planner.pdf/xls'
-        },
-        {
-            'paragraph': '',
-            'url': 'https://timewise.co.uk/'
-        },
-        {
-            'paragraph':'',
-            'url': 'https://www.2to3days.com/'
+            'user': 'greid@gmail.com'
         }
     ]
 
-    for link in links:
-        l = Link.objects.get_or_create(paragraph = link['paragraph'], url = link['url'])
-        l.save()
+    for report in reports:
+        r = Report.objects.get_or_create(paragraph = report['paragraph'], user = 'user')
 
 
-    
+if __name__ == '__main__':
+    print('Starting population script...')
+    populate()
 
     
