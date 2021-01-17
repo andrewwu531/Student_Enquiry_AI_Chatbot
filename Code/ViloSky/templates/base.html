@@ -62,8 +62,6 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
 
         <!-- Page Content  -->
         <div id="content">
-                <div class="container-fluid">
-
                     <!--<button type="button" id="sidebarCollapse" class="btn btn-info">
                         <i class="fas fa-align-left"></i>
                         <span>Toggle Sidebar</span>
@@ -77,7 +75,6 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
 
 
 
-                </div>
             {% block bodyblock %}
             {% endblock %}
         </div>
@@ -104,7 +101,7 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
     trigger.click(function () {
       hamburger_cross();      
     });
-
+    
     function hamburger_cross() {
 
       if (isClosed == true) {          
@@ -123,12 +120,14 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
         isClosed = true;
       }
   }
-  
   $('[data-toggle="offcanvas"]').click(function () {
         $('#wrapper').toggleClass('toggled');
   });  
 });
 </script>
-
+<!--listener to adjust sidebar-->
+<script>
+  
+  </script>
 </body>
 </html>
