@@ -25,3 +25,6 @@ def myactions(request):
 
 def report(request):
     return render(request, 'report.html', {}) 
+
+def roles(request):
+    return render(request, 'roles.html', {}) 

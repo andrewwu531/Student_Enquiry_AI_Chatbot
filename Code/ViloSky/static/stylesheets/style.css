@@ -309,6 +309,10 @@ a.article:hover {
     margin-left: 50px;
   }
 
+  .bottommargin{
+    margin-bottom: 20px;
+  }
+
   /*Image options*/
   .centerImg{
     display: block;
