@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block bodyblock%}
+<div class="divbackground widediv">
+    <div class="largeText whiteText centerText">
+        Data
+    </div>
+    Visitors
+    {% autoescape off %}
+    {{ vis_div }}
+    {% endautoescape %}
+    Inputs added
+    {% autoescape off %}
+    {{ inp_div }}
+    {% endautoescape %}
+    Outputs generated
+    {% autoescape off %}
+    {{ out_div }}
+    {% endautoescape %}
+</div>
+{%endblock%}
