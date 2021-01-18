@@ -64,12 +64,7 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
         </nav>
 
         <!-- Page Content  -->
-        <div id="content">
-                    <!--<button type="button" id="sidebarCollapse" class="btn btn-info">
-                        <i class="fas fa-align-left"></i>
-                        <span>Toggle Sidebar</span>
-                    </button>-->
-
+        <div class="content" id="content">
                     <button type="button" class="hamburger animated fadeInLeft is-open" data-toggle="offcanvas">
                       <span class="hamb-top"></span>
                       <span class="hamb-middle"></span>
@@ -77,9 +72,10 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
                     </button>
 
 
-
-            {% block bodyblock %}
-            {% endblock %}
+            <div class="sitecontent" id="sitecontent">
+              {% block bodyblock %}
+              {% endblock %}
+            </div>
         </div>
     </div>
 
@@ -97,16 +93,32 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
     $("#sidebar").mCustomScrollbar({
           theme: "minimal"
       });
-
+      var screensize = window.matchMedia("(max-width: 768px)");
+      checkContentVisible(screensize);
+      screensize.addListener(checkContentVisible);
   var trigger = $('.hamburger'),
       overlay = $('.overlay'),
      isClosed = true;
     trigger.click(function () {
       hamburger_cross();      
     });
-    
-    function hamburger_cross() {
 
+    function checkContentVisible(x){
+      var content = $('.sitecontent');
+      if(x.matches){
+        if(isClosed){
+          content.removeClass('content-invisible');
+          content.addClass('content-visible');
+        }else{
+          content.removeClass('content-visible');
+          content.addClass('content-invisible');
+        }
+      }else{
+        content.removeClass('content-invisible');
+        content.addClass('content-visible');
+      }
+    }
+    function hamburger_cross() {
       if (isClosed == true) {          
         $('#sidebar, #content').toggleClass('active');
           $('.collapse.in').toggleClass('in');
@@ -122,6 +134,7 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
         trigger.addClass('is-open');
         isClosed = true;
       }
+      checkContentVisible(screensize);
   }
   $('[data-toggle="offcanvas"]').click(function () {
         $('#wrapper').toggleClass('toggled');
