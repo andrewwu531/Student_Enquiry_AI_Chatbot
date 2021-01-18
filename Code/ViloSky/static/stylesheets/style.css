@@ -335,6 +335,9 @@ a.article:hover {
   .largeText{
     font-size: 50px;
   }
+  .mediumText{
+    font-size: 35px;
+  }
   .whiteText{
     color: black;
   }
