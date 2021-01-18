@@ -72,7 +72,7 @@ def populate():
                 {'key': 'Risk Manegement', 'score': 10},
                 {'key': 'Banking & Financy', 'score': 7},
             ],
-            'links': [ 
+            'links': [
                 {'url': 'https://www.wibf.org.uk'},
                 {'url': 'https://womenreturners.com '},
             ]
@@ -156,7 +156,12 @@ def populate():
                 {'level' : 'HighSchool', 'subject': 'Physics'},
                 {'level' : 'HighSchool', 'subject': 'Chemistry'}
                 ],
-            'paragraphs': []
+            'paragraphs': [],
+            'sessions':[
+                {'page': 'Home Page', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 170, microseconds = 0), 'clicks_on_page': '15'},
+                {'page': 'Register', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 210, microseconds = 0), 'clicks_on_page': '10'},
+                {'page': 'Report', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 900, microseconds = 0), 'clicks_on_page': '30'},
+            ]
         },
         {
             'user': 'muhammadA123@gmail.com',
@@ -173,7 +178,13 @@ def populate():
                 {'level' : 'HighSchool', 'subject': 'Drama'},
                 {'level' : 'HighSchool', 'subject': 'Musics'}
                 ],
-            'paragraphs': []
+            'paragraphs': [],
+            'sessions':[
+                {'page': 'Home Page', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 300, microseconds = 0), 'clicks_on_page': '6'},
+                {'page': 'Register', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 400, microseconds = 0), 'clicks_on_page': '10'},
+                {'page': 'Dashboard', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 600, microseconds = 0), 'clicks_on_page': ''},
+                {'page': 'Login', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 120, microseconds = 0), 'clicks_on_page': '5'},
+            ]
         },
         {
             'user': 'ovensS99@yahoo.co.uk',
@@ -190,7 +201,12 @@ def populate():
                 {'level' : 'HighSchool', 'subject': 'Physics'},
                 {'level' : 'HighSchool', 'subject': 'Computer Science'}
                 ],
-            'paragraphs': []
+            'paragraphs': [],
+            'sessions':[
+                {'page': 'Home Page', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 10, microseconds = 0), 'clicks_on_page': '10'},
+                {'page': 'Login', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 120, microseconds = 0), 'clicks_on_page': '5'},
+                {'page': 'Report', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 800, microseconds = 0), 'clicks_on_page': '25'},
+            ]
         },
         {
            'user': 'marinelli76@hotmail.com',
@@ -207,7 +223,12 @@ def populate():
                 {'level' : 'HighSchool', 'subject': 'Spanish'},
                 {'level' : 'HighSchool', 'subject': 'Physical Education'}
                 ],
-            'paragraphs': []
+            'paragraphs': [],
+            'sessions':[
+                {'page': 'Home Page', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 180, microseconds = 0), 'clicks_on_page': '12'},
+                {'page': 'Login', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 120, microseconds = 0), 'clicks_on_page': '6'},
+                {'page': 'Dashboard', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 720, microseconds = 0), 'clicks_on_page': '24'},
+            ]
         },
         {
            'user': 'suzieMul23@gmail.com',
@@ -224,7 +245,11 @@ def populate():
                 {'level' : 'HighSchool', 'subject': 'Spanish'},
                 {'level' : 'HighSchool', 'subject': 'Biology'}
                 ],
-            'paragraphs': paragraphs
+            'paragraphs': paragraphs,
+            'sessions':[
+                {'page': 'Home Page', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 120, microseconds = 0), 'clicks_on_page': '5'},
+                {'page': 'Admin', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 6000, microseconds = 0), 'clicks_on_page': '30'},
+            ]
         }
     ]
 
@@ -243,16 +268,21 @@ def populate():
 
         p.save()
 
+        user_cur = UserProfile.objects.get(profile['user'])
         #adding qualifications per profile
         for qualification in profile['qualifications']:
-            q = Qualification.objects.get_or_create(user = profile['user'], level = qualification['level'], subject = qualification['subject'])[0]
+            q = Qualification.objects.get_or_create(user = user_cur, level = qualification['level'], subject = qualification['subject'])[0]
             q.save()
 
+        #adding sessions per profile
+        for session in profile['sessions']:
+            ses = Session.objects.get_or_create(user = user_cur, page = session['page'], time_spent_on_page = session['time_spent_on_page'], clicks_on_page = session['clicks_on_page'])
+            ses.save()
+            
         #if the user is an admin, create paragraphs with foreign key as this user
         if profile['is_vilo_sky_admin'] == True:
             for paragraph in paragraphs:
-                admin = UserProfile.objects.get(profile['user'])
-                pg = Paragraph.objects.get_or_create(created_by = admin, static_text = paragraph['text'])[0]
+                pg = Paragraph.objects.get_or_create(created_by = user_cur, static_text = paragraph['text'])[0]
                 pg.save()
 
             #each paragraoh has a series of key words
