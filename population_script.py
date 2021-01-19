@@ -427,6 +427,7 @@ def populate():
             q.save()
 
         #if the user is an admin, create paragraphs with foreign key as this user
+        #and create admin inputs.
         if profile['is_vilo_sky_admin'] == True:
             for paragraph in paragraphs:
 
@@ -452,25 +453,25 @@ def populate():
                     a = Action.objects.get_or_create(paragraph = pg_fk, title = action['title'], completed = action['completed'])[0]
                     a.save()
                 
-                for inputs in admin_input:
-                    admin = UserProfile.objects.get(profile['created_by'])
-                    inp_type = inputs['input_type']
-                    curr_input = AdminInput.objects.get(label = inputs['label'])
+            for inputs in admin_input:
+                admin = UserProfile.objects.get(profile['created_by'])
+                inp_type = inputs['input_type']
+                curr_input = AdminInput.objects.get(label = inputs['label'])
 
-                    inp = AdminInput.objects.get_or_create(created_by = admin, label = inputs['label'], input_type = inputs['input_type'], is_required = inputs['is_required'])[0]
-                    inp.save()
+                inp = AdminInput.objects.get_or_create(created_by = admin, label = inputs['label'], input_type = inputs['input_type'], is_required = inputs['is_required'])[0]
+                inp.save()
 
-                    #depending on the input type of the input, create new object which as a one to one relationship with parent input
-                    if inp_type == AdminInputTypes.TEXT:
-                        user_input = TextAdminInput.objects.get_or_create(admin_input = curr_input, max_length = inputs['maxlength'])[0]
-                    elif inp_type == AdminInputTypes.TEXTAREA:
-                        user_input = TextareaAdminInput.objects.get_or_create(admin_input = curr_input, max_length = inputs['maxlength'])[0]
-                    elif inp_type == AdminInputTypes.CHECKBOX:
-                        user_input = CheckboxAdminInput.objects.get_or_create(admin_input = curr_input, default_value = False)[0]
-                    elif inp_type == AdminInputTypes.DROPDOWN:
-                        user_input = DropdownAdminInput.objects.get_or_create(admin_input = curr_input, max_length = inputs['maxlength'])[0]    
+                #depending on the input type of the input, create new object which as a one to one relationship with parent input
+                if inp_type == AdminInputTypes.TEXT:
+                    user_input = TextAdminInput.objects.get_or_create(admin_input = curr_input, max_length = inputs['maxlength'])[0]
+                elif inp_type == AdminInputTypes.TEXTAREA:
+                    user_input = TextareaAdminInput.objects.get_or_create(admin_input = curr_input, max_length = inputs['maxlength'])[0]
+                elif inp_type == AdminInputTypes.CHECKBOX:
+                    user_input = CheckboxAdminInput.objects.get_or_create(admin_input = curr_input, default_value = False)[0]
+                elif inp_type == AdminInputTypes.DROPDOWN:
+                    user_input = DropdownAdminInput.objects.get_or_create(admin_input = curr_input, max_length = inputs['maxlength'])[0]    
         
-                    user_input.save()
+                user_input.save()
 
 
     reports = [
