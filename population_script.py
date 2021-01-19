@@ -6,7 +6,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE','ViloSky.settings')
 import django
 django.setup()
 
-from Code.ViloSkyApp.models.py import CustomUser, UserProfile, Qualifications, Link, Paragraph, Report, Action
+from Code.ViloSky.ViloSkyApp.models.py import CustomUser, UserProfile, Qualifications, Link, Paragraph, Report, Action
 from django.contrib.auth import get_user_model
 
 
@@ -63,7 +63,8 @@ def populate():
                 {'key': '3-5 years', 'score': 5},
                 {'key': 'confidence', 'score': 7},
             ],
-            'links': []
+            'links': [],
+            'actions':[]
         },
         {
             'admin': 'Suzie Mulligan',
@@ -75,7 +76,8 @@ def populate():
             'links': [
                 {'url': 'https://www.wibf.org.uk'},
                 {'url': 'https://womenreturners.com '},
-            ]
+            ],
+            'actions':[]
         },
         {
             'admin': 'Suzie Mulligan',
@@ -86,7 +88,8 @@ def populate():
             ],
             'links':[
                 {'url': 'Time planner.pdf/xls'},
-            ]
+            ],
+            'actions':[]
         },
         {
             'admin': 'Suzie Mulligan',
@@ -101,7 +104,8 @@ def populate():
             'links':[
                 {'url': 'https://timewise.co.uk/'},
                 {'url': 'https://www.2to3days.com/'}
-            ]
+            ],
+            'actions':[]
         },
         {
             'admin': 'Suzie Mulligan',
@@ -118,7 +122,8 @@ def populate():
                 {'key': '5-10 years', 'score': 8},
                 {'key': '10+ years', 'score': 9},
             ],
-            'links':[]
+            'links':[],
+            'actions':[]
         },
         {
             'admin': 'Suzie Mulligan',
@@ -130,13 +135,76 @@ def populate():
                 {'key': 'confidence', 'score': 9},
                 {'key': 'workplace culture', 'score': 7}
             ],
-            'links':[]
+            'links':[],
+            'actions':[]
         },
         {
             'admin': 'Suzie Mulligan',
             'text': 'We would like to offer you a free coaching session or put you in touch with one of our associate coaches/mentors so please send us a note if you would like to discuss that further - info@vilosky.com.' ,
             'keywords':[],
-            'links': []
+            'links': [],
+            'acitions':[]
+        },
+
+        #The following paragraphs will be more of an action plan
+        {
+            'admin': 'Suzie Mulligan',
+            'text': 'Next Few Weeks' ,
+            'keywords':[
+                {'key': 'Risk Management', 'score': 8},
+                {'key': 'Banking & Finance', 'score': 9},
+                {'key': 'confidence', 'score': 3},
+                {'key': 'learning new skills', 'score': 4},
+                {'key': 're-establish career', 'score':6},
+            ],
+            'links': [
+                {'url':'https://nationalcareers.service.gov.uk/careers-advice/interview-advice'}
+                {'url':'https://www.shesback.co.uk/'}
+            ],
+            'actions':[
+                {'title':'1. Decide what you want from your next role.', 'isComplete':True},
+                {'title': '2. List all of your amazing skills and experience, as well as your values.', 'isComplete':True},
+                {'title': '3. Focus on areas where you do not feel confident, use these resources to help: Interview Skills, She\'s Back.', 'isComplete':True},
+                {'title': '4. Start working on some Udemy courses to refresh your memory and learn some new skills.', 'isComplete': False}
+            ]
+        },
+        {
+            'admin': 'Suzie Mulligan',
+            'text': '1+ Months',
+            'keywords':[
+            
+            ],
+            'links': [
+                {'url':'https://www.udemy.com/topic/financial-risk-manager-frm/'},
+                {'url':'https://fb.me/e/5g4gsYZme'},
+                {'url':'https://www.indeed.co.uk/Finance-Risk-jobs'}
+            ],
+            'actions':[
+                {'title':'1. Complete the udemy courses you started in the first few weeks.', 'isComplete':False},
+                {'title': '2. Update your CV using the skills and experience you listed.', 'isComplete':False},
+                {'title': '3. Attend an online seminar to network and socialse with other people in Risk Management as well as Finance. This will boost your confidence', 'isComplete':True},
+                {'title': '4. Start listing some interesting employers and vacancies. Some ideas might be RBS and Barclays.', 'isCompleted': False},
+                {'title': '4. Start searching for a job.', 'isCompleted': False}
+            ]
+        },
+        {
+            'admin': 'Suzie Mulligan',
+            'text': '6 Months' ,
+            'keywords':[],
+            'links': [],
+            'actions':[
+                {'title':'1. If the ideal role hasnt appeared, give yourself a few weeks break.', 'isComplete':False},
+            ]
+        },
+        #is 7+ months static?
+        {
+            'admin': 'Suzie Mulligan',
+            'text': '7+ months' ,
+            'keywords':[],
+            'links': [],
+            'actions':[
+                {'title':'1. Back to it again', 'isComplete':False},
+            ]
         }
     ]
 
@@ -284,18 +352,25 @@ def populate():
             for paragraph in paragraphs:
                 pg = Paragraph.objects.get_or_create(created_by = user_cur, static_text = paragraph['text'])[0]
                 pg.save()
+            
+            #pg will be used as foreign key for each of these 1:M relationships
+            pg = Paragraph.objects.get(static_text = paragraph['text'])
 
             #each paragraoh has a series of key words
             for keyword in paragraph['keywords']:
-                pg = Paragraph.objects.get(static_text = paragraph['text'])
+                
                 kw = Keyword.objects.get_or_create(paragraph = pg, key = keyword['key'], score = keyword['score'])[0]
                 kw.save()
         
             #each paragraph has a series of links
             for link in paragraph['links']:
-                pg = Paragraph.objects.get(static_text = paragraph['text'])
                 l = Link.objects.get_or_create(paragraph = pg, url = link['url'])[0]
                 l.save()
+            
+            #some paragraphs have actions
+            for action in paragraph['action']:
+                act = Action.objects.get_or_create(paragraph = pg, text = action['title'], is_completed=action['isComplete'])[0]
+                act.save()
         
     reports = [
         {'user': 'greid@gmail.com'}
