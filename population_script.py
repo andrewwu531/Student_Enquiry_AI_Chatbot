@@ -144,7 +144,169 @@ def populate():
             'keywords':[],
             'links': [],
             'actions':[]
+        },
+
+        #the following paragraphs have actions and form an action plan
+        {
+            'admin':'Suzie Mulligan',
+            'text': 'Next few weeks:',
+            'keywords':[
+                {'key':'regaining confidence', 'score':4},
+                {'key': 'Risk Management', 'score': 8},
+                {'key': 'Finance', 'score':8},
+            ],
+            'links':[
+                {'url':'https://www.udemy.com/topic/financial-risk-manager-frm/'}
+            ],
+            'actions':[
+                {'title':'Decide what you want from your next role.', 'iscompleted': True},
+                {'title': 'List your amazing skills and experience in the finance and risk management sector.', 'iscompleted':True},
+                {'title': 'Start working on some Udemy finance courses to refresh your memory and gain confidence.', 'iscompleted':True},
+            ],
+        },
+        {
+            'admin': 'Suzie Mulligan',
+            'text': '1+ months:',
+            'keywords':[
+                {'key':'regaining confidence', 'score':4},
+                {'key': 'Risk Management', 'score': 8},
+                {'key': 'Finance', 'score':8},
+            ],
+            'links':[
+                {'url':'https://www.indeed.co.uk/Finance-Risk-jobs'},
+                {'url':'https://www.facebook.com/Accounting-and-Finance-Webinar-Series-199716536749210/'}
+            ],
+            'actions':[
+                {'title':'Complete the Udemy courses you started.', 'iscompleted':False},
+                {'title':'Attend a webinar on Risk Management, or some networking events.', 'iscompleted':False},
+                {'title': 'Start compiling a list of employers and vacances, look at companies such as RBS.', 'iscompleted': False},
+                {'title': 'Update your CV - refer to Helen for CV advice', 'iscompleted': False},
+                {'title': 'Start your search', 'iscompleted':False}
+            ]
+        },
+        {
+            'admin':'Suzie Mulligan',
+            'text':'6 months:',
+            'keywords':[],
+            'links':[
+                {'url':'https://jobs.theguardian.com/careers/job-hunting-advice/'},
+                {'url':'https://www.careercast.com/job-hunting-advice'}
+            ],
+            'actions':[
+                {'title':'If the ideal role has not yet appeared, give yourself a few week’s break. It’s hard work, full of ups and downs, but the right role will turn up. The following might help you at this point:', 'iscompleted':False}
+            ]
+        },
+        {
+            'admin':'Suzie Mulligan',
+            'text':'7 months:',
+            'keywords':[],
+            'links':[],
+            'actions':[
+                {'title':'Back to it!', 'iscompleted':False}
+            ]
         }
+    ]
+
+    #create data for admin inputs, if a user is an admin we associate the input with that admin
+    admin_input = [
+        {
+            'created_by':'suzieMul23@gmail.com',
+            'label':'Name',
+            'input_type':AdminInputTypes.TEXT,
+            'is_required':True,
+            'maxlength':50,
+        },
+        {
+            'created_by':'suzieMul23@gmail.com',
+            'label':'Gender (optional)',
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':False,
+            #what?
+        },
+        {
+            'created_by':'suzieMul23@gmail.com',
+            'label':'Sexual Orientation (optional)',
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':False,
+            #what?
+        },
+        {
+            'created_by':'suzieMul23@gmail.com',
+            'label':'Ethnicity (optional)',
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':False,
+            #what?
+        },
+        {
+            'created_by':'suzieMul23@gmail.com',
+            'label':'Physical/Mental Abiltiy',
+            'input_type':AdminInputTypes.TEXT,
+            'is_required':False,
+            #what?
+        },
+        {
+            'created_by':'suzieMul23@gmail.com',
+            'label':'What best describes current work situation (select one) ',
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':True,
+            #what?
+        },
+        {
+            'created_by':'suzieMul23@gmail.com',
+            'label':'What best describes current work barriers (select all that apply):',
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':True,
+            #what? 
+        },
+        {
+            'created_by':'suzieMul23@gmail.com',
+            'label':'Time since last paid work:',
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':True,
+            #what?    
+        },
+        {
+            'created_by':'suzieMul23@gmail.com',
+            'label':'Industry interested in (select all that apply):',
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':True,
+            #what?    
+        },
+        {
+            'created_by':'suzieMul23@gmail.com',
+            'label':'Area of interest:',
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':True,
+            #what?    
+        },
+        {
+            'created_by':'suzieMul23@gmail.com',
+            'label':'Do you have relevant formal qualifications in the area you are interested in:',
+            'input_type':AdminInputTypes.CHECKBOX,
+            'is_required':True,
+            'default_value': True
+        },
+        {
+            'created_by':'suzieMul23@gmail.com',
+            'label':'How many year’s experience do you have in the area you are interested in:',
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':True,
+            #what?    
+        },
+        {
+            'created_by':'suzieMul23@gmail.com',
+            'label':'Hours per week you want to work:',
+            'input_type':AdminInputTypes.TEXT,
+            'is_required':True,
+            'maxlength':50,
+        },
+        {
+            'created_by':'suzieMul23@gmail.com',
+            'label':'What would you like to achieve from your next role? (select all that apply)', 
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':True,
+            #what?
+        },
     ]
 
     #create data for user profiles
@@ -164,7 +326,8 @@ def populate():
                 {'level' : 'HighSchool', 'subject': 'Physics'},
                 {'level' : 'HighSchool', 'subject': 'Chemistry'}
                 ],
-            'paragraphs': []
+            'paragraphs': [],
+            'inputs':[],
         },
         {
             'user': 'muhammadA123@gmail.com',
@@ -181,7 +344,8 @@ def populate():
                 {'level' : 'HighSchool', 'subject': 'Drama'},
                 {'level' : 'HighSchool', 'subject': 'Musics'}
                 ],
-            'paragraphs': []
+            'paragraphs': [],
+            'inputs':[],
         },
         {
             'user': 'ovensS99@yahoo.co.uk',
@@ -198,10 +362,11 @@ def populate():
                 {'level' : 'HighSchool', 'subject': 'Physics'},
                 {'level' : 'HighSchool', 'subject': 'Computer Science'}
                 ],
-            'paragraphs': []
+            'paragraphs': [],
+            'inputs':[],
         },
         {
-           'user': 'marinelli76@hotmail.com',
+            'user': 'marinelli76@hotmail.com',
             'date_of_birth': datetime.date(1992, 12, 6),
             'is_vilosky_admin': False,
             'is_hr_rep':False,
@@ -215,10 +380,11 @@ def populate():
                 {'level' : 'HighSchool', 'subject': 'Spanish'},
                 {'level' : 'HighSchool', 'subject': 'Physical Education'}
                 ],
-            'paragraphs': []
+            'paragraphs': [],
+            'inputs':[],
         },
         {
-           'user': 'suzieMul23@gmail.com',
+            'user': 'suzieMul23@gmail.com',
             'date_of_birth': datetime.date(1995, 11, 2),
             'is_vilosky_admin' : True,
             'is_hr_rep': False,
@@ -232,96 +398,9 @@ def populate():
                 {'level' : 'HighSchool', 'subject': 'Spanish'},
                 {'level' : 'HighSchool', 'subject': 'Biology'}
                 ],
-            'paragraphs': paragraphs
+            'paragraphs': paragraphs,
+            'inputs': admin_input,
         }
-    ]
-
-    #create data for admin inputs, if a user is an admin we associate the input with that admin
-    admin_input = [
-        {
-            'label':'Name',
-            'input_type':AdminInputTypes.TEXT,
-            'is_required':True,
-            'maxlength':50,
-        },
-        {
-            'label':'Gender (optional)',
-            'input_type':AdminInputTypes.DROPDOWN,
-            'is_required':False,
-            #what?
-        },
-        {
-            'label':'Sexual Orientation (optional)',
-            'input_type':AdminInputTypes.DROPDOWN,
-            'is_required':False,
-            #what?
-        },
-        {
-            'label':'Ethnicity (optional)',
-            'input_type':AdminInputTypes.DROPDOWN,
-            'is_required':False,
-            #what?
-        },
-        {
-            'label':'Physical/Mental Abiltiy',
-            'input_type':AdminInputTypes.TEXT,
-            'is_required':False,
-            #what?
-        },
-        {
-            'label':'What best describes current work situation (select one) ',
-            'input_type':AdminInputTypes.DROPDOWN,
-            'is_required':True,
-            #what?
-        },
-        {
-            'label':'What best describes current work barriers (select all that apply):',
-            'input_type':AdminInputTypes.DROPDOWN,
-            'is_required':True,
-            #what? 
-        },
-        {
-            'label':'Time since last paid work:',
-            'input_type':AdminInputTypes.DROPDOWN,
-            'is_required':True,
-            #what?    
-        },
-        {
-            'label':'Industry interested in (select all that apply):',
-            'input_type':AdminInputTypes.DROPDOWN,
-            'is_required':True,
-            #what?    
-        },
-        {
-            'label':'Area of interest:',
-            'input_type':AdminInputTypes.DROPDOWN,
-            'is_required':True,
-            #what?    
-        },
-        {
-            'label':'Do you have relevant formal qualifications in the area you are interested in:',
-            'input_type':AdminInputTypes.CHECKBOX,
-            'is_required':True,
-            'default_value': True
-        },
-        {
-            'label':'How many year’s experience do you have in the area you are interested in:',
-            'input_type':AdminInputTypes.DROPDOWN,
-            'is_required':True,
-            #what?    
-        },
-        {
-            'label':'Hours per week you want to work:',
-            'input_type':AdminInputTypes.TEXT,
-            'is_required':True,
-            'maxlength':50,
-        },
-        {
-            'label':'What would you like to achieve from your next role? (select all that apply)', 
-            'input_type':AdminInputTypes.DROPDOWN,
-            'is_required':True,
-            #what?
-        },
     ]
 
     #Here user profiles are creates as well as their qualifciations
@@ -350,7 +429,7 @@ def populate():
         #if the user is an admin, create paragraphs with foreign key as this user
         if profile['is_vilo_sky_admin'] == True:
             for paragraph in paragraphs:
-                
+
                 admin = UserProfile.objects.get(profile['user'])
                 pg = Paragraph.objects.get_or_create(created_by = admin, static_text = paragraph['text'])[0]
                 pg.save()
@@ -374,6 +453,7 @@ def populate():
                     a.save()
                 
                 for inputs in admin_input:
+                    admin = UserProfile.objects.get(profile['created_by'])
                     inp_type = inputs['input_type']
                     curr_input = AdminInput.objects.get(label = inputs['label'])
 
