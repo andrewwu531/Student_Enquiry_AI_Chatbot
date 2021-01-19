@@ -41,6 +41,9 @@ def output(request):
 def editquestion(request):
     return render(request, 'editquestion.html', {}) 
 
+def outputdetails(request):
+    return render(request, 'outputdetails.html', {}) 
+
 def data(request):
     visitors = []
     registered_users = []

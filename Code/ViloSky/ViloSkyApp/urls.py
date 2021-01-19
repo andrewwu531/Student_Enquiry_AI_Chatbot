@@ -17,4 +17,5 @@ urlpatterns = [
     path('output/',views.output, name='output'),
     path('data/',views.data, name='data'),
     path('editquestion/',views.editquestion, name='editquestion'),
+    path('outputdetails/',views.outputdetails, name='outputdetails'),
 ]
