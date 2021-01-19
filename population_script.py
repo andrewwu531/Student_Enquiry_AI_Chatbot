@@ -6,7 +6,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE','ViloSky.settings')
 import django
 django.setup()
 
-from Code.ViloSky.ViloSkyApp.models.py import CustomUser, UserProfile, Qualifications, Link, Paragraph, Report, Action
+from Code.ViloSky.ViloSkyApp.models import CustomUser, UserProfile, Qualification, Keyword, Link, Paragraph, Report, Action, AdminInput, AdminInputTypes, DropdownAdminInput, CheckboxAdminInput, TextAdminInput, TextareaAdminInput
 from django.contrib.auth import get_user_model
 
 
@@ -73,7 +73,7 @@ def populate():
                 {'key': 'Risk Manegement', 'score': 10},
                 {'key': 'Banking & Financy', 'score': 7},
             ],
-            'links': [
+            'links': [ 
                 {'url': 'https://www.wibf.org.uk'},
                 {'url': 'https://womenreturners.com '},
             ],
@@ -105,7 +105,7 @@ def populate():
                 {'url': 'https://timewise.co.uk/'},
                 {'url': 'https://www.2to3days.com/'}
             ],
-            'actions':[]
+            'actions': []
         },
         {
             'admin': 'Suzie Mulligan',
@@ -143,71 +143,11 @@ def populate():
             'text': 'We would like to offer you a free coaching session or put you in touch with one of our associate coaches/mentors so please send us a note if you would like to discuss that further - info@vilosky.com.' ,
             'keywords':[],
             'links': [],
-            'acitions':[]
-        },
-
-        #The following paragraphs will be more of an action plan
-        {
-            'admin': 'Suzie Mulligan',
-            'text': 'Next Few Weeks' ,
-            'keywords':[
-                {'key': 'Risk Management', 'score': 8},
-                {'key': 'Banking & Finance', 'score': 9},
-                {'key': 'confidence', 'score': 3},
-                {'key': 'learning new skills', 'score': 4},
-                {'key': 're-establish career', 'score':6},
-            ],
-            'links': [
-                {'url':'https://nationalcareers.service.gov.uk/careers-advice/interview-advice'}
-                {'url':'https://www.shesback.co.uk/'}
-            ],
-            'actions':[
-                {'title':'1. Decide what you want from your next role.', 'isComplete':True},
-                {'title': '2. List all of your amazing skills and experience, as well as your values.', 'isComplete':True},
-                {'title': '3. Focus on areas where you do not feel confident, use these resources to help: Interview Skills, She\'s Back.', 'isComplete':True},
-                {'title': '4. Start working on some Udemy courses to refresh your memory and learn some new skills.', 'isComplete': False}
-            ]
-        },
-        {
-            'admin': 'Suzie Mulligan',
-            'text': '1+ Months',
-            'keywords':[
-            
-            ],
-            'links': [
-                {'url':'https://www.udemy.com/topic/financial-risk-manager-frm/'},
-                {'url':'https://fb.me/e/5g4gsYZme'},
-                {'url':'https://www.indeed.co.uk/Finance-Risk-jobs'}
-            ],
-            'actions':[
-                {'title':'1. Complete the udemy courses you started in the first few weeks.', 'isComplete':False},
-                {'title': '2. Update your CV using the skills and experience you listed.', 'isComplete':False},
-                {'title': '3. Attend an online seminar to network and socialse with other people in Risk Management as well as Finance. This will boost your confidence', 'isComplete':True},
-                {'title': '4. Start listing some interesting employers and vacancies. Some ideas might be RBS and Barclays.', 'isCompleted': False},
-                {'title': '4. Start searching for a job.', 'isCompleted': False}
-            ]
-        },
-        {
-            'admin': 'Suzie Mulligan',
-            'text': '6 Months' ,
-            'keywords':[],
-            'links': [],
-            'actions':[
-                {'title':'1. If the ideal role hasnt appeared, give yourself a few weeks break.', 'isComplete':False},
-            ]
-        },
-        #is 7+ months static?
-        {
-            'admin': 'Suzie Mulligan',
-            'text': '7+ months' ,
-            'keywords':[],
-            'links': [],
-            'actions':[
-                {'title':'1. Back to it again', 'isComplete':False},
-            ]
+            'actions':[]
         }
     ]
 
+    #create data for user profiles
     profiles = [
         {
             'user': 'greid@gmail.com',
@@ -224,12 +164,7 @@ def populate():
                 {'level' : 'HighSchool', 'subject': 'Physics'},
                 {'level' : 'HighSchool', 'subject': 'Chemistry'}
                 ],
-            'paragraphs': [],
-            'sessions':[
-                {'page': 'Home Page', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 170, microseconds = 0), 'clicks_on_page': '15'},
-                {'page': 'Register', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 210, microseconds = 0), 'clicks_on_page': '10'},
-                {'page': 'Report', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 900, microseconds = 0), 'clicks_on_page': '30'},
-            ]
+            'paragraphs': []
         },
         {
             'user': 'muhammadA123@gmail.com',
@@ -246,13 +181,7 @@ def populate():
                 {'level' : 'HighSchool', 'subject': 'Drama'},
                 {'level' : 'HighSchool', 'subject': 'Musics'}
                 ],
-            'paragraphs': [],
-            'sessions':[
-                {'page': 'Home Page', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 300, microseconds = 0), 'clicks_on_page': '6'},
-                {'page': 'Register', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 400, microseconds = 0), 'clicks_on_page': '10'},
-                {'page': 'Dashboard', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 600, microseconds = 0), 'clicks_on_page': ''},
-                {'page': 'Login', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 120, microseconds = 0), 'clicks_on_page': '5'},
-            ]
+            'paragraphs': []
         },
         {
             'user': 'ovensS99@yahoo.co.uk',
@@ -269,12 +198,7 @@ def populate():
                 {'level' : 'HighSchool', 'subject': 'Physics'},
                 {'level' : 'HighSchool', 'subject': 'Computer Science'}
                 ],
-            'paragraphs': [],
-            'sessions':[
-                {'page': 'Home Page', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 10, microseconds = 0), 'clicks_on_page': '10'},
-                {'page': 'Login', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 120, microseconds = 0), 'clicks_on_page': '5'},
-                {'page': 'Report', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 800, microseconds = 0), 'clicks_on_page': '25'},
-            ]
+            'paragraphs': []
         },
         {
            'user': 'marinelli76@hotmail.com',
@@ -291,12 +215,7 @@ def populate():
                 {'level' : 'HighSchool', 'subject': 'Spanish'},
                 {'level' : 'HighSchool', 'subject': 'Physical Education'}
                 ],
-            'paragraphs': [],
-            'sessions':[
-                {'page': 'Home Page', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 180, microseconds = 0), 'clicks_on_page': '12'},
-                {'page': 'Login', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 120, microseconds = 0), 'clicks_on_page': '6'},
-                {'page': 'Dashboard', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 720, microseconds = 0), 'clicks_on_page': '24'},
-            ]
+            'paragraphs': []
         },
         {
            'user': 'suzieMul23@gmail.com',
@@ -313,13 +232,101 @@ def populate():
                 {'level' : 'HighSchool', 'subject': 'Spanish'},
                 {'level' : 'HighSchool', 'subject': 'Biology'}
                 ],
-            'paragraphs': paragraphs,
-            'sessions':[
-                {'page': 'Home Page', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 120, microseconds = 0), 'clicks_on_page': '5'},
-                {'page': 'Admin', 'time_spent_on_page':datetime.timedelta(days = 0, seconds = 6000, microseconds = 0), 'clicks_on_page': '30'},
-            ]
+            'paragraphs': paragraphs
         }
     ]
+
+    #create data for admin inputs, if a user is an admin we associate the input with that admin
+    admin_input = [
+        {
+            'label':'Name',
+            'input_type':AdminInputTypes.TEXT,
+            'is_required':True,
+            'maxlength':50,
+        },
+        {
+            'label':'Gender (optional)',
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':False,
+            #what?
+        },
+        {
+            'label':'Sexual Orientation (optional)',
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':False,
+            #what?
+        },
+        {
+            'label':'Ethnicity (optional)',
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':False,
+            #what?
+        },
+        {
+            'label':'Physical/Mental Abiltiy',
+            'input_type':AdminInputTypes.TEXT,
+            'is_required':False,
+            #what?
+        },
+        {
+            'label':'What best describes current work situation (select one) ',
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':True,
+            #what?
+        },
+        {
+            'label':'What best describes current work barriers (select all that apply):',
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':True,
+            #what? 
+        },
+        {
+            'label':'Time since last paid work:',
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':True,
+            #what?    
+        },
+        {
+            'label':'Industry interested in (select all that apply):',
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':True,
+            #what?    
+        },
+        {
+            'label':'Area of interest:',
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':True,
+            #what?    
+        },
+        {
+            'label':'Do you have relevant formal qualifications in the area you are interested in:',
+            'input_type':AdminInputTypes.CHECKBOX,
+            'is_required':True,
+            'default_value': True
+        },
+        {
+            'label':'How many year’s experience do you have in the area you are interested in:',
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':True,
+            #what?    
+        },
+        {
+            'label':'Hours per week you want to work:',
+            'input_type':AdminInputTypes.TEXT,
+            'is_required':True,
+            'maxlength':50,
+        },
+        {
+            'label':'What would you like to achieve from your next role? (select all that apply)', 
+            'input_type':AdminInputTypes.DROPDOWN,
+            'is_required':True,
+            #what?
+        },
+    ]
+
+    #Here user profiles are creates as well as their qualifciations
+    #If the user is an admin then create paragraphs with theyr respetive links
+    #keywords & actions
 
     #initialise user profiles and qualifications
     for profile in profiles:
@@ -336,42 +343,56 @@ def populate():
 
         p.save()
 
-        user_cur = UserProfile.objects.get(profile['user'])
-        #adding qualifications per profile
         for qualification in profile['qualifications']:
-            q = Qualification.objects.get_or_create(user = user_cur, level = qualification['level'], subject = qualification['subject'])[0]
+            q = Qualification.objects.get_or_create(user = profile['user'], level = qualification['level'], subject = qualification['subject'])[0]
             q.save()
 
-        #adding sessions per profile
-        for session in profile['sessions']:
-            ses = Session.objects.get_or_create(user = user_cur, page = session['page'], time_spent_on_page = session['time_spent_on_page'], clicks_on_page = session['clicks_on_page'])
-            ses.save()
-            
         #if the user is an admin, create paragraphs with foreign key as this user
         if profile['is_vilo_sky_admin'] == True:
             for paragraph in paragraphs:
-                pg = Paragraph.objects.get_or_create(created_by = user_cur, static_text = paragraph['text'])[0]
-                pg.save()
-            
-            #pg will be used as foreign key for each of these 1:M relationships
-            pg = Paragraph.objects.get(static_text = paragraph['text'])
-
-            #each paragraoh has a series of key words
-            for keyword in paragraph['keywords']:
                 
-                kw = Keyword.objects.get_or_create(paragraph = pg, key = keyword['key'], score = keyword['score'])[0]
-                kw.save()
+                admin = UserProfile.objects.get(profile['user'])
+                pg = Paragraph.objects.get_or_create(created_by = admin, static_text = paragraph['text'])[0]
+                pg.save()
+
+                #pg_fk will be used as foreign key for following models
+                pg_fk = Paragraph.objects.get(static_text = paragraph['text'])
+
+                #each paragraph has a series of key words
+                for keyword in paragraph['keywords']:
+                    #pg = Paragraph.objects.get(static_text = paragraph['text'])
+                    kw = Keyword.objects.get_or_create(paragraph = pg_fk, key = keyword['key'], score = keyword['score'])[0]
+                    kw.save()
         
-            #each paragraph has a series of links
-            for link in paragraph['links']:
-                l = Link.objects.get_or_create(paragraph = pg, url = link['url'])[0]
-                l.save()
-            
-            #some paragraphs have actions
-            for action in paragraph['action']:
-                act = Action.objects.get_or_create(paragraph = pg, text = action['title'], is_completed=action['isComplete'])[0]
-                act.save()
+                #each paragraph has a series of links
+                for link in paragraph['links']:
+                    l = Link.objects.get_or_create(paragraph = pg_fk, url = link['url'])[0]
+                    l.save()
+
+                for action in paragraph['actions']:
+                    a = Action.objects.get_or_create(paragraph = pg_fk, title = action['title'], completed = action['completed'])[0]
+                    a.save()
+                
+                for inputs in admin_input:
+                    inp_type = inputs['input_type']
+                    curr_input = AdminInput.objects.get(label = inputs['label'])
+
+                    inp = AdminInput.objects.get_or_create(created_by = admin, label = inputs['label'], input_type = inputs['input_type'], is_required = inputs['is_required'])[0]
+                    inp.save()
+
+                    #depending on the input type of the input, create new object which as a one to one relationship with parent input
+                    if inp_type == AdminInputTypes.TEXT:
+                        user_input = TextAdminInput.objects.get_or_create(admin_input = curr_input, max_length = inputs['maxlength'])[0]
+                    elif inp_type == AdminInputTypes.TEXTAREA:
+                        user_input = TextareaAdminInput.objects.get_or_create(admin_input = curr_input, max_length = inputs['maxlength'])[0]
+                    elif inp_type == AdminInputTypes.CHECKBOX:
+                        user_input = CheckboxAdminInput.objects.get_or_create(admin_input = curr_input, default_value = False)[0]
+                    elif inp_type == AdminInputTypes.DROPDOWN:
+                        user_input = DropdownAdminInput.objects.get_or_create(admin_input = curr_input, max_length = inputs['maxlength'])[0]    
         
+                    user_input.save()
+
+
     reports = [
         {'user': 'greid@gmail.com'}
         ]
