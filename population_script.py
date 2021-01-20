@@ -60,8 +60,8 @@ def populate():
            'admin': 'Suzie Mulligan',
             'text': 'Having been out of work for 3-5 years now it is understandable that your confidence would be low, but you have all the skills and experience you need to re-establish your career.' ,
             'keywords': [
-                {'key': '3-5 years', 'score': 5},
-                {'key': 'confidence', 'score': 7},
+                {'key': '3-5 Years', 'score': 5},
+                {'key': 'Confidence', 'score': 7},
             ],
             'links': [],
             'actions':[]
@@ -71,7 +71,7 @@ def populate():
             'text': 'As you are interested in a Risk Management role in Banking & Finance, we think the following networks would be very useful for you: ',
             'keywords': [
                 {'key': 'Risk Manegement', 'score': 10},
-                {'key': 'Banking & Financy', 'score': 7},
+                {'key': 'Banking&Finance', 'score': 7},
             ],
             'links': [ 
                 {'url': 'https://www.wibf.org.uk'},
@@ -83,8 +83,8 @@ def populate():
             'admin': 'Suzie Mulligan',
             'text': 'The following template might also help plan your childcare and carer responsibilities when you are back at work: ',
             'keywords': [
-                {'key': 'childcare', 'score': 10},
-                {'key': 'carer responsibilites', 'score': 8},
+                {'key': 'Childcare', 'score': 10},
+                {'key': 'Carer Responsibilites', 'score': 8},
             ],
             'links':[
                 {'url': 'Time planner.pdf/xls'},
@@ -95,10 +95,10 @@ def populate():
             'admin': 'Suzie Mulligan',
             'text': 'As you are looking for flexibility and a shorter working week (20hrs), we suggest the following job search sites: ',
             'keywords': [
-                {'key': 'flexibility', 'score': 10},
-                {'key': 'work/life banace', 'score': 7},
-                {'key': 'low stress', 'score': 5},
-                {'key': 'ease', 'score': 7},
+                {'key': 'Flexibility', 'score': 10},
+                {'key': 'Work/Life Balance', 'score': 7},
+                {'key': 'Low Stress', 'score': 5},
+                {'key': 'Ease', 'score': 7},
                 {'key': '20', 'score': 10}
             ],
             'links':[
@@ -115,12 +115,12 @@ def populate():
 
                 #triggered if someone has been out of work for any amount of time
                 #score increases with time length
-                {'key': '1-6 mnths', 'score': 4},
-                {'key': '7-12 mnths', 'score': 5},
-                {'key': '1-2 years', 'score': 6},
-                {'key': '3-5 years', 'score':7},
-                {'key': '5-10 years', 'score': 8},
-                {'key': '10+ years', 'score': 9},
+                {'key': '1-6 Months', 'score': 4},
+                {'key': '7-12 Months', 'score': 5},
+                {'key': '1-2 Years', 'score': 6},
+                {'key': '3-5 Years', 'score':7},
+                {'key': '5-10 Years', 'score': 8},
+                {'key': '10+ Years', 'score': 9},
             ],
             'links':[],
             'actions':[]
@@ -129,11 +129,11 @@ def populate():
             'admin': 'Suzie Mulligan',
             'text': 'To support ongoing career progression and to help with challenges such as learning new skills, regaining confidence and adapting to workplace cultures, we are strong advocates of creating a support network.',
             'keywords':[
-                {'key': 'learn new skills', 'score': 8},
-                {'key': 'develop confidence', 'score': 8},
-                {'key': 're-establish career', 'score': 10},
-                {'key': 'confidence', 'score': 9},
-                {'key': 'workplace culture', 'score': 7}
+                {'key': 'Learn New Skills', 'score': 8},
+                {'key': 'Develop Confidence', 'score': 8},
+                {'key': 'Re-establish Career', 'score': 10},
+                {'key': 'Confidence', 'score': 9},
+                {'key': 'Workplace Culture', 'score': 7}
             ],
             'links':[],
             'actions':[]
@@ -221,63 +221,67 @@ def populate():
             'label':'Gender (optional)',
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':False,
-            #what?
+            'choices': ['Male', 'Female', 'Non-Binary', 'Transgender Male', 'Other', 'Transgender Female']
         },
         {
             'created_by':'suzieMul23@gmail.com',
             'label':'Sexual Orientation (optional)',
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':False,
-            #what?
+            'choices': ['Heterosexual', 'Homosexual', 'Bisexual', 'Pansexual', 'Asexual'. 'Queer']
         },
         {
             'created_by':'suzieMul23@gmail.com',
             'label':'Ethnicity (optional)',
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':False,
-            #what?
+            'choices': ['White', 'Black', 'Asian', 'Mixed Race', 'South Asian']
         },
         {
             'created_by':'suzieMul23@gmail.com',
             'label':'Physical/Mental Abiltiy',
             'input_type':AdminInputTypes.TEXT,
             'is_required':False,
-            #what?
+            'choices': []
         },
         {
             'created_by':'suzieMul23@gmail.com',
             'label':'What best describes current work situation (select one) ',
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':True,
-            #what?
+            'choices': ['Employed', 'Self-Employed', 'Unpaid Work (e.g. Volunteering)', 'Retired', 'Career Break']
         },
         {
             'created_by':'suzieMul23@gmail.com',
             'label':'What best describes current work barriers (select all that apply):',
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':True,
-            #what? 
-        },
+            'choices': ['Childcare', 'Carer Responsibilities', 'Technical Skills', 
+            'Leadership Skills', 'Flexibility', 'Workplace Culture', 'Confidence']
+            },
         {
             'created_by':'suzieMul23@gmail.com',
             'label':'Time since last paid work:',
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':True,
-            #what?    
+            'choices': ['0 (Currently Working)', '1-6 Months', '7-12 Months', '1-2 Years', 
+            '3-5 Years', '5-10 Years', '10+ Years']
         },
         {
             'created_by':'suzieMul23@gmail.com',
             'label':'Industry interested in (select all that apply):',
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':True,
-            #what?    
+            'choices':['Retail', 'Fashion', 'Media', 'Banking&Finance', 'Construction', 
+            'Manuacturing', 'Law', 'Medical', 'Education', 'IT']   
         },
         {
             'created_by':'suzieMul23@gmail.com',
             'label':'Area of interest:',
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':True,
-            #what?    
+            'choices': ['HR', 'Risk Management', 'Accountancy', 'Law', 'Marketing',
+            'Coaching', 'IT', 'Nursing', 'Medicine']   
         },
         {
             'created_by':'suzieMul23@gmail.com',
@@ -291,7 +295,8 @@ def populate():
             'label':'How many year’s experience do you have in the area you are interested in:',
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':True,
-            #what?    
+            'choices': ['0', '1-6 Months', '7-12 Months', '1-2 Years', 
+            '3-5 Years', '5-10 Years', '10+ Years']
         },
         {
             'created_by':'suzieMul23@gmail.com',
@@ -305,7 +310,10 @@ def populate():
             'label':'What would you like to achieve from your next role? (select all that apply)', 
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':True,
-            #what?
+            'choices': ['Re-establish career', 'Learn New SKills', 'Give Something Back', 'Confidence',
+            'Realise Full Potential', 'Promotion', 'Work/Life Balance','Ease', 'Good Salary',
+            'Working From Home', 'Low Stress', 'Flexibility', 'Greater Autonomy', 'More Responsibility', 
+            'Less Responsibility']
         },
     ]
 
@@ -328,6 +336,11 @@ def populate():
                 ],
             'paragraphs': [],
             'inputs':[],
+            'sessions':[
+                {'page':'', 'time': , 'clicks'},
+                {'page':'', 'time': , 'clicks'},
+                {'page':'', 'time': , 'clicks'}
+            ]
         },
         {
             'user': 'muhammadA123@gmail.com',
@@ -336,8 +349,8 @@ def populate():
             'is_hr_rep':False,
             'company': 'Urban Outfitters',
             'employment_sector': 'Retail',
-            'emploment_status': 'unemployed',
-            'time_worked_in_industry': '12 months',
+            'emploment_status': 'Unemployed',
+            'time_worked_in_industry': '7-12 Months',
             'qualifications': [
                 {'level': 'Modern Apprentice', 'subject':'Retail Skills'},
                 {'level' : 'HighSchool', 'subject': 'English'},
@@ -346,6 +359,11 @@ def populate():
                 ],
             'paragraphs': [],
             'inputs':[],
+            'sessions':[
+                {'page':'', 'time': , 'clicks'},
+                {'page':'', 'time': , 'clicks'},
+                {'page':'', 'time': , 'clicks'}
+            ]
         },
         {
             'user': 'ovensS99@yahoo.co.uk',
@@ -354,8 +372,8 @@ def populate():
             'is_hr_rep':True,
             'company': 'JP Morgan',
             'employment_sector': 'IT',
-            'employment_status': 'employed',
-            'time_worked_in_industry': '5-10 years',
+            'employment_status': 'Employed',
+            'time_worked_in_industry': '5-10 Years',
             'qualifications': [
                 {'level': 'UD', 'subject':'Computer Science'},
                 {'level' : 'HighSchool', 'subject': 'Mathematics'},
@@ -364,6 +382,11 @@ def populate():
                 ],
             'paragraphs': [],
             'inputs':[],
+            'sessions':[
+                {'page':'', 'time': , 'clicks'},
+                {'page':'', 'time': , 'clicks'},
+                {'page':'', 'time': , 'clicks'}
+            ],
         },
         {
             'user': 'marinelli76@hotmail.com',
@@ -372,7 +395,7 @@ def populate():
             'is_hr_rep':False,
             'company': None,
             'employment_sector': 'Construction',
-            'employment_status': 'unemployed',
+            'employment_status': 'Unemployed',
             'time_worked_in_industry': '0',
             'qualifications': [
                 {'level' : 'HighSchool', 'subject': 'Woodwork'},
@@ -382,6 +405,11 @@ def populate():
                 ],
             'paragraphs': [],
             'inputs':[],
+            'sessions':[
+                {'page':'', 'time': , 'clicks'},
+                {'page':'', 'time': , 'clicks'},
+                {'page':'', 'time': , 'clicks'}
+            ]
         },
         {
             'user': 'suzieMul23@gmail.com',
@@ -390,8 +418,8 @@ def populate():
             'is_hr_rep': False,
             'company': 'ViloSky',
             'employment_sector': 'Consulting',
-            'employment_status': 'employed',
-            'time_worked_in_sector': '1-2 years',
+            'employment_status': 'Employed',
+            'time_worked_in_sector': '1-2 Years',
             'qualifications': [
                 {'level' : 'MS', 'subject': 'Law'},
                 {'level' : 'HighSchool', 'subject': 'English'},
@@ -400,12 +428,17 @@ def populate():
                 ],
             'paragraphs': paragraphs,
             'inputs': admin_input,
+            'sessions':[
+                {'page':'', 'time': , 'clicks'},
+                {'page':'', 'time': , 'clicks'},
+                {'page':'', 'time': , 'clicks'}
+            ]
         }
     ]
 
     #Here user profiles are creates as well as their qualifciations
     #If the user is an admin then create paragraphs with theyr respetive links
-    #keywords & actions
+    #keywords & actions, as well as admin input
 
     #initialise user profiles and qualifications
     for profile in profiles:
@@ -422,9 +455,15 @@ def populate():
 
         p.save()
 
+        #get the user object we just saved for foregin keys for qualifications and sessions
+        userP = UserProfile.objects.get(profile['user'])
+
         for qualification in profile['qualifications']:
-            q = Qualification.objects.get_or_create(user = profile['user'], level = qualification['level'], subject = qualification['subject'])[0]
+            q = Qualification.objects.get_or_create(user = userP, level = qualification['level'], subject = qualification['subject'])[0]
             q.save()
+
+        for session in profile['sessions']:
+            ses = Session.objects.get_orCreate(user = userP, page = session['page'], time_spent_on_page = session['time'], clicks_on_page = sesssion['clicks'])
 
         #if the user is an admin, create paragraphs with foreign key as this user
         #and create admin inputs.
@@ -469,8 +508,8 @@ def populate():
                 elif inp_type == AdminInputTypes.CHECKBOX:
                     user_input = CheckboxAdminInput.objects.get_or_create(admin_input = curr_input, default_value = False)[0]
                 elif inp_type == AdminInputTypes.DROPDOWN:
-                    user_input = DropdownAdminInput.objects.get_or_create(admin_input = curr_input, max_length = inputs['maxlength'])[0]    
-        
+                    user_input = DropdownAdminInput.objects.get_or_create(admin_input = curr_input, choices = inputs['choices'])[0]    
+                    
                 user_input.save()
 
 
