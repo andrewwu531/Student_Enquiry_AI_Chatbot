@@ -80,11 +80,10 @@ class Keyword(models.Model):
 
 
 class Action(models.Model):
-    """ A model to hold actions, part of each paragraph. """
+    """ A model to hold static actions, related to a specific paragraph. """
     paragraph = models.ForeignKey(
         Paragraph, on_delete=models.CASCADE, related_name='actions')
     title = models.CharField(max_length=255)
-    is_completed = models.BooleanField(default=False)
 
 
 class Report(models.Model):
@@ -96,6 +95,16 @@ class Report(models.Model):
     user = models.ForeignKey(
         UserProfile, on_delete=models.CASCADE, related_name='reports_assigned')
     datetime_created = models.DateTimeField()
+
+
+class UserAction(models.Model):
+    """ A model to hold user actions, all related to an assigned report. 
+    As it is for each user, it has a value (changeable by the user).
+    """
+    report = models.ForeignKey(
+        Report, on_delete=models.CASCADE, related_name='user_actions')
+    title = models.CharField(max_length=255)
+    is_completed = models.BooleanField(default=False)
 
 
 class Session(models.Model):
