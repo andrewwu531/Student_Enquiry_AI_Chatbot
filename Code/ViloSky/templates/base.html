@@ -102,12 +102,13 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
     $("#sidebar").mCustomScrollbar({
           theme: "minimal"
       });
-      var screensize = window.matchMedia("(max-width: 768px)");
-      checkContentVisible(screensize);
-      screensize.addListener(checkContentVisible);
-  var trigger = $('.hamburger'),
+      
+    var trigger = $('.hamburger'),
       overlay = $('.overlay'),
      isClosed = true;
+     var screensize = window.matchMedia("(max-width: 768px)");
+      checkContentVisible(screensize);
+      screensize.addListener(checkContentVisible);
     trigger.click(function () {
       hamburger_cross();      
     });
