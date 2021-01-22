@@ -32,11 +32,11 @@ class UserProfile(models.Model):
         CustomUser, on_delete=models.CASCADE, related_name='user_profile')
     is_vilosky_admin = models.BooleanField(default=False)
     is_hr_representative = models.BooleanField(default=False)
-    date_of_birth = models.DateField(null=True)
-    company = models.CharField(max_length=255, null=True)
-    employment_sector = models.CharField(max_length=255, null=True)
-    employment_status = models.CharField(max_length=255, null=True)
-    time_worked_in_industry = models.DurationField(null=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    company = models.CharField(max_length=255, blank=True)
+    employment_sector = models.CharField(max_length=255, blank=True)
+    employment_status = models.CharField(max_length=255, blank=True)
+    time_worked_in_industry = models.DurationField(null=True, blank=True)
 
 
 class Qualification(models.Model):
@@ -161,14 +161,14 @@ class TextareaAdminInput(AdminInput):
     """ A model to information about textbox admin inputs."""
     admin_input = models.OneToOneField(
         AdminInput, parent_link=True, on_delete=models.CASCADE)
-    max_length = models.PositiveIntegerField(null=True)
+    max_length = models.PositiveIntegerField(null=True, blank=True)
 
 
 class TextAdminInput(AdminInput):
     """ A model to information about text admin inputs."""
     admin_input = models.OneToOneField(
         AdminInput, parent_link=True, on_delete=models.CASCADE)
-    max_length = models.PositiveIntegerField(null=True)
+    max_length = models.PositiveIntegerField(null=True, blank=True)
 
 
 class PartialInput(models.Model):
