@@ -6,7 +6,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE','ViloSky.settings')
 import django
 django.setup()
 
-from Code.ViloSky.ViloSkyApp.models import CustomUser, UserProfile, Qualification, Keyword, Link, Paragraph, Report, Action, AdminInput, AdminInputTypes, DropdownAdminInput, CheckboxAdminInput, TextAdminInput, TextareaAdminInput
+from Code.ViloSky.ViloSkyApp.models import CustomUser, UserProfile, Qualification, Keyword, Link, Paragraph, Report, Action, AdminInput, AdminInputTypes, DropdownAdminInput, CheckboxAdminInput, TextAdminInput, TextareaAdminInput, Session
 from django.contrib.auth import get_user_model
 
 
@@ -228,7 +228,7 @@ def populate():
             'label':'Sexual Orientation (optional)',
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':False,
-            'choices': ['Heterosexual', 'Homosexual', 'Bisexual', 'Pansexual', 'Asexual'. 'Queer']
+            'choices': ['Heterosexual', 'Homosexual', 'Bisexual', 'Pansexual', 'Asexual', 'Queer']
         },
         {
             'created_by':'suzieMul23@gmail.com',
@@ -337,9 +337,10 @@ def populate():
             'paragraphs': [],
             'inputs':[],
             'sessions':[
-                {'page':'', 'time': , 'clicks'},
-                {'page':'', 'time': , 'clicks'},
-                {'page':'', 'time': , 'clicks'}
+                {'page':'Home', 'time': datetime.time(0,5,10), 'clicks':20},
+                {'page':'Register', 'time':datetime.time(0,3,15) , 'clicks':13},
+                {'page':'Input Page', 'time':datetime.time(0,15,0) , 'clicks':40},
+                {'page':'Dashboard', 'time': datetime.time(0,25,30), 'clicks':20},
             ]
         },
         {
@@ -360,9 +361,9 @@ def populate():
             'paragraphs': [],
             'inputs':[],
             'sessions':[
-                {'page':'', 'time': , 'clicks'},
-                {'page':'', 'time': , 'clicks'},
-                {'page':'', 'time': , 'clicks'}
+                {'page':'Home Page', 'time': datetime.time(0,5,10), 'clicks':5},
+                {'page':'Login', 'time': datetime.time(0,2,5), 'clicks':10},
+                {'page':'Dashboard', 'time': datetime.time(0,20,10), 'clicks':30}
             ]
         },
         {
@@ -383,9 +384,10 @@ def populate():
             'paragraphs': [],
             'inputs':[],
             'sessions':[
-                {'page':'', 'time': , 'clicks'},
-                {'page':'', 'time': , 'clicks'},
-                {'page':'', 'time': , 'clicks'}
+                {'page':'Home Page', 'time': datetime.time(0,12,10), 'clicks': 10},
+                {'page':'Register', 'time': datetime.time(0,7,10), 'clicks': 15},
+                {'page':'My Account', 'time': datetime.time(0,10,10), 'clicks': 30},
+                {'page':'Dashboard', 'time': datetime.time(0,30,30), 'clicks':100},
             ],
         },
         {
@@ -406,9 +408,10 @@ def populate():
             'paragraphs': [],
             'inputs':[],
             'sessions':[
-                {'page':'', 'time': , 'clicks'},
-                {'page':'', 'time': , 'clicks'},
-                {'page':'', 'time': , 'clicks'}
+                {'page':'Login', 'time': datetime.time(0,1,15), 'clicks':7},
+                {'page':'Home Page', 'time': datetime.time(0,12,25), 'clicks':17},
+                {'page':'Dashboard', 'time': datetime.time(0,15,30), 'clicks':18},
+                {'page':'My Account', 'time': datetime.time(0,3,25), 'clicks':7},
             ]
         },
         {
@@ -429,9 +432,10 @@ def populate():
             'paragraphs': paragraphs,
             'inputs': admin_input,
             'sessions':[
-                {'page':'', 'time': , 'clicks'},
-                {'page':'', 'time': , 'clicks'},
-                {'page':'', 'time': , 'clicks'}
+                {'page':'Login', 'time': datetime.time(0,3,45), 'clicks':10},
+                {'page':'Admin Input', 'time': datetime.time(0,45,0), 'clicks':50},
+                {'page':'Home Page', 'time': datetime.time(0,1,25), 'clicks':13},
+                {'page':'My Account', 'time': datetime.time(0,4,0), 'clicks':23},
             ]
         }
     ]
@@ -456,21 +460,22 @@ def populate():
         p.save()
 
         #get the user object we just saved for foregin keys for qualifications and sessions
-        userP = UserProfile.objects.get(profile['user'])
+        user_p = UserProfile.objects.get(profile['user'])
 
         for qualification in profile['qualifications']:
-            q = Qualification.objects.get_or_create(user = userP, level = qualification['level'], subject = qualification['subject'])[0]
+            q = Qualification.objects.get_or_create(user = user_p, level = qualification['level'], subject = qualification['subject'])[0]
             q.save()
 
         for session in profile['sessions']:
-            ses = Session.objects.get_orCreate(user = userP, page = session['page'], time_spent_on_page = session['time'], clicks_on_page = sesssion['clicks'])
+            ses = Session.objects.get_orCreate(user = user_p, page = session['page'], time_spent_on_page = session['time'], clicks_on_page = session['clicks'])
+            ses.save()
 
         #if the user is an admin, create paragraphs with foreign key as this user
         #and create admin inputs.
         if profile['is_vilo_sky_admin'] == True:
             for paragraph in paragraphs:
 
-                admin = UserProfile.objects.get(profile['user'])
+                admin = UserProfile.objects.get(profile[user_p])
                 pg = Paragraph.objects.get_or_create(created_by = admin, static_text = paragraph['text'])[0]
                 pg.save()
 
@@ -493,7 +498,7 @@ def populate():
                     a.save()
                 
             for inputs in admin_input:
-                admin = UserProfile.objects.get(profile['created_by'])
+                admin = user_p
                 inp_type = inputs['input_type']
                 curr_input = AdminInput.objects.get(label = inputs['label'])
 
@@ -508,7 +513,7 @@ def populate():
                 elif inp_type == AdminInputTypes.CHECKBOX:
                     user_input = CheckboxAdminInput.objects.get_or_create(admin_input = curr_input, default_value = False)[0]
                 elif inp_type == AdminInputTypes.DROPDOWN:
-                    user_input = DropdownAdminInput.objects.get_or_create(admin_input = curr_input, choices = inputs['choices'])[0]    
+                    user_input = DropdownAdminInput.objects.get_or_create(admin_input = curr_input, choices = inputs['choices'])[0]
                     
                 user_input.save()
 
