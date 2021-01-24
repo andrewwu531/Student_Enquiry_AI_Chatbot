@@ -6,7 +6,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE','ViloSky.settings')
 import django
 django.setup()
 
-from Code.ViloSky.ViloSkyApp.models import CustomUser, UserProfile, Qualification, Keyword, Link, Paragraph, Report, Action, AdminInput, AdminInputTypes, DropdownAdminInput, CheckboxAdminInput, TextAdminInput, TextareaAdminInput, Session
+from Code.ViloSky.ViloSkyApp.models import CustomUser, UserProfile, Qualification, Keyword, Link, Paragraph, Report, Action, AdminInput, AdminInputTypes, DropdownAdminInput, CheckboxAdminInput, TextAdminInput, TextareaAdminInput, Session, PartialInput
 from django.contrib.auth import get_user_model
 
 
@@ -215,41 +215,59 @@ def populate():
             'input_type':AdminInputTypes.TEXT,
             'is_required':True,
             'maxlength':50,
+            'partial_inputs':[
+                {'created_by': 'greid@gmail.com', 'value': 'Gemma Reid'},
+            ]
         },
         {
             'created_by':'suzieMul23@gmail.com',
             'label':'Gender (optional)',
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':False,
-            'choices': ['Male', 'Female', 'Non-Binary', 'Transgender Male', 'Other', 'Transgender Female']
+            'choices': ['Male', 'Female', 'Non-Binary', 'Transgender Male', 'Other', 'Transgender Female'],
+            'partial_inputs':[
+                {'created_by': 'greid@gmail.com', 'value': 'Female'},
+            ]
         },
         {
             'created_by':'suzieMul23@gmail.com',
             'label':'Sexual Orientation (optional)',
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':False,
-            'choices': ['Heterosexual', 'Homosexual', 'Bisexual', 'Pansexual', 'Asexual', 'Queer']
+            'choices': ['Heterosexual', 'Homosexual', 'Bisexual', 'Pansexual', 'Asexual', 'Queer'],
+            'partial_inputs':[
+                {'created_by': 'greid@gmail.com', 'value': ''},
+            ]
         },
         {
             'created_by':'suzieMul23@gmail.com',
             'label':'Ethnicity (optional)',
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':False,
-            'choices': ['White', 'Black', 'Asian', 'Mixed Race', 'South Asian']
+            'choices': ['White', 'Black', 'Asian', 'Mixed Race', 'South Asian'],
+            'partial_inputs':[
+                {'created_by': 'greid@gmail.com', 'value': 'White'},
+            ]
         },
         {
             'created_by':'suzieMul23@gmail.com',
-            'label':'Physical/Mental Abiltiy',
+            'label':'Physical/Mental Abiltiy (optional)',
             'input_type':AdminInputTypes.TEXT,
             'is_required':False,
-            'choices': []
+            'choices': [],
+            'partial_inputs':[
+                {'created_by': 'greid@gmail.com', 'value': ''},
+            ]
         },
         {
             'created_by':'suzieMul23@gmail.com',
             'label':'What best describes current work situation (select one) ',
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':True,
-            'choices': ['Employed', 'Self-Employed', 'Unpaid Work (e.g. Volunteering)', 'Retired', 'Career Break']
+            'choices': ['Employed', 'Self-Employed', 'Unpaid Work (e.g. Volunteering)', 'Retired', 'Career Break'],
+            'partial_inputs':[
+                {'created_by': 'greid@gmail.com', 'value': 'Career Break'},
+            ]
         },
         {
             'created_by':'suzieMul23@gmail.com',
@@ -257,15 +275,21 @@ def populate():
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':True,
             'choices': ['Childcare', 'Carer Responsibilities', 'Technical Skills', 
-            'Leadership Skills', 'Flexibility', 'Workplace Culture', 'Confidence']
-            },
+            'Leadership Skills', 'Flexibility', 'Workplace Culture', 'Confidence'],
+            'partial_inputs':[
+                {'created_by': 'greid@gmail.com', 'value': ''},
+            ]
+        },
         {
             'created_by':'suzieMul23@gmail.com',
             'label':'Time since last paid work:',
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':True,
             'choices': ['0 (Currently Working)', '1-6 Months', '7-12 Months', '1-2 Years', 
-            '3-5 Years', '5-10 Years', '10+ Years']
+            '3-5 Years', '5-10 Years', '10+ Years'],
+            'partial_inputs':[
+                {'created_by': 'greid@gmail.com','value': '10+ Years'},
+            ]
         },
         {
             'created_by':'suzieMul23@gmail.com',
@@ -273,7 +297,10 @@ def populate():
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':True,
             'choices':['Retail', 'Fashion', 'Media', 'Banking&Finance', 'Construction', 
-            'Manuacturing', 'Law', 'Medical', 'Education', 'IT']   
+            'Manuacturing', 'Law', 'Medical', 'Education', 'IT'],
+            'partial_inputs':[
+                {'created_by': 'greid@gmail.com', 'value': 'Banking&Finance'},
+            ]  
         },
         {
             'created_by':'suzieMul23@gmail.com',
@@ -281,22 +308,30 @@ def populate():
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':True,
             'choices': ['HR', 'Risk Management', 'Accountancy', 'Law', 'Marketing',
-            'Coaching', 'IT', 'Nursing', 'Medicine']   
+            'Coaching', 'IT', 'Nursing', 'Medicine'],
+            'partial_inputs':[
+                {'created_by': 'greid@gmail.com', 'value': 'Risk Management'},
+            ]
         },
         {
             'created_by':'suzieMul23@gmail.com',
             'label':'Do you have relevant formal qualifications in the area you are interested in:',
             'input_type':AdminInputTypes.CHECKBOX,
             'is_required':True,
-            'default_value': True
+            'default_value': True,
+            'partial_inputs':[
+                {'created_by': 'greid@gmail.com', 'value': True},
+            ]
         },
         {
             'created_by':'suzieMul23@gmail.com',
             'label':'How many year’s experience do you have in the area you are interested in:',
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':True,
-            'choices': ['0', '1-6 Months', '7-12 Months', '1-2 Years', 
-            '3-5 Years', '5-10 Years', '10+ Years']
+            'choices': ['0', '1-6 Months', '7-12 Months', '1-2 Years', '3-5 Years', '5-10 Years', '10+ Years'],
+            'partial_inputs':[
+                {'created_by': 'greid@gmail.com', 'value': '3-5 Years'},
+            ]
         },
         {
             'created_by':'suzieMul23@gmail.com',
@@ -304,16 +339,26 @@ def populate():
             'input_type':AdminInputTypes.TEXT,
             'is_required':True,
             'maxlength':50,
+            'partial_inputs':[
+                {'created_by': 'greid@gmail.com', 'value': '20'},
+            ]
         },
         {
             'created_by':'suzieMul23@gmail.com',
             'label':'What would you like to achieve from your next role? (select all that apply)', 
             'input_type':AdminInputTypes.DROPDOWN,
             'is_required':True,
-            'choices': ['Re-establish career', 'Learn New SKills', 'Give Something Back', 'Confidence',
+            'choices': ['Re-establish career', 'Learn New Skills', 'Give Something Back', 'Confidence',
             'Realise Full Potential', 'Promotion', 'Work/Life Balance','Ease', 'Good Salary',
             'Working From Home', 'Low Stress', 'Flexibility', 'Greater Autonomy', 'More Responsibility', 
-            'Less Responsibility']
+            'Less Responsibility'],
+            'partial_inputs':[
+                {
+                'created_by': 'greid@gmail.com', 
+                'value': ['Re-establish career', 'Learn New Skills', 'Give Something Back', 'Confidence',
+                'Promotion', 'Work/Life Balance','Ease', 'Good Salary','Working From Home', 'Low Stress', 'Flexibility']
+                },
+            ]
         },
     ]
 
@@ -463,8 +508,8 @@ def populate():
         user_p = UserProfile.objects.get(profile['user'])
 
         for qualification in profile['qualifications']:
-            q = Qualification.objects.get_or_create(user = user_p, level = qualification['level'], subject = qualification['subject'])[0]
-            q.save()
+            qual = Qualification.objects.get_or_create(user = user_p, level = qualification['level'], subject = qualification['subject'])[0]
+            qual.save()
 
         for session in profile['sessions']:
             ses = Session.objects.get_orCreate(user = user_p, page = session['page'], time_spent_on_page = session['time'], clicks_on_page = session['clicks'])
@@ -472,12 +517,13 @@ def populate():
 
         #if the user is an admin, create paragraphs with foreign key as this user
         #and create admin inputs.
-        if profile['is_vilo_sky_admin'] == True:
+        is_admin =  profile['is_vilo_sky_admin']
+        if is_admin:
             for paragraph in paragraphs:
 
                 admin = UserProfile.objects.get(profile[user_p])
-                pg = Paragraph.objects.get_or_create(created_by = admin, static_text = paragraph['text'])[0]
-                pg.save()
+                pgph = Paragraph.objects.get_or_create(created_by = admin, static_text = paragraph['text'])[0]
+                pgph.save()
 
                 #pg_fk will be used as foreign key for following models
                 pg_fk = Paragraph.objects.get(static_text = paragraph['text'])
@@ -485,19 +531,21 @@ def populate():
                 #each paragraph has a series of key words
                 for keyword in paragraph['keywords']:
                     #pg = Paragraph.objects.get(static_text = paragraph['text'])
-                    kw = Keyword.objects.get_or_create(paragraph = pg_fk, key = keyword['key'], score = keyword['score'])[0]
-                    kw.save()
+                    keyw = Keyword.objects.get_or_create(paragraph = pg_fk, key = keyword['key'], score = keyword['score'])[0]
+                    keyw.save()
         
                 #each paragraph has a series of links
                 for link in paragraph['links']:
-                    l = Link.objects.get_or_create(paragraph = pg_fk, url = link['url'])[0]
-                    l.save()
+                    lnk = Link.objects.get_or_create(paragraph = pg_fk, url = link['url'])[0]
+                    lnk.save()
 
                 for action in paragraph['actions']:
-                    a = Action.objects.get_or_create(paragraph = pg_fk, title = action['title'], completed = action['completed'])[0]
-                    a.save()
+                    act = Action.objects.get_or_create(paragraph = pg_fk, title = action['title'], completed = action['completed'])[0]
+                    act.save()
                 
-            for inputs in admin_input:
+            #each input has corresponding partial inputs, each partial
+            #input has a corresponding user.
+            for inputs in profile['inputs']:
                 admin = user_p
                 inp_type = inputs['input_type']
                 curr_input = AdminInput.objects.get(label = inputs['label'])
@@ -514,17 +562,29 @@ def populate():
                     user_input = CheckboxAdminInput.objects.get_or_create(admin_input = curr_input, default_value = False)[0]
                 elif inp_type == AdminInputTypes.DROPDOWN:
                     user_input = DropdownAdminInput.objects.get_or_create(admin_input = curr_input, choices = inputs['choices'])[0]
-                    
+                
                 user_input.save()
+
+                #create partial inputs
+                #use curr_input as the input that each partial input is for
+                #created_by_user is a foreign key which uses the given email in 'created_by' key of dict
+                for partial_input in inputs['partial_inputs']:
+                    created_by_user = UserProfile.objects.get(user = partial_input['created_by'])
+                    partial_inp = PartialInput.objects.get_or_create(created_by = created_by_user, admin_input = curr_input, value = partial_input['value'])[0]
+                    partial_inp.save()
 
 
     reports = [
-        {'user': 'greid@gmail.com'}
+        {
+            'user': 'greid@gmail.com',
+            'datetime_created': datetime.date(2021, 11, 1),
+            'paragraphs':[]
+        }
         ]
 
     for report in reports:
-        r = Report.objects.get_or_create(paragraph = report['paragraph'], user = 'user')[0]
-        r.save()
+        rep = Report.objects.get_or_create(paragraph = report['paragraph'], user = 'user')[0]
+        rep.save()
 
 if __name__ == '__main__':
     print('Starting population script...')
