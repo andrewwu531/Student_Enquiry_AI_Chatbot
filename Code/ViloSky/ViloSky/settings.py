@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cuser',
+    'ViloSkyApp',
 ]
 
 MIDDLEWARE = [
@@ -118,3 +120,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Custom User model
+AUTH_USER_MODEL = 'ViloSkyApp.CustomUser'
