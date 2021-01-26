@@ -596,7 +596,8 @@ def populate():
         ]
 
     for report in reports:
-        report_paragraphs = report['paragraphs']
+
+        #create report object with user and datetime
         rep = Report.objects.get_or_create(user = report['user'], datetime_created = report['datetime_created'])[0]
         rep.save()
 
@@ -612,17 +613,7 @@ def populate():
                 #each action in this paragaph will then become a user action, linked to this report
                 for actions in text['actions']:
                     user_action = UserAction.objects.get_or_create(report = rep, title = actions['title'], is_completed = False)[0]
-
-
-
-
-        for paragraph in report_paragraphs:
-            for action in paragraph['actions']:
-                #get current report for foreign key - use the date time to fecth the correct one (unique)
-                cur_report = Report.objetcs.get(datetime_created = report['datetime_created'])
-                user_act = Action.objects.get_or_create(report = cur_report, title = action['title'], is_completed = action['is_complete'])[0]
-                user_act.save()
-
+                    user_action.save()
 
 if __name__ == '__main__':
     print('Starting population script...')
