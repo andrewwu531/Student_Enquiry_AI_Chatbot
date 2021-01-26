@@ -300,6 +300,15 @@ a.article:hover {
     max-width: 900px;
     min-height: 600px;
   }
+
+  .footerdiv{
+    padding-left: 20px;
+    padding-right: 20px;
+    margin: auto;
+    margin-top: 50px;
+    min-width: 50%;
+    max-width: 900px;
+  }
   
   @keyframes appear{
     0%{

@@ -84,6 +84,21 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
             <div class="sitecontent" id="sitecontent">
               {% block bodyblock %}
               {% endblock %}
+              <div class="divbackground footerdiv">
+                <div class="row">
+                  <div class="col-md-2">Tel.:</div>
+                  <div class="col-md-5">07895 086 134</div>
+                  <div class="col-md-5">07817 545 525</div>
+                </div>
+                <div class="row">
+                  Vilo Sky C.I.C. is a company incorporated in Scotland with company number SC586949.          
+                  ICO Reference - ZA738970
+                </div>
+                <div class="row">
+                  Copyright © 2018 onwards Vilo Sky C.I.C.                
+                  All rights reserved.
+                </div>
+              </div>
             </div>
         </div>
     </div>
@@ -102,18 +117,16 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
     $("#sidebar").mCustomScrollbar({
           theme: "minimal"
       });
-      
     var trigger = $('.hamburger'),
       overlay = $('.overlay'),
      isClosed = true;
      var screensize = window.matchMedia("(max-width: 768px)");
-      checkContentVisible(screensize);
       screensize.addListener(checkContentVisible);
     trigger.click(function () {
       hamburger_cross();      
     });
 
-    function checkContentVisible(x){
+    function checkContentVisible(x){//adjust content visibility in mobile view, if sidebar is expanded content is invisible
       var content = $('.sitecontent');
       if(x.matches){
         if(isClosed){
@@ -128,7 +141,7 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
         content.addClass('content-visible');
       }
     }
-    function hamburger_cross() {
+    function hamburger_cross() {//responsible for hamburger animations
       if (isClosed == true) {          
         $('#sidebar, #content').toggleClass('active');
           $('.collapse.in').toggleClass('in');
