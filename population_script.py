@@ -6,7 +6,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE','ViloSky.settings')
 import django
 django.setup()
 
-from Code.ViloSky.ViloSkyApp.models import CustomUser, UserProfile, Qualification, Keyword, Link, Paragraph, Report, Action, AdminInput, AdminInputTypes, DropdownAdminInput, CheckboxAdminInput, TextAdminInput, TextareaAdminInput, Session, PartialInput
+from Code.ViloSky.ViloSkyApp.models import CustomUser, UserProfile, Qualification, Keyword, Link, Paragraph, Report, Action, AdminInput, AdminInputTypes, DropdownAdminInput, CheckboxAdminInput, TextAdminInput, TextareaAdminInput, Session, PartialInput, UserAction
 from django.contrib.auth import get_user_model
 
 
@@ -57,7 +57,8 @@ def populate():
 
     paragraphs = [
         {
-           'admin': 'Suzie Mulligan',
+            'users':['greid@gmail.com',],
+            'admin': 'Suzie Mulligan',
             'text': 'Having been out of work for 3-5 years now it is understandable that your confidence would be low, but you have all the skills and experience you need to re-establish your career.' ,
             'keywords': [
                 {'key': '3-5 Years', 'score': 5},
@@ -67,6 +68,7 @@ def populate():
             'actions':[]
         },
         {
+            'users':['greid@gmail.com',],
             'admin': 'Suzie Mulligan',
             'text': 'As you are interested in a Risk Management role in Banking & Finance, we think the following networks would be very useful for you: ',
             'keywords': [
@@ -80,6 +82,7 @@ def populate():
             'actions':[]
         },
         {
+            'users':['greid@gmail.com',],
             'admin': 'Suzie Mulligan',
             'text': 'The following template might also help plan your childcare and carer responsibilities when you are back at work: ',
             'keywords': [
@@ -92,6 +95,7 @@ def populate():
             'actions':[]
         },
         {
+            'users':['greid@gmail.com',],
             'admin': 'Suzie Mulligan',
             'text': 'As you are looking for flexibility and a shorter working week (20hrs), we suggest the following job search sites: ',
             'keywords': [
@@ -108,6 +112,7 @@ def populate():
             'actions': []
         },
         {
+            'users':['greid@gmail.com',],
             'admin': 'Suzie Mulligan',
             'text': 'The following organisations are also well known for supporting flexible working and women returners so it is well worth checking their individual career pages too: ',
             'keywords':[
@@ -126,6 +131,7 @@ def populate():
             'actions':[]
         },
         {
+            'users':['greid@gmail.com', ],
             'admin': 'Suzie Mulligan',
             'text': 'To support ongoing career progression and to help with challenges such as learning new skills, regaining confidence and adapting to workplace cultures, we are strong advocates of creating a support network.',
             'keywords':[
@@ -139,6 +145,7 @@ def populate():
             'actions':[]
         },
         {
+            'users':['greid@gmail.com',],
             'admin': 'Suzie Mulligan',
             'text': 'We would like to offer you a free coaching session or put you in touch with one of our associate coaches/mentors so please send us a note if you would like to discuss that further - info@vilosky.com.' ,
             'keywords':[],
@@ -148,6 +155,7 @@ def populate():
 
         #the following paragraphs have actions and form an action plan
         {
+            'users':['greid@gmail.com',],
             'admin':'Suzie Mulligan',
             'text': 'Next few weeks:',
             'keywords':[
@@ -159,12 +167,13 @@ def populate():
                 {'url':'https://www.udemy.com/topic/financial-risk-manager-frm/'}
             ],
             'actions':[
-                {'title':'Decide what you want from your next role.', 'iscompleted': True},
-                {'title': 'List your amazing skills and experience in the finance and risk management sector.', 'iscompleted':True},
-                {'title': 'Start working on some Udemy finance courses to refresh your memory and gain confidence.', 'iscompleted':True},
+                {'title':'Decide what you want from your next role.'},
+                {'title': 'List your amazing skills and experience in the finance and risk management sector.'},
+                {'title': 'Start working on some Udemy finance courses to refresh your memory and gain confidence.'},
             ],
         },
         {
+            'users':['greid@gmail.com',],
             'admin': 'Suzie Mulligan',
             'text': '1+ months:',
             'keywords':[
@@ -177,14 +186,15 @@ def populate():
                 {'url':'https://www.facebook.com/Accounting-and-Finance-Webinar-Series-199716536749210/'}
             ],
             'actions':[
-                {'title':'Complete the Udemy courses you started.', 'iscompleted':False},
-                {'title':'Attend a webinar on Risk Management, or some networking events.', 'iscompleted':False},
-                {'title': 'Start compiling a list of employers and vacances, look at companies such as RBS.', 'iscompleted': False},
-                {'title': 'Update your CV - refer to Helen for CV advice', 'iscompleted': False},
-                {'title': 'Start your search', 'iscompleted':False}
+                {'title':'Complete the Udemy courses you started.'},
+                {'title':'Attend a webinar on Risk Management, or some networking events.'},
+                {'title': 'Start compiling a list of employers and vacances, look at companies such as RBS.'},
+                {'title': 'Update your CV - refer to Helen for CV advice'},
+                {'title': 'Start your search'}
             ]
         },
         {
+            'users':['greid@gmail.com',],
             'admin':'Suzie Mulligan',
             'text':'6 months:',
             'keywords':[],
@@ -193,16 +203,17 @@ def populate():
                 {'url':'https://www.careercast.com/job-hunting-advice'}
             ],
             'actions':[
-                {'title':'If the ideal role has not yet appeared, give yourself a few week’s break. It’s hard work, full of ups and downs, but the right role will turn up. The following might help you at this point:', 'iscompleted':False}
+                {'title':'If the ideal role has not yet appeared, give yourself a few week’s break. It’s hard work, full of ups and downs, but the right role will turn up. The following might help you at this point:'}
             ]
         },
         {
+            'users':['greid@gmail.com',],
             'admin':'Suzie Mulligan',
             'text':'7 months:',
             'keywords':[],
             'links':[],
             'actions':[
-                {'title':'Back to it!', 'iscompleted':False}
+                {'title':'Back to it!'}
             ]
         }
     ]
@@ -540,7 +551,7 @@ def populate():
                     lnk.save()
 
                 for action in paragraph['actions']:
-                    act = Action.objects.get_or_create(paragraph = pg_fk, title = action['title'], completed = action['completed'])[0]
+                    act = Action.objects.get_or_create(paragraph = pg_fk, title = action['title'])[0]
                     act.save()
                 
             #each input has corresponding partial inputs, each partial
@@ -574,17 +585,44 @@ def populate():
                     partial_inp.save()
 
 
+
+    #creating reports
+
     reports = [
         {
             'user': 'greid@gmail.com',
             'datetime_created': datetime.date(2021, 11, 1),
-            'paragraphs':[]
-        }
+        },
         ]
 
     for report in reports:
-        rep = Report.objects.get_or_create(paragraph = report['paragraph'], user = 'user')[0]
+        report_paragraphs = report['paragraphs']
+        rep = Report.objects.get_or_create(user = report['user'], datetime_created = report['datetime_created'])[0]
         rep.save()
+
+        #now we have saved the report, we can add paragraphs to it
+        for text in paragraphs:
+
+            #added users to the paragraph dict for ease of populating database
+            if 'greid@gmail.com' in text['users']:
+                #wherever a paragphs user contains gemmas email, add the paragraoh to her report
+                user_paragraph = Paragraph.objects.get(static_text = text['text'])
+                rep.paragraphs.add(user_paragraph)
+
+                #each action in this paragaph will then become a user action, linked to this report
+                for actions in text['actions']:
+                    user_action = UserAction.objects.get_or_create(report = rep, title = actions['title'], is_completed = False)[0]
+
+
+
+
+        for paragraph in report_paragraphs:
+            for action in paragraph['actions']:
+                #get current report for foreign key - use the date time to fecth the correct one (unique)
+                cur_report = Report.objetcs.get(datetime_created = report['datetime_created'])
+                user_act = Action.objects.get_or_create(report = cur_report, title = action['title'], is_completed = action['is_complete'])[0]
+                user_act.save()
+
 
 if __name__ == '__main__':
     print('Starting population script...')
