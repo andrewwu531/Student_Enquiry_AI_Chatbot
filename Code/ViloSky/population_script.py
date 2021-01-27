@@ -1,5 +1,6 @@
 import os
 import datetime
+import pytz
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE','ViloSky.settings')
 
@@ -8,7 +9,8 @@ django.setup()
 
 from ViloSkyApp.models import CustomUser, UserProfile, Qualification, Keyword, Link, Paragraph, Report, Action, AdminInput, DropdownAdminInput, CheckboxAdminInput, TextAdminInput, TextareaAdminInput, Session, PartialInput, UserAction
 from django.contrib.auth import get_user_model
-
+from django.utils import timezone
+timezone.now()
 
 User = get_user_model()
 
@@ -227,7 +229,7 @@ def populate():
             'label': 'Name',
             'input_type': AdminInput.AdminInputTypes.TEXT,
             'is_required': True,
-            'maxlength': 50,
+            'max_length': 50,
             'partial_inputs': [
                 {'created_by': 'greid@gmail.com', 'value': 'Gemma Reid'},
             ]
@@ -270,7 +272,8 @@ def populate():
             'choices': [],
             'partial_inputs':[
                 {'created_by': 'greid@gmail.com', 'value': ''},
-            ]
+            ],
+            'max_length': None,
         },
         {
             'created_by': 'suzieMul23@gmail.com',
@@ -351,7 +354,7 @@ def populate():
             'label': 'Hours per week you want to work:',
             'input_type': AdminInput.AdminInputTypes.TEXT,
             'is_required': True,
-            'maxlength': 50,
+            'max_length': 50,
             'partial_inputs': [
                 {'created_by': 'greid@gmail.com', 'value': '20'},
             ]
@@ -379,140 +382,140 @@ def populate():
     profiles = [
         {
             'user': 'greid@gmail.com',
-            'date_of_birth': datetime.date(1980, 10, 5),
+            'date_of_birth': datetime.datetime(1980, 10, 5, tzinfo=pytz.UTC),
             'is_vilosky_admin': False,
             'is_hr_representative': False,
             'company': 'Tesco Bank',
             'employment_sector': 'Banking&Finance',
             'employment_status': 'unemployed/volounteer',
-            'time_worked_in_industry': '3-5 years',
+            'time_worked_in_industry': UserProfile.TimeWorkedTypes.THREE_TO_FIVE_YEARS,
             'qualifications': [
-                {'level': 'MS', 'subject': 'Mathematics & Finance'},
-                {'level': 'HighSchool', 'subject': 'Mathematics'},
-                {'level': 'HighSchool', 'subject': 'Physics'},
-                {'level': 'HighSchool', 'subject': 'Chemistry'}
+                {'level': 'MS', 'subjects': 'Mathematics & Finance'},
+                {'level': 'HighSchool', 'subjects': 'Mathematics'},
+                {'level': 'HighSchool', 'subjects': 'Physics'},
+                {'level': 'HighSchool', 'subjects': 'Chemistry'}
             ],
             'paragraphs': [],
             'inputs':[],
             'sessions':[
-                {'page': 'Home', 'time': datetime.time(
-                    0, 5, 10), 'clicks': 20},
-                {'page': 'Register', 'time': datetime.time(
-                    0, 3, 15), 'clicks': 13},
-                {'page': 'Input Page', 'time': datetime.time(
-                    0, 15, 0), 'clicks': 40},
-                {'page': 'Dashboard', 'time': datetime.time(
-                    0, 25, 30), 'clicks': 20},
+                {'page': 'Home', 'time': datetime.timedelta(
+                    minutes=5, seconds=10), 'clicks': 20},
+                {'page': 'Register', 'time': datetime.timedelta(
+                    minutes=3, seconds=15), 'clicks': 13},
+                {'page': 'Input Page', 'time': datetime.timedelta(
+                    minutes=15), 'clicks': 40},
+                {'page': 'Dashboard', 'time': datetime.timedelta(
+                    minutes=25, seconds=30), 'clicks': 20},
             ]
         },
         {
             'user': 'muhammadA123@gmail.com',
-            'date_of_birth': datetime.date(1989, 6, 11),
+            'date_of_birth': datetime.datetime(1989, 6, 11, tzinfo=pytz.UTC),
             'is_vilosky_admin': False,
             'is_hr_representative': False,
             'company': 'Urban Outfitters',
             'employment_sector': 'Retail',
-            'emploment_status': 'Unemployed',
-            'time_worked_in_industry': '7-12 Months',
+            'employment_status': 'Unemployed',
+            'time_worked_in_industry': UserProfile.TimeWorkedTypes.SEVEN_TO_TWELVE_MONTHS,
             'qualifications': [
-                {'level': 'Modern Apprentice', 'subject': 'Retail Skills'},
-                {'level': 'HighSchool', 'subject': 'English'},
-                {'level': 'HighSchool', 'subject': 'Drama'},
-                {'level': 'HighSchool', 'subject': 'Musics'}
+                {'level': 'Modern Apprentice', 'subjects': 'Retail Skills'},
+                {'level': 'HighSchool', 'subjects': 'English'},
+                {'level': 'HighSchool', 'subjects': 'Drama'},
+                {'level': 'HighSchool', 'subjects': 'Musics'}
             ],
             'paragraphs': [],
             'inputs':[],
             'sessions':[
-                {'page': 'Home Page', 'time': datetime.time(
-                    0, 5, 10), 'clicks': 5},
-                {'page': 'Login', 'time': datetime.time(
-                    0, 2, 5), 'clicks': 10},
-                {'page': 'Dashboard', 'time': datetime.time(
-                    0, 20, 10), 'clicks': 30}
+                {'page': 'Home Page', 'time': datetime.timedelta(
+                    minutes=5, seconds=10), 'clicks': 5},
+                {'page': 'Login', 'time': datetime.timedelta(
+                    minutes=2, seconds=5), 'clicks': 10},
+                {'page': 'Dashboard', 'time': datetime.timedelta(
+                    minutes=20, seconds=15), 'clicks': 30}
             ]
         },
         {
             'user': 'ovensS99@yahoo.co.uk',
-            'date_of_birth': datetime.date(1976, 7, 21),
-            'is_viloky_admin': False,
+            'date_of_birth': datetime.datetime(1976, 7, 21, tzinfo=pytz.UTC),
+            'is_vilosky_admin': False,
             'is_hr_representative': True,
             'company': 'JP Morgan',
             'employment_sector': 'IT',
             'employment_status': 'Employed',
-            'time_worked_in_industry': '5-10 Years',
+            'time_worked_in_industry': UserProfile.TimeWorkedTypes.FIVE_TO_TEN_YEARS,
             'qualifications': [
-                {'level': 'UD', 'subject': 'Computer Science'},
-                {'level': 'HighSchool', 'subject': 'Mathematics'},
-                {'level': 'HighSchool', 'subject': 'Physics'},
-                {'level': 'HighSchool', 'subject': 'Computer Science'}
+                {'level': 'UD', 'subjects': 'Computer Science'},
+                {'level': 'HighSchool', 'subjects': 'Mathematics'},
+                {'level': 'HighSchool', 'subjects': 'Physics'},
+                {'level': 'HighSchool', 'subjects': 'Computer Science'}
             ],
             'paragraphs': [],
             'inputs':[],
             'sessions':[
-                {'page': 'Home Page', 'time': datetime.time(
-                    0, 12, 10), 'clicks': 10},
-                {'page': 'Register', 'time': datetime.time(
-                    0, 7, 10), 'clicks': 15},
-                {'page': 'My Account', 'time': datetime.time(
-                    0, 10, 10), 'clicks': 30},
-                {'page': 'Dashboard', 'time': datetime.time(
-                    0, 30, 30), 'clicks': 100},
+                {'page': 'Home Page', 'time': datetime.timedelta(
+                    minutes=12, seconds=10), 'clicks': 10},
+                {'page': 'Register', 'time': datetime.timedelta(
+                    minutes=7, seconds=10), 'clicks': 15},
+                {'page': 'My Account', 'time': datetime.timedelta(
+                    minutes=10, seconds=10), 'clicks': 30},
+                {'page': 'Dashboard', 'time': datetime.timedelta(
+                    minutes=13, seconds=13), 'clicks': 100},
             ],
         },
         {
             'user': 'marinelli76@hotmail.com',
-            'date_of_birth': datetime.date(1992, 12, 6),
+            'date_of_birth': datetime.datetime(1992, 12, 6, tzinfo=pytz.UTC),
             'is_vilosky_admin': False,
             'is_hr_representative': False,
-            'company': None,
+            'company': "",
             'employment_sector': 'Construction',
             'employment_status': 'Unemployed',
-            'time_worked_in_industry': '0',
+            'time_worked_in_industry': UserProfile.TimeWorkedTypes.NO_EXPERIENCE,
             'qualifications': [
-                {'level': 'HighSchool', 'subject': 'Woodwork'},
-                {'level': 'HighSchool', 'subject': 'Physics'},
-                {'level': 'HighSchool', 'subject': 'Spanish'},
-                {'level': 'HighSchool', 'subject': 'Physical Education'}
+                {'level': 'HighSchool', 'subjects': 'Woodwork'},
+                {'level': 'HighSchool', 'subjects': 'Physics'},
+                {'level': 'HighSchool', 'subjects': 'Spanish'},
+                {'level': 'HighSchool', 'subjects': 'Physical Education'}
             ],
             'paragraphs': [],
             'inputs':[],
             'sessions':[
-                {'page': 'Login', 'time': datetime.time(
-                    0, 1, 15), 'clicks': 7},
-                {'page': 'Home Page', 'time': datetime.time(
-                    0, 12, 25), 'clicks': 17},
-                {'page': 'Dashboard', 'time': datetime.time(
-                    0, 15, 30), 'clicks': 18},
-                {'page': 'My Account', 'time': datetime.time(
-                    0, 3, 25), 'clicks': 7},
+                {'page': 'Login', 'time': datetime.timedelta(
+                    minutes=1, seconds=15), 'clicks': 7},
+                {'page': 'Home Page', 'time': datetime.timedelta(
+                    minutes=12, seconds=25), 'clicks': 17},
+                {'page': 'Dashboard', 'time': datetime.timedelta(
+                    minutes=15, seconds=30), 'clicks': 18},
+                {'page': 'My Account', 'time': datetime.timedelta(
+                    minutes=3, seconds=25), 'clicks': 7},
             ]
         },
         {
             'user': 'suzieMul23@gmail.com',
-            'date_of_birth': datetime.date(1995, 11, 2),
+            'date_of_birth': datetime.datetime(1995, 11, 2, tzinfo=pytz.UTC),
             'is_vilosky_admin': True,
             'is_hr_representative': False,
             'company': 'ViloSky',
             'employment_sector': 'Consulting',
             'employment_status': 'Employed',
-            'time_worked_in_sector': '1-2 Years',
+            'time_worked_in_industry': UserProfile.TimeWorkedTypes.ONE_TO_TWO_YEARS,
             'qualifications': [
-                {'level': 'MS', 'subject': 'Law'},
-                {'level': 'HighSchool', 'subject': 'English'},
-                {'level': 'HighSchool', 'subject': 'Spanish'},
-                {'level': 'HighSchool', 'subject': 'Biology'}
+                {'level': 'MS', 'subjects': 'Law'},
+                {'level': 'HighSchool', 'subjects': 'English'},
+                {'level': 'HighSchool', 'subjects': 'Spanish'},
+                {'level': 'HighSchool', 'subjects': 'Biology'}
             ],
             'paragraphs': paragraphs,
             'inputs': admin_input,
             'sessions': [
-                {'page': 'Login', 'time': datetime.time(
-                    0, 3, 45), 'clicks': 10},
-                {'page': 'Admin Input', 'time': datetime.time(
-                    0, 45, 0), 'clicks': 50},
-                {'page': 'Home Page', 'time': datetime.time(
-                    0, 1, 25), 'clicks': 13},
-                {'page': 'My Account', 'time': datetime.time(
-                    0, 4, 0), 'clicks': 23},
+                {'page': 'Login', 'time': datetime.timedelta(
+                    minutes=3, seconds=45), 'clicks': 10},
+                {'page': 'Admin Input', 'time': datetime.timedelta(
+                    minutes=45), 'clicks': 50},
+                {'page': 'Home Page', 'time': datetime.timedelta(
+                    minutes=1, seconds=25), 'clicks': 13},
+                {'page': 'My Account', 'time': datetime.timedelta(
+                    minutes=4), 'clicks': 23},
             ]
         }
     ]
@@ -537,16 +540,17 @@ def populate():
         p.save()
 
         # get the user object we just saved for foregin keys for qualifications and sessions
-        user_p = UserProfile.objects.get(profile['user'])
+        user_p = UserProfile.objects.get(
+            user=User.objects.get(email=profile['user']))
 
         for qualification in profile['qualifications']:
             qual = Qualification.objects.get_or_create(
-                user=user_p, level=qualification['level'], subject=qualification['subject'])[0]
+                user=user_p, level=qualification['level'], subjects=qualification['subjects'])[0]
             qual.save()
 
         for session in profile['sessions']:
-            ses = Session.objects.get_orCreate(
-                user=user_p, page=session['page'], time_spent_on_page=session['time'], clicks_on_page=session['clicks'])
+            ses = Session.objects.get_or_create(
+                user=user_p, page=session['page'], time_spent_on_page=session['time'], clicks_on_page=session['clicks'])[0]
             ses.save()
 
         # if the user is an admin, create paragraphs with foreign key as this user
@@ -555,7 +559,8 @@ def populate():
         if is_admin:
             for paragraph in paragraphs:
 
-                admin = UserProfile.objects.get(profile[user_p])
+                admin = UserProfile.objects.get(
+                    user=User.objects.get(email=profile['user']))
                 pgph = Paragraph.objects.get_or_create(
                     created_by=admin, static_text=paragraph['text'])[0]
                 pgph.save()
@@ -586,25 +591,42 @@ def populate():
             for inputs in profile['inputs']:
                 admin = user_p
                 inp_type = inputs['input_type']
-                curr_input = AdminInput.objects.get(label=inputs['label'])
 
                 inp = AdminInput.objects.get_or_create(
                     created_by=admin, label=inputs['label'], input_type=inputs['input_type'], is_required=inputs['is_required'])[0]
                 inp.save()
 
+                curr_input = inp
+
                 # depending on the input type of the input, create new object which as a one to one relationship with parent input
                 if inp_type == AdminInput.AdminInputTypes.TEXT:
                     user_input = TextAdminInput.objects.get_or_create(
-                        admin_input=curr_input, max_length=inputs['maxlength'])[0]
+                        admin_input=curr_input,
+                        is_required=inputs['is_required'],
+                        label=inputs['label'],
+                        input_type=inputs['input_type'],
+                        created_by=admin, max_length=inputs['max_length'])[0]
                 elif inp_type == AdminInput.AdminInputTypes.TEXTAREA:
                     user_input = TextareaAdminInput.objects.get_or_create(
-                        admin_input=curr_input, max_length=inputs['maxlength'])[0]
+                        admin_input=curr_input,
+                        is_required=inputs['is_required'],
+                        label=inputs['label'],
+                        input_type=inputs['input_type'],
+                        created_by=admin, max_length=inputs['max_length'])[0]
                 elif inp_type == AdminInput.AdminInputTypes.CHECKBOX:
                     user_input = CheckboxAdminInput.objects.get_or_create(
-                        admin_input=curr_input, default_value=False)[0]
+                        admin_input=curr_input,
+                        is_required=inputs['is_required'],
+                        label=inputs['label'],
+                        input_type=inputs['input_type'],
+                        created_by=admin, default_value=False)[0]
                 elif inp_type == AdminInput.AdminInputTypes.DROPDOWN:
                     user_input = DropdownAdminInput.objects.get_or_create(
-                        admin_input=curr_input, choices=inputs['choices'])[0]
+                        admin_input=curr_input,
+                        is_required=inputs['is_required'],
+                        label=inputs['label'],
+                        input_type=inputs['input_type'],
+                        created_by=admin, choices=inputs['choices'])[0]
 
                 user_input.save()
 
@@ -613,7 +635,7 @@ def populate():
                 # created_by_user is a foreign key which uses the given email in 'created_by' key of dict
                 for partial_input in inputs['partial_inputs']:
                     created_by_user = UserProfile.objects.get(
-                        user=partial_input['created_by'])
+                        user=User.objects.get(email=partial_input['created_by']))
                     partial_inp = PartialInput.objects.get_or_create(
                         created_by=created_by_user, admin_input=curr_input, value=partial_input['value'])[0]
                     partial_inp.save()
@@ -623,7 +645,7 @@ def populate():
     reports = [
         {
             'user': 'greid@gmail.com',
-            'datetime_created': datetime.date(2021, 11, 1),
+            'datetime_created': datetime.datetime(2021, 11, 1, tzinfo=pytz.UTC),
         },
     ]
 
@@ -631,7 +653,7 @@ def populate():
 
         # create report object with user and datetime
         rep = Report.objects.get_or_create(
-            user=report['user'], datetime_created=report['datetime_created'])[0]
+            user=UserProfile.objects.get(user=User.objects.get(email=report['user'])), datetime_created=report['datetime_created'])[0]
         rep.save()
 
         # now we have saved the report, we can add paragraphs to it
