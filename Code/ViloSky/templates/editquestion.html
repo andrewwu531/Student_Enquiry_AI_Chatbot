@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block bodyblock%}
+<div class="divbackground widediv">
+    <div class="largeText whiteText centerText">
+        Question
+        <input name="question" type="text" class="form-control" value="What best describes your current work barriers?" required>
+    </div>
+    <div class="largeText whiteText centerText">
+        Answer type
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-primary btn-block">Single choice</button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-primary btn-block">Multiple choice</button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-primary btn-block">Number</button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-primary btn-block">Text area</button>
+            </div>
+        </div>
+    </div>
+    <div class="centerText whiteText largeText">
+        Choices
+        <input name="answer" type="text" class="form-control bottommargin" value="Some" required>
+        <input name="answer" type="text" class="form-control bottommargin" value="Thing" required>
+        <input name="answer" type="text" class="form-control bottommargin" value="Here" required>
+        <button type="button" class="btn btn-primary btn-block bottommargin">Add new answer</button>
+    </div>
+
+    <div class="centerText">
+        <div class="row">
+            <div class = col>
+                <button type="button" class="btn btn-primary btn-block">Go back</button>
+            </div>
+            <div class = col>
+                <button type="button" class="btn btn-primary btn-block">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}

@@ -1,0 +1,119 @@
+{% extends 'baseuser.html' %}
+{% load static %}
+
+{% block body%}
+    <div class="largeText whiteText centerText">
+        MyDetails
+    </div>
+    <form class="center">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    What best describes your current work barriers?
+                    <select class="form-control form-control-lg">
+                        <option>Stuff</option>
+                        <option>comes</option>
+                        <option>Here</option>
+                      </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    What best describes your current work situation?
+                    <select class="form-control form-control-lg">
+                        <option>Stuff</option>
+                        <option>comes</option>
+                        <option>Here</option>
+                      </select>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    Time since last paid work?
+                    <select class="form-control form-control-lg">
+                        <option>Stuff</option>
+                        <option>comes</option>
+                        <option>Here</option>
+                      </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    Do you have relevant formal qualifications in the area you are interested in?
+                    <select class="form-control form-control-lg">
+                        <option>Stuff</option>
+                        <option>comes</option>
+                        <option>Here</option>
+                      </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    Industry interested in?
+                    <select class="form-control form-control-lg">
+                        <option>Stuff</option>
+                        <option>comes</option>
+                        <option>Here</option>
+                      </select>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    Area of interest?
+                    <select class="form-control form-control-lg">
+                        <option>Stuff</option>
+                        <option>comes</option>
+                        <option>Here</option>
+                      </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    What would you like to achieve from your next role?
+                    <select class="form-control form-control-lg">
+                        <option>Stuff</option>
+                        <option>comes</option>
+                        <option>Here</option>
+                      </select>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    Hours per week you want to work?
+                    <input name="username" type="text" class="form-control"required>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    Tell us more about you:
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary btn-block">Create new report</button>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary btn-block">Save details</button>
+                </div>
+            </div>
+        </div>
+		
+        
+    </form>
+{%endblock%}
