@@ -111,3 +111,5 @@ media/
 ehthumbs.db
 Icon?
 Thumbs.db
+ViloSky/__pycache__/
+ViloSkyApp/__pycache__/
