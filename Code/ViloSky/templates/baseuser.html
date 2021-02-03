@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block bodyblock%}
+<div class="row">
+    <div class="col-lg-4">
+        <div class="divbackground">
+            <div class="largeText whiteText centerText">
+                My Profile
+            </div>
+            <img src="{% static 'images/user.png' %}" alt="Vilosky" class="centerImg">
+            <div class="row bottomborder center centerText">
+                <div class="col">
+                    Name
+                </div>
+                <div class="col">
+                    Gemma
+                </div>
+            </div>
+            <div class="row bottomborder center centerText">
+                <div class="col">
+                    Ethnicity
+                </div>
+                <div class="col">
+                    N/A
+                </div>
+            </div>
+            <div class="row bottomborder center centerText">
+                <div class="col">
+                    Sexual orientation
+                </div>
+                <div class="col">
+                    Female
+                </div>
+            </div>
+            <div class="row center centerText">
+                <div class="col">
+                    Physical/Mental ability
+                </div>
+                <div class="col">
+                    N/A
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="divbackground">
+            {% block body %}
+            {% endblock %}
+        </div>
+    </div>
+</div>>
+{%endblock%}

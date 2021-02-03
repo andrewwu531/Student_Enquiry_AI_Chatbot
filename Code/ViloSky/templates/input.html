@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block bodyblock%}
+<div class="divbackground widediv">
+    <div class="largeText whiteText centerText">
+        Edit inputs
+    </div>
+    <a href="{% url 'editquestion' %}">What best describes your current work barriers?</a></br>
+    <a href="{% url 'editquestion' %}">Time since last paid work</a></br>
+    <a href="{% url 'editquestion' %}">What best describes your current work situation?</a></br>
+    <a href="{% url 'editquestion' %}">Industry interested in</a></br>
+    <a href="{% url 'editquestion' %}">Tell us more about you:</a></br>
+    <button type="input" class="btn btn-primary btn-block">Add new field</button>
+</div>
+{%endblock%}

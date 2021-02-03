@@ -28,6 +28,16 @@ class UserProfile(models.Model):
         * sessions_made = All sessions made by the user while logged in.
         * partial_input_created = All partial inputs created by the user.
     """
+    class TimeWorkedTypes(models.TextChoices):
+        """ A class containing all possible admin input types"""
+        NO_EXPERIENCE = 'No experience'
+        ONE_TO_SIX_MONTHS = '1-6 Months'
+        SEVEN_TO_TWELVE_MONTHS = '7-12 Months'
+        ONE_TO_TWO_YEARS = '1-2 Years'
+        THREE_TO_FIVE_YEARS = '3-5 Years'
+        FIVE_TO_TEN_YEARS = '5-10 Years'
+        TEN_PLUS_YEARS = '10+ Years'
+
     user = models.OneToOneField(
         CustomUser, on_delete=models.CASCADE, related_name='user_profile')
     is_vilosky_admin = models.BooleanField(default=False)
@@ -36,7 +46,8 @@ class UserProfile(models.Model):
     company = models.CharField(max_length=255, blank=True)
     employment_sector = models.CharField(max_length=255, blank=True)
     employment_status = models.CharField(max_length=255, blank=True)
-    time_worked_in_industry = models.DurationField(null=True, blank=True)
+    time_worked_in_industry = models.CharField(
+        blank=True, choices=TimeWorkedTypes.choices, max_length=255)
 
 
 class Qualification(models.Model):

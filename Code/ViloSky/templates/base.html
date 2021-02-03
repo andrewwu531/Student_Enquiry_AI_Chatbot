@@ -1,0 +1,172 @@
+<html lang="en">
+<!--source for sidebar : https://bootstrapious.com/tutorial/sidebar/index2.html
+https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2RhnKP51_P0zGRG-L2vw93iY4IrUbDCiEKYqvy9kuQEsaM#voorbeelden
+-->
+{% load static %}  
+<head>
+    <meta charset="utf-8">
+
+    <title>Vilosky</title>
+    <meta name="description" content="ViloSky">
+    <meta name="author" content="SitePoint">
+
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/stylesheets/style.css">
+
+    <!-- Scrollbar Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
+
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!--navbar-->
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav class="customnav" id="sidebar">
+            <div class="sidebar-header">
+              <img src="{% static 'images/logo.png' %}" alt="Vilosky" width="150" height="95">
+            </div>
+
+            <ul class="list-unstyled components">
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'login' %}">Login</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'register' %}">Register</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'report' %}">Report</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'input' %}">Input</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'output' %}">Output</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'data' %}">Data</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'mydetails' %}">MyDetails</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'myactions' %}">MyActions</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'roles' %}">Roles</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Logout</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Page Content  -->
+        <div class="content" id="content">
+                    <button type="button" class="hamburger animated fadeInLeft is-open" data-toggle="offcanvas">
+                      <span class="hamb-top"></span>
+                      <span class="hamb-middle"></span>
+                      <span class="hamb-bottom"></span>
+                    </button>
+
+
+            <div class="sitecontent" id="sitecontent">
+              {% block bodyblock %}
+              {% endblock %}
+              <div class="divbackground footerdiv">
+                <div class="row">
+                  <div class="col-md-2">Tel.:</div>
+                  <div class="col-md-5">07895 086 134</div>
+                  <div class="col-md-5">07817 545 525</div>
+                </div>
+                <div class="row">
+                  Vilo Sky C.I.C. is a company incorporated in Scotland with company number SC586949.          
+                  ICO Reference - ZA738970
+                </div>
+                <div class="row">
+                  Copyright © 2018 onwards Vilo Sky C.I.C.                
+                  All rights reserved.
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <!--Bootstrap scripts-->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  
+ <!-- jQuery Custom Scroller CDN -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+ <script type="text/javascript">
+  $(document).ready(function () {
+
+    $("#sidebar").mCustomScrollbar({
+          theme: "minimal"
+      });
+    var trigger = $('.hamburger'),
+      overlay = $('.overlay'),
+     isClosed = true;
+     var screensize = window.matchMedia("(max-width: 768px)");
+      screensize.addListener(checkContentVisible);
+    trigger.click(function () {
+      hamburger_cross();      
+    });
+
+    function checkContentVisible(x){//adjust content visibility in mobile view, if sidebar is expanded content is invisible
+      var content = $('.sitecontent');
+      if(x.matches){
+        if(isClosed){
+          content.removeClass('content-invisible');
+          content.addClass('content-visible');
+        }else{
+          content.removeClass('content-visible');
+          content.addClass('content-invisible');
+        }
+      }else{
+        content.removeClass('content-invisible');
+        content.addClass('content-visible');
+      }
+    }
+    function hamburger_cross() {//responsible for hamburger animations
+      if (isClosed == true) {          
+        $('#sidebar, #content').toggleClass('active');
+          $('.collapse.in').toggleClass('in');
+          $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        trigger.removeClass('is-open');
+        trigger.addClass('is-closed');
+        isClosed = false;
+      } else {   
+        $('#sidebar, #content').toggleClass('active');
+          $('.collapse.in').toggleClass('in');
+          $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        trigger.removeClass('is-closed');
+        trigger.addClass('is-open');
+        isClosed = true;
+      }
+      checkContentVisible(screensize);
+  }
+  $('[data-toggle="offcanvas"]').click(function () {
+        $('#wrapper').toggleClass('toggled');
+  });  
+});
+</script>
+<!--listener to adjust sidebar-->
+<script>
+  
+  </script>
+</body>
+</html>
