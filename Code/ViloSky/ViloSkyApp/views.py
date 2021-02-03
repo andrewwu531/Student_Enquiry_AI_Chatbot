@@ -7,6 +7,9 @@ from plotly.offline import plot
 import plotly.graph_objs as go
 from random import randint
 from random import uniform
+from django.http import request
+from .forms import ReportForm
+from .models import UserProfile, Report
 # Create your views here.
 def index(request):
     return render(request, 'index.html', {}) 
@@ -44,6 +47,22 @@ def editquestion(request):
 def outputdetails(request):
     return render(request, 'outputdetails.html', {}) 
 
+def createReport(request):
+    form = ReportForm()
+    if request.method == 'POST':
+        if form.is_valid():
+            instance = Report()
+            instance.datetime = request.POST['datetime_created']
+            instance.user = User.objects.get(username = request.user.username) 
+            return redirect('ViloSkyApp::report')
+    else:
+        print(form.errors)
+    context = {
+        'form' : form
+    }
+    return render(request, 'mydetails.html', context)
+
+    
 def data(request):
     visitors = []
     registered_users = []
