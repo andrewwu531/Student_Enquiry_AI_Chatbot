@@ -8,7 +8,9 @@ import plotly.graph_objs as go
 from random import randint
 from random import uniform
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as ulogin
+from django.contrib.auth import logout as ulogout
 from django.contrib.auth.decorators import login_required
 import ViloSkyApp.models
 from ViloSkyApp.forms import UserForm
@@ -17,6 +19,22 @@ def index(request):
     return render(request, 'index.html', {}) 
 
 def login(request):
+    context_dict = {}
+    if not request.user.is_authenticated:
+        if request.method == 'POST':
+            email = request.POST.get('email')
+            password = request.POST.get('password')
+            user = authenticate(username = email, password = password)
+            if user:
+                ulogin(request, user)
+                return redirect(reverse('dashboard'))
+            else:
+                messages.error(request, "Email or password is incorrect")
+                return redirect(reverse('login'))
+        else:
+            return render(request, 'login.html', context_dict)
+    else:
+        return redirect(reverse('dashboard'))
     return render(request, 'login.html', {}) 
 
 def register(request):
@@ -46,33 +64,48 @@ def register(request):
     else:
         return redirect(reverse('dashboard'))
 
+@login_required(login_url='login')
+def user_logout(request):
+    ulogout(request)
+    return redirect(reverse('index'))
+
+@login_required(login_url='login')
 def dashboard(request):
     return render(request, 'dashboard.html', {}) 
-    
+
+@login_required(login_url='login')    
 def mydetails(request):
     return render(request, 'mydetails.html', {}) 
 
+@login_required(login_url='login')
 def myactions(request):
     return render(request, 'myactions.html', {}) 
 
+@login_required(login_url='login')
 def report(request):
     return render(request, 'report.html', {}) 
 
+@login_required(login_url='login')
 def roles(request):
     return render(request, 'roles.html', {}) 
 
+@login_required(login_url='login')
 def input(request):
     return render(request, 'input.html', {}) 
 
+@login_required(login_url='login')
 def output(request):
     return render(request, 'output.html', {}) 
 
+@login_required(login_url='login')
 def editquestion(request):
     return render(request, 'editquestion.html', {}) 
 
+@login_required(login_url='login')
 def outputdetails(request):
     return render(request, 'outputdetails.html', {}) 
 
+@login_required(login_url='login')
 def data(request):
     visitors = []
     registered_users = []
