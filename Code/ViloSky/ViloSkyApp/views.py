@@ -7,6 +7,11 @@ from plotly.offline import plot
 import plotly.graph_objs as go
 from random import randint
 from random import uniform
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+import ViloSkyApp.models
+from ViloSkyApp.forms import UserForm
 # Create your views here.
 def index(request):
     return render(request, 'index.html', {}) 
@@ -15,7 +20,31 @@ def login(request):
     return render(request, 'login.html', {}) 
 
 def register(request):
-    return render(request, 'register.html', {}) 
+    if not request.user.is_authenticated:
+        registered = False
+        if request.method == 'POST':
+            user_form = UserForm(request.POST)
+            if user_form.is_valid():
+                user = user_form.save()
+                user.set_password(user.password)
+                user.save()
+                if request.POST.get('tos') != "on":
+                    user.delete()
+                    messages.error(request, "You must accept the TOS and Privacy Policy in order to register.")
+                elif request.POST.get('password') != request.POST.get('confirm_password'):
+                    user.delete()
+                    messages.error(request, "The passwords provided do not match.")
+                else:
+                    registered = True
+        else:
+            user_form = UserForm()
+        context_dict = {
+            'user_form' : user_form,
+            'registered' : registered,
+        }
+        return render(request, 'register.html', context_dict)
+    else:
+        return redirect(reverse('dashboard'))
 
 def dashboard(request):
     return render(request, 'dashboard.html', {}) 
