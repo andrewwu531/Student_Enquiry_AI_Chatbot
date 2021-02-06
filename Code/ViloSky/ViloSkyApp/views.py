@@ -7,6 +7,10 @@ from plotly.offline import plot
 import plotly.graph_objs as go
 from random import randint
 from random import uniform
+from ViloSkyApp.models import AdminInput, CustomUser, UserProfile
+from .forms import UserProfileForm
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 def index(request):
     return render(request, 'index.html', {}) 
@@ -20,8 +24,18 @@ def register(request):
 def dashboard(request):
     return render(request, 'dashboard.html', {}) 
     
+def baseuser(request):
+    quals = Qualification.objects.get(user=request.user)
+    contexts_dict = {'qualifications': quals}
+    return render(request, 'baseuser.html', context=contexts_dict)
+
 def mydetails(request):
-    return render(request, 'mydetails.html', {}) 
+    user_form = UserProfileForm(request.POST)
+    if user_form.is_valid():
+        user_form.save()
+    inputs = AdminInput.objects.all()
+    context_dict = {'questions':inputs, 'user_form':user_form}
+    return render(request, 'myDetails.html', context= context_dict) 
 
 def myactions(request):
     return render(request, 'myactions.html', {}) 

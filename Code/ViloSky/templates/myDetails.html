@@ -6,114 +6,50 @@
         MyDetails
     </div>
     <form class="center">
-        {% csrf_token %}
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    What best describes your current work barriers?
-                    <select class="form-control form-control-lg">
-                        <option>Stuff</option>
-                        <option>comes</option>
-                        <option>Here</option>
-                      </select>
-                </div>
+        {% csrf_token %} 
+
+        {{ user_form.as_p }}
+        <div class="col">
+            <div class="form-group">
+                <button type="button" class="btn btn-primary btn-block">Save details</button>
             </div>
         </div>
-        <div class="row">
+         {% if questions %}
+         {% for question in questions %}
+
+         <div class="row">
             <div class="col">
                 <div class="form-group">
-                    What best describes your current work situation?
+                    {{ question.label }}
+
+                    {% if question.input_type == 'DROPDOWN' %}
                     <select class="form-control form-control-lg">
-                        <option>Stuff</option>
-                        <option>comes</option>
-                        <option>Here</option>
+                        {% for options in question.choices %}
+                        <option>option</option>
+                        {% endfor %}
                       </select>
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    Time since last paid work?
-                    <select class="form-control form-control-lg">
-                        <option>Stuff</option>
-                        <option>comes</option>
-                        <option>Here</option>
-                      </select>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    Do you have relevant formal qualifications in the area you are interested in?
-                    <select class="form-control form-control-lg">
-                        <option>Stuff</option>
-                        <option>comes</option>
-                        <option>Here</option>
-                      </select>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    Industry interested in?
-                    <select class="form-control form-control-lg">
-                        <option>Stuff</option>
-                        <option>comes</option>
-                        <option>Here</option>
-                      </select>
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    Area of interest?
-                    <select class="form-control form-control-lg">
-                        <option>Stuff</option>
-                        <option>comes</option>
-                        <option>Here</option>
-                      </select>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    What would you like to achieve from your next role?
-                    <select class="form-control form-control-lg">
-                        <option>Stuff</option>
-                        <option>comes</option>
-                        <option>Here</option>
-                      </select>
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    Hours per week you want to work?
+                    {% endif %}
+
+                    {% if question.input_type == 'TEXT' %}
                     <input name="username" type="text" class="form-control"required>
+                    {% endif %}
+                    
+                    {% if question.input_type == 'CHECKBOX' %}
+                    <br>
+                    <div class="form-check form-check-inline">
+                        <input type ="checkbox", id="true", name="true", value="Yes">
+    
+                    </div>
+                    {% endif %}
+
+                    {% if question.input_type == 'TEXTAREA' %}
+                    <input name="username" type="text" class="form-control"required>
+                    {% endif %}
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    Tell us more about you:
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    <button type="button" class="btn btn-primary btn-block">Create new report</button>
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    <button type="button" class="btn btn-primary btn-block">Save details</button>
-                </div>
-            </div>
-        </div>
-		
-        
+
+         {% endfor %}
+         {% endif %}
     </form>
 {%endblock%}

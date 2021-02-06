@@ -14,32 +14,59 @@
                     Name
                 </div>
                 <div class="col">
-                    Gemma
+                    {{user.first_name}}
                 </div>
             </div>
             <div class="row bottomborder center centerText">
                 <div class="col">
-                    Ethnicity
+                    D.O.B
                 </div>
                 <div class="col">
-                    N/A
+                    {{user.userprofile.date_of_birth}}
+                    
                 </div>
             </div>
             <div class="row bottomborder center centerText">
                 <div class="col">
-                    Sexual orientation
+                    Company
                 </div>
                 <div class="col">
-                    Female
+                    {{user.userprofile.company}}
+                </div>
+            </div>
+            <div class="row bottomborder center centerText">
+                <div class="col">
+                    Employmet Sector
+                </div>
+                <div class="col">
+                    {{user.userprofile.employment_sector}}
+                </div>
+            </div>
+            <div class="row bottomborder center centerText">
+                <div class="col">
+                    Employment Status
+                </div>
+                <div class="col">
+                    {{user.userprofile.employment_status}}
+                </div>
+            </div>
+            <div class="row bottomborder center centerText">
+                <div class="col">
+                    Time In Industry
+                </div>
+                <div class="col">
+                    {{user.userprofile.time_in_industry}}
                 </div>
             </div>
             <div class="row center centerText">
                 <div class="col">
-                    Physical/Mental ability
+                    Qualifications:
                 </div>
-                <div class="col">
-                    N/A
-                </div>
+                <div class="col"></div>
+                {% for q in qualifications %}
+                    {{q.level}}
+                    {{q.subjects}}
+                {% endfor %}
             </div>
         </div>
     </div>
