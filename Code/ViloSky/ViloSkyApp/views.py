@@ -30,11 +30,16 @@ def baseuser(request):
     return render(request, 'baseuser.html', context=contexts_dict)
 
 def mydetails(request):
-    user_form = UserProfileForm(request.POST)
-    if user_form.is_valid():
-        user_form.save()
-    inputs = AdminInput.objects.all()
-    context_dict = {'questions':inputs, 'user_form':user_form}
+    context_dict = {}
+    if request.method == 'POST':
+        p_form = UserProfileForm(request.POST, instance = request.user.user_profile)
+        if p_form.isvalid():
+            p_form.save()
+        else:
+            p_form = UserProfileForm(instance = request.user.user_profile)
+
+        inputs = AdminInput.objects.all()
+        context_dict = {'questions':inputs, 'p_form':p_form}
     return render(request, 'myDetails.html', context= context_dict) 
 
 def myactions(request):

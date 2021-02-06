@@ -3,12 +3,12 @@
 
 {% block body%}
     <div class="largeText whiteText centerText">
-        MyDetails
+        Update My Details
     </div>
     <form class="center">
         {% csrf_token %} 
 
-        {{ user_form.as_p }}
+        {{ p_form.as_p }}
         <div class="col">
             <div class="form-group">
                 <button type="button" class="btn btn-primary btn-block">Save details</button>
