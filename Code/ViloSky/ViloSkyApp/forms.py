@@ -1,5 +1,6 @@
 from django import forms
 from ViloSkyApp.models import CustomUser, UserProfile, Qualification
+from django.forms import modelformset_factory
 
 class UserProfileForm(forms.ModelForm):
 
@@ -19,4 +20,6 @@ class UserProfileForm(forms.ModelForm):
 class QualificationForm(forms.ModelForm):
     class Meta:
         model = Qualification
-        fields = ['user', 'level', 'subjects']
+        fields = ['level', 'subjects']
+
+#QualificationFormSet = modelformset_factory(QualificationForm, fields = ('user','level', 'subjects'), extra = 1)

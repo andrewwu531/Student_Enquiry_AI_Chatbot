@@ -31,17 +31,39 @@ def baseuser(request):
 
 def mydetails(request):
     context_dict = {}
+    p_form = ''
+    q_form = ''
     if request.method == 'POST':
         p_form = UserProfileForm(request.POST, instance = request.user.user_profile)
-        if p_form.isvalid():
+        q_form = QualificationForm(request.POST, instance = request.user.user_profile)
+        if p_form.is_valid():
             p_form.save()
         else:
             p_form = UserProfileForm(instance = request.user.user_profile)
+            
+        if q_form.is_valid():
+            q_form.save()
+        else:
+            q_form = QualificationForm(instance = request.user.user_profile)
+            
+        
 
-        inputs = AdminInput.objects.all()
-        context_dict = {'questions':inputs, 'p_form':p_form}
+    inputs = AdminInput.objects.all()
+    context_dict = {'questions':inputs, 'p_form':p_form, 'q_form':q_form}
     return render(request, 'myDetails.html', context= context_dict) 
 
+def add_qualifications(request):
+    if request.method == 'GET':
+        formset = QualificationFormSet(request.GET or None, instance = request.user.user_profile)
+    elif request.method == 'POST':
+        formset = QualificationFormSet(request.POST, instance = request.user.user_profile)
+        if formset.is_valid():
+            for form in formset:
+                level = form.cleaned_data.get('level')
+                subject = form.cleaned_data.get('subject')
+                Book(level=level, subject=subject).save()
+    return render(request, 'myDetails.html', {'formset':formset})
+    
 def myactions(request):
     return render(request, 'myactions.html', {}) 
 
