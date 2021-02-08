@@ -6,11 +6,11 @@
     <div class="largeText whiteText centerText">
         Login
     </div>
-    <form class="center">
+    <form class="center" method='post' action="{% url 'login' %}">
         {% csrf_token %}
         <div class="form-group">
 			<p>Username:</p>
-			<input name="username" type="text" class="form-control txtbox"required>
+			<input name="email" type="email" class="form-control txtbox" required>
 		</div>
 		<div class="form-group">
 			<p>Password:</p>

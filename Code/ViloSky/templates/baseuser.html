@@ -15,6 +15,7 @@
                 </div>
                 <div class="col">
                     {{user.first_name}}
+                    {{user.last_name}}
                 </div>
             </div>
             <div class="row bottomborder center centerText">
@@ -22,7 +23,7 @@
                     D.O.B
                 </div>
                 <div class="col">
-                    {{user.userprofile.date_of_birth}}
+                    {{user.user_profile.date_of_birth}}
                     
                 </div>
             </div>
@@ -31,7 +32,7 @@
                     Company
                 </div>
                 <div class="col">
-                    {{user.userprofile.company}}
+                    {{user.user_profile.company}}
                 </div>
             </div>
             <div class="row bottomborder center centerText">
@@ -39,7 +40,7 @@
                     Employmet Sector
                 </div>
                 <div class="col">
-                    {{user.userprofile.employment_sector}}
+                    {{user.user_profile.employment_sector}}
                 </div>
             </div>
             <div class="row bottomborder center centerText">
@@ -47,7 +48,7 @@
                     Employment Status
                 </div>
                 <div class="col">
-                    {{user.userprofile.employment_status}}
+                    {{user.user_profile.employment_status}}
                 </div>
             </div>
             <div class="row bottomborder center centerText">
@@ -55,7 +56,7 @@
                     Time In Industry
                 </div>
                 <div class="col">
-                    {{user.userprofile.time_in_industry}}
+                    {{user.user_profile.time_worked_in_industry}}
                 </div>
             </div>
             <div class="row center centerText">
@@ -63,7 +64,8 @@
                     Qualifications:
                 </div>
                 <div class="col"></div>
-                {% for q in qualifications %}
+                {% for q in user.qualifications %}
+                    hi
                     {{q.level}}
                     {{q.subjects}}
                 {% endfor %}

@@ -1,7 +1,7 @@
 """ Models for the ViloSky app. """
 from django.db import models
 from cuser.models import AbstractCUser
-
+from django.contrib.auth.models import User
 
 class CustomUser(AbstractCUser):
     """ A model to hold the user entity with a unique email instead of username.
