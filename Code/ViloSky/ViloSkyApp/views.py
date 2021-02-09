@@ -78,32 +78,20 @@ def dashboard(request):
     return render(request, 'dashboard.html', {}) 
 
 def baseuser(request):
-    quals = Qualification.objects.get(user=request.user)
-    profile = UserProfile.objects.get(user=request.user)
-    contexts_dict = {'userp':profile, 'qualifications': quals}
-    return render(request, 'baseuser.html', context=contexts_dict)
+   return render(request, 'baseuser.html', {})
 
 @login_required(login_url='login')
 def mydetails(request):
-    context_dict = {}
-    p_form = ''
-    q_form = ''
-    if request.method == 'POST':
-        p_form = UserProfileForm(request.POST, instance = request.user.user_profile)
-        q_form = QualificationForm(request.POST, instance = request.user.user_profile)
-        if p_form.is_valid():
-            p_form.save()
-        else:
-            p_form = UserProfileForm(instance = request.user.user_profile)
-            
-        if q_form.is_valid():
-            q_form.save()
-        else:
-            q_form = QualificationForm(instance = request.user.user_profile)
-            
-
-    inputs = AdminInput.objects.all()
-    context_dict = {'questions':inputs, 'p_form':p_form, 'q_form':q_form}
+    p_form = UserProfileForm(request.POST, instance = request.user.user_profile)
+    if p_form.is_valid():
+        profile = p_form.save()
+        profile.save()
+        return redirect(reverse('mydetails'))
+    else:
+        p_form = UserProfileForm(instance = request.user.user_profile)
+    
+    #inputs = AdminInput.objects.all()
+    context_dict = {'p_form':p_form}
     return render(request, 'myDetails.html', context= context_dict) 
 
 

@@ -5,64 +5,43 @@
     <div class="largeText whiteText centerText">
         Update My Details
     </div>
-    <form class="center">
+    <form class="center" method = "POST" action="{% url 'mydetails' %}">
         {% csrf_token %} 
 
-        {{ p_form.as_p }}
+        <div class="form-group">
+            <p>Vilo Sky Admin: {{ p_form.is_vilosky_admin}}</p>
+        </div>
+        <div class="form-group">
+            <p>HR Rep: {{ p_form.is_hr_representative}}</p>
+        </div>
+        <div class="form-group">
+            <p>Date of Birth:</p>
+            {{ p_form.date_of_birth}}
+        </div>
+        <div class="form-group">
+            <p>Company:</p>
+            {{ p_form.company}}
+        </div>
+        <div class="form-group">
+            <p>Employment Status:</p>
+            {{ p_form.employment_status}}
+        </div>
+        <div class="form-group">
+            <p>Empoyment Sector:</p>
+            {{ p_form.employment_sector}}
+        </div>
+        <div class="form-group">
+            <p>Time Worked In Sector:</p>
+            {{ p_form.time_worked_in_industry}}
+        </div>
+        
         <div class="col">
             <div class="form-group">
-                <button type="button" class="btn btn-primary btn-block">Save details</button>
-            </div>
+				<button type="submit" class="btn btn-primary btn-block">Update</button>
+			</div>
         </div>
 
-        {{ q_form.as_q }}
-        <div class="col">
-            <div class="form-group">
-                <button type="button" class="btn btn-primary btn-block">Add Qualification</button>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class = "form-group">
-                {{form.}}
-            </div>
-        </div>
-         {% if questions %}
-         {% for question in questions %}
-
-         <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    {{ question.label }}
-
-                    {% if question.input_type == 'DROPDOWN' %}
-                    <select class="form-control form-control-lg">
-                        {% for options in question.choices %}
-                        <option>option</option>
-                        {% endfor %}
-                      </select>
-                    {% endif %}
-
-                    {% if question.input_type == 'TEXT' %}
-                    <input name="username" type="text" class="form-control"required>
-                    {% endif %}
-                    
-                    {% if question.input_type == 'CHECKBOX' %}
-                    <br>
-                    <div class="form-check form-check-inline">
-                        <input type ="checkbox", id="true", name="true", value="Yes">
-    
-                    </div>
-                    {% endif %}
-
-                    {% if question.input_type == 'TEXTAREA' %}
-                    <input name="username" type="text" class="form-control"required>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-
-         {% endfor %}
-         {% endif %}
     </form>
+       
+    
 {%endblock%}
