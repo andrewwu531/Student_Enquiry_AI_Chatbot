@@ -63,6 +63,16 @@
             <p> Back to it again.</p>
             
             <p> We hope that gives you enough to get going for now but please check back to give us an update and hopefully we can continue to support you as your career proceeds.  </p></p>
+            {% for paragraph in paragraphs %}
+            <p>
+                {{paragraph.static_text}}
+            </p>
+            {% endfor %}
+            {% for link in links %}
+            <p>
+                {{link.url}}
+            </p>
+            {% endfor %}
         </div>
         <div class="col-lg-3 col-md-4 leftborder">
             <div class="linktext">Useful links</div>
@@ -70,7 +80,7 @@
             <a class="worklink" href="https://womenreturners.com" target="_blank">Women Returners</a><br/>
             <a class="worklink" href="https://timewise.co.uk/" target="_blank">Timewise</a><br/>
             <a class="worklink" href="https://www.2to3days.com/" target="_blank">2to3days</a><br/>
-            
+
         </div>
     </div>
 </div>

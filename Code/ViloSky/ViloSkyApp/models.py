@@ -1,7 +1,7 @@
 """ Models for the ViloSky app. """
 from django.db import models
 from cuser.models import AbstractCUser
-
+from django.contrib.auth.models import User
 
 class CustomUser(AbstractCUser):
     """ A model to hold the user entity with a unique email instead of username.
@@ -109,7 +109,7 @@ class Report(models.Model):
 
 
 class UserAction(models.Model):
-    """ A model to hold user actions, all related to an assigned report. 
+    """ A model to hold user actions, all related to an assigned report.
     As it is for each user, it has a value (changeable by the user).
     """
     report = models.ForeignKey(

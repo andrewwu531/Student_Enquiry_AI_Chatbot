@@ -7,13 +7,21 @@
 </div>
 <div class="margin">
 Week 1
+
 <form>
-    <div class="row">
+    <div class="row">            
+        {% for action in myactions %}
+        <p>
+            {{action.title}}
+        </p>
+        {% endfor %}
+
         <div class="form-check form-check-inline">
             <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
             <label class="form-check-label" for="action1">Do this first</label>
         </div>
     </div>
+
     <div class="row">
         <div class="form-check form-check-inline">
             <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">

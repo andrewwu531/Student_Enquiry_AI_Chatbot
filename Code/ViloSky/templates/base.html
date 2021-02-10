@@ -33,6 +33,7 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
             </div>
 
             <ul class="list-unstyled components">
+              {% if not request.user.is_authenticated %}
                 <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
                 </li>
@@ -42,6 +43,7 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'register' %}">Register</a>
                 </li>
+              {% else %}
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
                 </li>
@@ -67,8 +69,9 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
                   <a class="nav-link" href="{% url 'roles' %}">Roles</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#">Logout</a>
+                  <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                 </li>
+                {% endif %}
             </ul>
         </nav>
 

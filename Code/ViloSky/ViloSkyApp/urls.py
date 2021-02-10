@@ -11,11 +11,12 @@ urlpatterns = [
     path('dashboard/',views.dashboard, name='dashboard'),
     path('mydetails/',views.mydetails, name='mydetails'),
     path('myactions/',views.myactions, name='myactions'),
-    path('report/',views.report, name='report'),
+    path('report/',views.show_report, name='report'),
     path('roles/',views.roles, name='roles'),
     path('input/',views.input, name='input'),
     path('output/',views.output, name='output'),
     path('data/',views.data, name='data'),
     path('editquestion/',views.editquestion, name='editquestion'),
     path('outputdetails/',views.outputdetails, name='outputdetails'),
+    path('logout/', views.user_logout, name='logout'),
 ]
