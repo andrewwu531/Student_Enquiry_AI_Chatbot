@@ -77,21 +77,37 @@ def user_logout(request):
 def dashboard(request):
     return render(request, 'dashboard.html', {}) 
 
+@login_required
 def baseuser(request):
    return render(request, 'baseuser.html', {})
 
 @login_required(login_url='login')
 def mydetails(request):
-    p_form = UserProfileForm(request.POST, instance = request.user.user_profile)
-    if p_form.is_valid():
-        profile = p_form.save()
-        profile.save()
-        return redirect(reverse('mydetails'))
-    else:
-        p_form = UserProfileForm(instance = request.user.user_profile)
-    
-    #inputs = AdminInput.objects.all()
-    context_dict = {'p_form':p_form}
+    p_form = UserProfileForm(instance = request.user.user_profile)
+    q_form = QualificationForm(request.POST)
+
+    if request.method == 'POST':
+        if 'addquals' in request.POST: 
+            #q_form = QualificationForm(request.POST, instance = request.user.user_profile)
+            if q_form.is_valid():
+                quals = q_form.save(commit=False)
+                quals.user = request.user.user_profile
+                quals.save()
+                return redirect(reverse('mydetails'))
+            else:
+                q_form = QualificationForm(instance = request.user.user_profile)
+        else:
+            p_form = UserProfileForm(request.POST, instance = request.user.user_profile)
+            if p_form.is_valid():
+                profile = p_form.save()
+                profile.save()
+                return redirect(reverse('mydetails'))
+            else:
+                p_form = UserProfileForm(instance = request.user.user_profile)
+           
+
+    qualifications = Qualification.objects.filter(user=request.user.user_profile)
+    context_dict = {'p_form':p_form, 'q_form':q_form, 'qualifications': qualifications}
     return render(request, 'myDetails.html', context= context_dict) 
 
 

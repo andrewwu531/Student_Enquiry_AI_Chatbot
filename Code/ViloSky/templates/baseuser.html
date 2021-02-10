@@ -11,20 +11,18 @@
             <img src="{% static 'images/user.png' %}" alt="Vilosky" class="centerImg">
             <div class="row bottomborder center centerText">
                 <div class="col">
-                    Name
+                    Name 
                 </div>
-                <div class="col">
-                    {{user.first_name}}
-                    {{user.last_name}}
+                <div class = col>
+                    {{user.first_name}} {{user.last_name}}
                 </div>
             </div>
             <div class="row bottomborder center centerText">
                 <div class="col">
                     D.O.B
                 </div>
-                <div class="col">
-                    {{user.user_profile.date_of_birth}}
-                    
+                <div class = "col">
+                    {{user_p.date_of_birth}}
                 </div>
             </div>
             <div class="row bottomborder center centerText">
@@ -32,15 +30,15 @@
                     Company
                 </div>
                 <div class="col">
-                    {{user.user_profile.company}}
+                    {{user_p.company}}
                 </div>
             </div>
             <div class="row bottomborder center centerText">
                 <div class="col">
-                    Employmet Sector
+                    Employment Sector
                 </div>
                 <div class="col">
-                    {{user.user_profile.employment_sector}}
+                    {{user_p.employment_sector}}
                 </div>
             </div>
             <div class="row bottomborder center centerText">
@@ -48,7 +46,7 @@
                     Employment Status
                 </div>
                 <div class="col">
-                    {{user.user_profile.employment_status}}
+                    {{user_p.employment_status}}
                 </div>
             </div>
             <div class="row bottomborder center centerText">
@@ -56,19 +54,8 @@
                     Time In Industry
                 </div>
                 <div class="col">
-                    {{user.user_profile.time_worked_in_industry}}
+                    {{user_p.time_worked_in_industry}}
                 </div>
-            </div>
-            <div class="row center centerText">
-                <div class="col">
-                    Qualifications:
-                </div>
-                <div class="col"></div>
-                {% for q in user.qualifications %}
-                    hi
-                    {{q.level}}
-                    {{q.subjects}}
-                {% endfor %}
             </div>
         </div>
     </div>

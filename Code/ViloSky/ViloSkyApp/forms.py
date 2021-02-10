@@ -1,10 +1,8 @@
 from django import forms
 from ViloSkyApp.models import CustomUser, UserProfile, Qualification
-from django.forms import modelformset_factory
 from django.contrib.auth import get_user_model
 from ViloSkyApp.models import UserProfile
-
-
+import datetime
 class UserForm(forms.ModelForm):
     email = forms.CharField(widget = forms.EmailInput(attrs = {'class' : 'form-control txtbox'}))
     password = forms.CharField(widget = forms.PasswordInput(attrs = {'class' : 'form-control txtbox'}))
@@ -15,20 +13,17 @@ class UserForm(forms.ModelForm):
         fields = ( 'email', 'password', 'confirm_password')
 
 class UserProfileForm(forms.ModelForm):
-
-    is_vilosky_admin = forms.BooleanField(required = False)
-    is_hr_representative = forms.BooleanField(required = False)
-    date_of_birth = forms.DateField(widget = forms.DateInput(format=('%m/%d/%Y')))
-    company = forms.CharField()
-    employment_status = forms.CharField()
-    employment_sector = forms.CharField()
-    time_worked_in_industry = forms.CharField()
+    cur_year = datetime.datetime.today().year
+    date_of_birth = forms.DateField(widget = forms.SelectDateWidget(years = tuple([i for i in range(cur_year - 80, cur_year - 16)])))
+    #company = forms.CharField(widget=forms.TextInput())
+    #employment_status = forms.CharField(max_length = 1, widget = forms.Select(choices=UserProfile.EmploymentStatusTypes))
+    #employment_status = forms.CharField()
+    #employment_sector = forms.CharField(widget=forms.TextInput())
+    #time_worked_in_industry = forms.Select(choices=UserProfile.TimeWorkedTypes)
 
     class Meta:
         model = UserProfile
         fields = (
-                  'is_vilosky_admin',
-                  'is_hr_representative',
                   'date_of_birth',
                   'company',
                   'employment_sector',
@@ -39,14 +34,20 @@ class UserProfileForm(forms.ModelForm):
 
 class QualificationForm(forms.ModelForm):
     level = forms.CharField(max_length=160, widget=forms.TextInput(attrs={
-        'placeholder': 'Qualification Level (e.g.BSc'
+        'placeholder': 'e.g. BSc, High School'
     }),
     required = True)
-    subject = forms.CharField(max_length=160, widget=forms.TextInput(attrs={
+    subjects = forms.CharField(max_length=160, widget=forms.TextInput(attrs={
         'placeholder': 'Subject'
     }),
     required = True)
 
+    class Meta:
+        model = Qualification
+        fields = (
+            'level',
+            'subjects'
+        )
 #QualificationFormSet = modelformset_factory(QualificationForm, fields = ('user','level', 'subjects'), extra = 1)
 
 

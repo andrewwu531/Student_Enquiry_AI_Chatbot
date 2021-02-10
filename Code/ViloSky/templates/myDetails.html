@@ -3,17 +3,42 @@
 
 {% block body%}
     <div class="largeText whiteText centerText">
-        Update My Details
+        My Qualifications
     </div>
+
+    <div class="row center centerText">
+        <div class="col">
+        {% for q in qualifications %}
+            {{q.level}} {{q.subjects}}
+            <br>
+        {% endfor %}
+        </div>
+    </div>
+
     <form class="center" method = "POST" action="{% url 'mydetails' %}">
         {% csrf_token %} 
 
-        <div class="form-group">
-            <p>Vilo Sky Admin: {{ p_form.is_vilosky_admin}}</p>
+        <div class = "form-group">
+            {{ q_form.level }} {{ q_form.subjects}}
         </div>
         <div class="form-group">
-            <p>HR Rep: {{ p_form.is_hr_representative}}</p>
+            <button type="submit" name = "addquals" class="btn btn-primary btn-block">Add Qualifications</button>
         </div>
+    
+    </form>
+
+    
+    <div class="largeText whiteText centerText">
+        <button id = "show" class="btn btn-primary btn-block" onclick="showDiv()">Update Details</button>
+    </div>
+
+    <div id = "update" style="display: none;">
+        <div class="largeText whiteText centerText">
+            Update My Profile
+        </div>
+    <form class="center" method = "POST" action="{% url 'mydetails' %}">
+        {% csrf_token %} 
+
         <div class="form-group">
             <p>Date of Birth:</p>
             {{ p_form.date_of_birth}}
@@ -34,14 +59,20 @@
             <p>Time Worked In Sector:</p>
             {{ p_form.time_worked_in_industry}}
         </div>
-        
+
         <div class="col">
             <div class="form-group">
-				<button type="submit" class="btn btn-primary btn-block">Update</button>
+				<button type="submit" class="btn btn-primary btn-block">Save Details</button>
 			</div>
         </div>
-
     </form>
-       
+    </div>
     
+<script>        
+function showDiv() {
+    document.getElementById('update').style.display = "block";
+    document.getElementById('show').style.display = "none";
+}
+</script>
 {%endblock%}
+
