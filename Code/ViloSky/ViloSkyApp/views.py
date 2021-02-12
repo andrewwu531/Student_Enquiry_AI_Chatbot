@@ -128,4 +128,4 @@ def data(request):
     out_fig = go.Figure(data=go.Scatter(x=days,y=outputs, name="outputs"))
     out_div = plot(out_fig, output_type='div')
     content_dict ={"vis_div":vis_div,"inp_div":inp_div,"out_div":out_div}
-    return render(request, 'data.html', content_dict) 
+    return render(request, 'data.html', content_dict)
