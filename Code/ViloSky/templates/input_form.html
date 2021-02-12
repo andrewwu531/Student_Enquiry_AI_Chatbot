@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block bodyblock%}
+<div class="divbackground widediv">
+    <div class="largeText whiteText centerText">
+        Create Report
+    </div>
+    <form id="inputForm" method="POST" action="{% url 'input_form' %}" enctype="multipart/form-data">
+       {% csrf_token %}
+       {{ inputForm.as_p }}
+       <input type="submit" name="submit" class="btn btn-primary btn-block"/>
+</form>
+</div>
+{%endblock%}

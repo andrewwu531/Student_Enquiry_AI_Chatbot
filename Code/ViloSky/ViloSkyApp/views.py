@@ -13,7 +13,9 @@ from django.contrib.auth import login as ulogin
 from django.contrib.auth import logout as ulogout
 from django.contrib.auth.decorators import login_required
 import ViloSkyApp.models
-from ViloSkyApp.forms import UserForm
+from .forms import UserForm, InputForm
+from .models import AdminInput, Keyword, Paragraph
+from difflib import SequenceMatcher
 # Create your views here.
 def index(request):
     return render(request, 'index.html', {}) 
@@ -81,9 +83,31 @@ def mydetails(request):
 def myactions(request):
     return render(request, 'myactions.html', {}) 
 
-@login_required(login_url='login')
-def report(request):
-    return render(request, 'report.html', {}) 
+
+def report(request, *args, **kwargs):
+    keywords = Keyword.objects.all()
+    paragraphs = Paragraph.objects.all()
+    inputs = request.session.get('saved')
+    #del inputs['csrfmiddlewaretoken']
+    #del inputs['submit']
+    paragraphs = []
+    scores_dict = {}
+    #create dictionary of paragraph score(how relevent paragraphs are to user input)
+    for key, value in inputs.items():
+        for keyword in keywords:
+            score = similarity(value, keyword.key)
+            para = keyword.paragraph
+            if para not in scores_dict.keys():
+                scores_dict[para] = score
+            else:
+                scores_dict[para] += score
+    #get 5 paragraphs with highest scores(most relevance)
+    for i in range(5):
+        highest_score = max(scores_dict, key=scores_dict.get)
+        paragraphs.append(highest_score)
+        del scores_dict[highest_score]
+    context = {'paragraph':paragraphs}
+    return render(request, 'report.html', {})
 
 @login_required(login_url='login')
 def roles(request):
@@ -129,3 +153,19 @@ def data(request):
     out_div = plot(out_fig, output_type='div')
     content_dict ={"vis_div":vis_div,"inp_div":inp_div,"out_div":out_div}
     return render(request, 'data.html', content_dict)
+
+def inputform(request):
+    if request.method == 'POST':
+        inputForm = InputForm(request.POST)
+        if inputForm.is_valid():
+            #data from the form is stored in a dictionary, 'cd'
+            cd = inputForm.cleaned_data
+            request.session['saved'] = cd
+            return redirect('/report/')
+    else:
+        inputForm = InputForm()
+    context = {'inputForm': inputForm, }
+    return render(request, 'input_form.html',context)
+
+def similarity(a,b):
+    return SequenceMatcher(None, a,b).ratio()

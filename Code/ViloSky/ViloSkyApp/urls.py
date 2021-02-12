@@ -19,4 +19,5 @@ urlpatterns = [
     path('editquestion/',views.editquestion, name='editquestion'),
     path('outputdetails/',views.outputdetails, name='outputdetails'),
     path('logout/', views.user_logout, name='logout'),
+    path('input_form/',views.inputform, name='input_form'),
 ]
