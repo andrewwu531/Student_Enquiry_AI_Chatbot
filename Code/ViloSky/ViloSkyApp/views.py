@@ -14,8 +14,9 @@ from django.contrib.auth import logout as ulogout
 from django.contrib.auth.decorators import login_required
 import ViloSkyApp.models
 from .forms import UserForm, InputForm
-from .models import AdminInput, Keyword, Paragraph
+from .models import AdminInput, Keyword, Paragraph, Report, CreateReport, UserProfile
 from difflib import SequenceMatcher
+from datetime import datetime
 # Create your views here.
 def index(request):
     return render(request, 'index.html', {}) 
@@ -106,6 +107,10 @@ def report(request, *args, **kwargs):
         highest_score = max(scores_dict, key=scores_dict.get)
         paragraphs.append(highest_score)
         del scores_dict[highest_score]
+    if request.user.is_authenticated:
+        report = Report.objects.save_report(paragraphs, UserProfile.user, datetime.now())
+    else:
+        request.session['paras'] = paragraphs
     context = {'paragraph':paragraphs}
     return render(request, 'report.html', {})
 

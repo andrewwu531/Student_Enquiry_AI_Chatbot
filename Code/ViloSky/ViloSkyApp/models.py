@@ -107,6 +107,11 @@ class Report(models.Model):
         UserProfile, on_delete=models.CASCADE, related_name='reports_assigned')
     datetime_created = models.DateTimeField()
 
+class CreateReport(models.Manager):
+    def save_report(self, paragraphs, user, datetime_created):
+        report = self.create(paragraphs=paragraphs, user=user, datetime_created=datetime_created)
+        return report
+
 
 class UserAction(models.Model):
     """ A model to hold user actions, all related to an assigned report.
