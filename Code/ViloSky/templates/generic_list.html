@@ -1,0 +1,59 @@
+{% extends 'baseuser.html' %}
+{% load static %}
+
+{% block body%}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{% static 'stylesheets/generic_list.css' %}">
+{% endblock %}
+
+{% block heading %}{% endblock %}
+<hr/>
+<div id="generic_list">
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered">
+            {% if entries|length == 0 %}
+            <hr/>
+            {% block empty_list_message %} {% endblock %}
+            {% else %}
+            <thead class="thead-light">
+                <tr>
+                {% for heading in headings %}
+                <th scope="col">{{heading}}</th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+                {% for entry in entries %}
+                    <tr class="entry-row" to="{{row_link_to}}{{entry.id}}">
+                    {% for model_key,model_value in entry.items %}
+                        {% for key in model_keys %}
+                            {% if model_key == key %}
+                                <td>{{model_value}}</td>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+            {% endif %}
+          </table>
+        </div>
+        <!-- <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+              <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Previous</a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+              </li>
+            </ul>
+          </nav>
+          </div> -->
+{%endblock%}
+{% block script %}
+<script type="text/javascript" src="{% static 'js/generic_list.js' %}" ></script>
+{% endblock %}
