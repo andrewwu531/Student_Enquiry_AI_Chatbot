@@ -6,72 +6,92 @@
         My Qualifications
     </div>
 
-    <div class="row center centerText">
+    {% for q in qualifications %}
+    <div class="row bottomborder center centerText">
         <div class="col">
-        {% for q in qualifications %}
-            {{q.level}} {{q.subjects}}
-            <br>
-        {% endfor %}
+            {{q.level}}
+        </div>
+        <div class="col">
+            {{q.subjects}}
         </div>
     </div>
+    {% endfor %}
 
-    <form class="center" method = "POST" action="{% url 'mydetails' %}">
-        {% csrf_token %} 
+    <br>
 
-        <div class = "form-group">
-            {{ q_form.level }} {{ q_form.subjects}}
-        </div>
-        <div class="form-group">
-            <button type="submit" name = "addquals" class="btn btn-primary btn-block">Add Qualifications</button>
-        </div>
-    
-    </form>
-
+    <div class="row center  centerText">   
+        <form class="center" method = "POST" action="{% url 'mydetails' %}">
+            {% csrf_token %} 
+           
+            <div class = "form-group row" >
+                <div class = "col">
+                    {{ q_form.level }} 
+                    {{ q_form.subjects}} 
+                </div>
+                <div class = "col">
+                    <button type="submit" name = "addquals" class="btn btn-primary" >+</button>
+                </div>
+            </div>
+        </form>
+    </div> 
+ 
+   
     
     <div class="largeText whiteText centerText">
-        <button id = "show" class="btn btn-primary btn-block" onclick="showDiv()">Update Details</button>
+        <button id = "show" class="btn btn-primary" onclick="showDiv()">Update My Profile</button>
     </div>
 
     <div id = "update" style="display: none;">
         <div class="largeText whiteText centerText">
             Update My Profile
         </div>
+    <div class="row center centerText">
     <form class="center" method = "POST" action="{% url 'mydetails' %}">
         {% csrf_token %} 
 
         <div class="form-group">
-            <p>Date of Birth:</p>
-            {{ p_form.date_of_birth}}
+            <p>Date of Birth: </p> {{ p_form.date_of_birth}}
+            
         </div>
         <div class="form-group">
-            <p>Company:</p>
-            {{ p_form.company}}
+            <p>Company: </p> {{ p_form.company}}
+            
         </div>
         <div class="form-group">
-            <p>Employment Status:</p>
-            {{ p_form.employment_status}}
+            <p>Employment Status: </p> {{ p_form.employment_status}}
+            
         </div>
         <div class="form-group">
-            <p>Empoyment Sector:</p>
-            {{ p_form.employment_sector}}
+            <p>Empoyment Sector: </p> {{ p_form.employment_sector}}
+            
         </div>
         <div class="form-group">
-            <p>Time Worked In Sector:</p>
-            {{ p_form.time_worked_in_industry}}
+            <p>Time Worked In Sector: </p>{{ p_form.time_worked_in_industry}}
+            
         </div>
 
-        <div class="col">
-            <div class="form-group">
-				<button type="submit" class="btn btn-primary btn-block">Save Details</button>
-			</div>
+       
+        <div class="form-group">
+            <div class = "col">
+                <button type="submit" class="btn btn-primary ">Save Details</button><br><br>
+            </div>  
+        </div>
+        <div class = "bottomleft">
+        <button id = "cancel" class="btn btn-primary " onclick=cancel()>Cancel</button>
         </div>
     </form>
     </div>
-    
+   
+
 <script>        
 function showDiv() {
     document.getElementById('update').style.display = "block";
+    document.getElementById('cancel').style.display = "block";
     document.getElementById('show').style.display = "none";
+}
+
+function cancel() {
+    window.location.reload();
 }
 </script>
 {%endblock%}
