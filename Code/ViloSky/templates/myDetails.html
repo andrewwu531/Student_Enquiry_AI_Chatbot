@@ -2,10 +2,14 @@
 {% load static %}
 
 {% block body%}
+    <div id = "quals">
     <div class="largeText whiteText centerText">
         My Qualifications
+        <button class ="btn-edit" id ="edit" onclick=editQuals()>Edit</button>
+        <button class ="btn-edit" id ="cancel" style = "display: none;" onclick=cancel()>Cancel</button>
     </div>
 
+    <div id = "staticQ">
     {% for q in qualifications %}
     <div class="row bottomborder center centerText">
         <div class="col">
@@ -16,27 +20,55 @@
         </div>
     </div>
     {% endfor %}
+    </div>
 
+    <div id = "dynamic" style ="display: none;">
+        
+        <table>
+        <thead>
+            <th>Level</th>
+            <th>Subject</th>
+            <th>Delete</th>
+        </thead>
+        <tbody>
+        <form method = "POST">
+        {% csrf_token %} 
+        {% for q in qualifications %}
+            <tr>
+                <td>{{q.level}}</td>
+                <td> {{q.subjects}}</td>
+                <td><input type = "checkbox" name = "delete_list" value = "{{q.id}}"></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <button type="submit" class = "btn-delete" name = "delete_qualifications">Delete</button>
+    </table>
+    </form>
+    </div>
     <br>
-
-    <div class="row center  centerText">   
+    
+    <div class="row bottombordercenter  centerText" id ="editquals">  
         <form class="center" method = "POST" action="{% url 'mydetails' %}">
             {% csrf_token %} 
            
             <div class = "form-group row" >
                 <div class = "col">
                     {{ q_form.level }} 
-                    {{ q_form.subjects}} 
                 </div>
                 <div class = "col">
-                    <button type="submit" name = "addquals" class="btn btn-primary" >+</button>
+                    {{ q_form.subjects}} 
+                </div>
+                <div class = "row">
+                    <button type="submit" name = "addquals" class = "btn-add-delete" >+</button>
                 </div>
             </div>
         </form>
+        
+        <br>
     </div> 
- 
-   
-    
+    </div>
+
+
     <div class="largeText whiteText centerText">
         <button id = "show" class="btn btn-primary" onclick="showDiv()">Update My Profile</button>
     </div>
@@ -77,21 +109,33 @@
             </div>  
         </div>
         <div class = "bottomleft">
-        <button id = "cancel" class="btn btn-primary " onclick=cancel()>Cancel</button>
+            <button id = "cancelP" onclick=cancel()>Cancel</button>
         </div>
     </form>
+  
     </div>
-   
-
+    
 <script>        
 function showDiv() {
     document.getElementById('update').style.display = "block";
-    document.getElementById('cancel').style.display = "block";
+    document.getElementById('cancelP').style.display = "block";
     document.getElementById('show').style.display = "none";
+    document.getElementById('quals').style.display = "none";
 }
 
 function cancel() {
     window.location.reload();
+}
+
+function editQuals(){
+    document.getElementById('dynamic').style.display = "block";
+    document.getElementById('cancel').style.display = "block";
+    document.getElementById('edit').style.display = "none";
+    document.getElementById('show').style.display = "none";
+    document.getElementById('editquals').style.display = "block";
+    document.getElementById('staticQ').style.display = "none";
+    
+    document.getElementById('cancelP').style.display = "block";
 }
 </script>
 {%endblock%}

@@ -85,7 +85,7 @@ def baseuser(request):
 def mydetails(request):
     p_form = UserProfileForm(instance = request.user.user_profile)
     q_form = QualificationForm(request.POST)
-
+    
     if request.method == 'POST':
         if 'addquals' in request.POST: 
             #q_form = QualificationForm(request.POST, instance = request.user.user_profile)
@@ -96,6 +96,9 @@ def mydetails(request):
                 return redirect(reverse('mydetails'))
             else:
                 q_form = QualificationForm(instance = request.user.user_profile)
+        elif 'delete_qualifications' in request.POST:
+            Qualification.objects.filter(pk__in=request.POST.getlist('delete_list')).delete()
+            return redirect(reverse('mydetails'))
         else:
             p_form = UserProfileForm(request.POST, instance = request.user.user_profile)
             if p_form.is_valid():
