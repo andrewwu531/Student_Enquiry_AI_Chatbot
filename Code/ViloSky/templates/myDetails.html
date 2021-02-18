@@ -6,7 +6,7 @@
     <div class="largeText whiteText centerText">
         My Qualifications
         <button class ="btn-edit" id ="edit" onclick=editQuals()>Edit</button>
-        <button  class = "btn-edit" id ="cancel" style = "display: none;" onclick=cancel()>Cancel</button>
+        <button class ="btn-edit" style = "display: none;" id="cancel" onclick=cancel()>Cancel</button>
     </div>
 
     <div id = "staticQ">
@@ -21,10 +21,9 @@
     </div>
     {% endfor %}
     </div>
-
-    <div id = "dynamic" style ="display: none;">
-        
-        <table>
+    
+    <div class = "center centerText" id = "dynamic" style ="display: none;">
+        <table class = "center">
         <thead>
             <th>Level</th>
             <th>Subject</th>
@@ -43,36 +42,37 @@
         </tbody>
         
     </table>
-    <button type="submit" class = "btn-delete" name = "delete_qualifications">Delete</button>
+    <br>
+    <button type="submit" class = "btn-account" name = "delete_qualifications">Delete Selected</button>
     </form>
+    </div>
+
+    <br>
+    <div class = "centerText" id = "editquals">
+        <form class="center" method = "POST" action="{% url 'mydetails' %}">
+            {% csrf_token %} 
+            <div class = "col">
+                {{ q_form.level }} 
+            </div>
+            <div class = "col">
+                {{ q_form.subjects}} 
+            </div>
+            <div>
+                <button type="submit" name = "addquals" class = "btn-delete" >Add</button>
+            </div>
+        </div>
+
+        </form>
+   
     </div>
     <br>
     
-    <div class="row bottombordercenter  centerText" id ="editquals">  
-        <form class="center" method = "POST" action="{% url 'mydetails' %}">
-            {% csrf_token %} 
-           
-            <div class = "form-group row" >
-                <div class = "col">
-                    {{ q_form.level }} 
-                </div>
-                <div class = "col">
-                    {{ q_form.subjects}} 
-                </div>
-                <div class = "row">
-                    <button type="submit" name = "addquals" class = "btn-add-delete" >+</button>
-                </div>
-            </div>
-        </form>
-        
-        <br>
-    </div> 
-    </div>
-
-
     <div class="largeText whiteText centerText">
         <button id = "show" class="btn btn-primary" onclick="showDiv()">Update My Profile</button>
     </div>
+
+    
+
 
     <div id = "update" style="display: none;">
         <div class="largeText whiteText centerText">
@@ -132,10 +132,8 @@ function editQuals(){
     document.getElementById('cancel').style.display = "block";
     document.getElementById('edit').style.display = "none";
     document.getElementById('show').style.display = "none";
-    document.getElementById('editquals').style.display = "block";
+    document.getElementById('editquals').style.display = "none";
     document.getElementById('staticQ').style.display = "none";
-    
-    document.getElementById('cancelP').style.display = "block";
 }
 </script>
 {%endblock%}

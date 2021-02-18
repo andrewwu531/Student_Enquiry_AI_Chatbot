@@ -385,6 +385,19 @@ a.article:hover {
     animation-name: button-fadeout;
 
   }
+  .btn-account {      
+    font-size: 15px;
+    position: relative;
+    width: 60px;
+    border: none;
+    display: inline;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-name: button-fadeout;
+    animation-name: button-fadeout;
+  }
   .btn-primary:hover{
     -webkit-animation-duration: 1s;
     animation-duration: 1;
@@ -409,23 +422,6 @@ a.article:hover {
     animation-name: button-fadeout;
   }
 
-  .btn-add-delete {
-    border-radius: 80px;
-    font-size: 15px;
-    position: relative;
-    width: 20px;
-    height:28px;
-    border: none;
-    text: center;
-    display: inline;
-    float: left;
-    -webkit-animation-duration: 1s;
-    animation-duration: 1;
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;
-    -webkit-animation-name: button-fadeout;
-    animation-name: button-fadeout;
-  }
 
   @-webkit-keyframes button-fadein {
     0% {background-color: rgba(155,81,224,0.8)}
