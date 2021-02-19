@@ -3,10 +3,11 @@
 
 {% block body%}
     <div id = "quals">
+        <button class ="btn-edit small" id ="edit" onclick=editQuals()>Edit</button>
+        <button class ="btn-edit small" style = "display: none;" id="cancel" onclick=cancel()>Cancel</button>
+        <br>
     <div class="largeText whiteText centerText">
         My Qualifications
-        <button class ="btn-edit" id ="edit" onclick=editQuals()>Edit</button>
-        <button class ="btn-edit" style = "display: none;" id="cancel" onclick=cancel()>Cancel</button>
     </div>
 
     <div id = "staticQ">
@@ -43,12 +44,12 @@
         
     </table>
     <br>
-    <button type="submit" class = "btn-account" name = "delete_qualifications">Delete Selected</button>
+    <button type="submit" class = "btn-add" name = "delete_qualifications">Delete Selected</button>
     </form>
     </div>
 
     <br>
-    <div class = "centerText" id = "editquals">
+    <div class = "center centerText" id = "editquals">
         <form class="center" method = "POST" action="{% url 'mydetails' %}">
             {% csrf_token %} 
             <div class = "col">
@@ -58,17 +59,16 @@
                 {{ q_form.subjects}} 
             </div>
             <div>
-                <button type="submit" name = "addquals" class = "btn-delete" >Add</button>
+                <button type="submit" name = "addquals" class = "btn-add" >Add</button>
             </div>
         </div>
 
         </form>
-   
     </div>
     <br>
     
     <div class="largeText whiteText centerText">
-        <button id = "show" class="btn btn-primary" onclick="showDiv()">Update My Profile</button>
+        <button id = "show" class="btn-profile" onclick="showDiv()">Update My Profile</button>
     </div>
 
     
@@ -101,7 +101,6 @@
         </div>
         <div class="form-group">
             <p>Time Worked In Sector: </p>{{ p_form.time_worked_in_industry}}
-            
         </div>
 
        
