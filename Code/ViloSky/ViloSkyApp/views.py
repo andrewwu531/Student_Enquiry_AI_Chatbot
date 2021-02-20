@@ -1,13 +1,9 @@
-from django.shortcuts import render
-from django.shortcuts import render, redirect
-from django.urls import reverse
-from django.http import HttpResponse
-from django.conf import settings
-from django.core import serializers
+''' Views for the ViloSky app'''
+from random import uniform, randint
 from plotly.offline import plot
 import plotly.graph_objs as go
-from random import randint
-from random import uniform
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as ulogin
@@ -16,7 +12,9 @@ from django.contrib.auth.decorators import login_required
 from django.utils.formats import localize
 from ViloSkyApp import models
 from ViloSkyApp.forms import UserForm
-# Create your views here.
+from ViloSkyApp.models import Qualification
+from ViloSkyApp.forms import QualificationForm
+from .forms import UserProfileForm
 
 
 def index(request):
@@ -86,7 +84,38 @@ def dashboard(request):
 
 @login_required(login_url='login')
 def mydetails(request):
-    return render(request, 'mydetails.html', {})
+    p_form = UserProfileForm(instance=request.user.user_profile)
+    q_form = QualificationForm(request.POST)
+
+    if request.method == 'POST':
+        if 'addquals' in request.POST:
+            #q_form = QualificationForm(request.POST, instance = request.user.user_profile)
+            if q_form.is_valid():
+                quals = q_form.save(commit=False)
+                quals.user = request.user.user_profile
+                quals.save()
+                return redirect(reverse('mydetails'))
+            else:
+                q_form = QualificationForm(instance=request.user.user_profile)
+        elif 'delete_qualifications' in request.POST:
+            Qualification.objects.filter(
+                pk__in=request.POST.getlist('delete_list')).delete()
+            return redirect(reverse('mydetails'))
+        else:
+            p_form = UserProfileForm(
+                request.POST, instance=request.user.user_profile)
+            if p_form.is_valid():
+                profile = p_form.save()
+                profile.save()
+                return redirect(reverse('mydetails'))
+            else:
+                p_form = UserProfileForm(instance=request.user.user_profile)
+
+    qualifications = Qualification.objects.filter(
+        user=request.user.user_profile)
+    context_dict = {'p_form': p_form, 'q_form': q_form,
+                    'qualifications': qualifications}
+    return render(request, 'myDetails.html', context=context_dict)
 
 
 @login_required(login_url='login')
@@ -118,6 +147,11 @@ def actions(request):
 def report(request, report_id):
     # Pass required info and update template
     return render(request, 'report.html', {})
+
+
+@login_required
+def baseuser(request):
+    return render(request, 'baseuser.html', {})
 
 
 @login_required(login_url='login')

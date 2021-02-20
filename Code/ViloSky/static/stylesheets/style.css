@@ -455,3 +455,54 @@ p {
   height: 50px;
   border-radius: 80px !important;
 }
+
+.btn-edit {
+  font-size: 15px;
+  position: absolute;
+  border-radius: 20px;
+  border: none;
+  display: inline;
+  float: left;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation-name: button-fadeout;
+  animation-name: button-fadeout;
+}
+.btn-add {
+  font-size: 19px;
+  border-radius: 20px;
+  color: white;
+  border: none;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation-name: button-fadeout;
+  animation-name: button-fadeout;
+}
+
+.btn-profile {
+  font-size: 25px;
+  border-radius: 20px;
+  color: white;
+  border: #cc00cc;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation-name: button-fadeout;
+  animation-name: button-fadeout;
+}
+
+.btn-primary:hover {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation-name: button-fadein;
+  animation-name: button-fadein;
+}
