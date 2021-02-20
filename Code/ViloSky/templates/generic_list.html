@@ -29,7 +29,7 @@
                     {% for model_key,model_value in entry.items %}
                         {% for key in model_keys %}
                             {% if model_key == key %}
-                                <td>{{model_value}}</td>
+                                <td>{{ model_value|truncatewords_html:9 }}</td>
                             {% endif %}
                         {% endfor %}
                     {% endfor %}

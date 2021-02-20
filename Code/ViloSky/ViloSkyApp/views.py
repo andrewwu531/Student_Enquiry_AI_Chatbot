@@ -146,7 +146,7 @@ def actions(request):
 @login_required(login_url='login')
 def report(request, report_id):
     # Pass required info and update template
-    return render(request, 'report.html', {})
+    return render(request, 'report.html', {'report_id': report_id})
 
 
 @login_required
@@ -205,13 +205,27 @@ def admin_inputs(request):
 
 
 @ login_required(login_url='login')
-def output(request):
-    return render(request, 'output.html', {})
+def paragraph(request, paragraph_id):
+    # Pass required info and update template
+    return render(request, 'paragraph.html', {'paragraph_id': paragraph_id})
 
 
 @ login_required(login_url='login')
-def outputdetails(request):
-    return render(request, 'outputdetails.html', {})
+def paragraphs(request):
+    user = models.UserProfile.objects.filter(user=request.user).first()
+
+    if user is None:
+        return render(request, "error.html")
+
+    pars_to_render = list(
+        models.Paragraph.objects.all().values('id', 'created_by__user__first_name', 'static_text'))
+    template_headings = ["#", "Created By", "Text"]
+    model_keys = ["id", "created_by__user__first_name", "static_text"]
+
+    return render(request, 'paragraphs.html', {
+        "headings": template_headings, "model_keys": model_keys,
+        "entries": pars_to_render, "row_link_to": "/paragraph/"
+    })
 
 
 @ login_required(login_url='login')
