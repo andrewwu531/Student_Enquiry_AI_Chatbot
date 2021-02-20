@@ -1,8 +1,8 @@
-from django import forms
-from ViloSkyApp.models import CustomUser, UserProfile, Qualification
-from django.contrib.auth import get_user_model
-from ViloSkyApp.models import UserProfile
+'''Forms for the ViloSky app'''
 import datetime
+from django import forms
+from ViloSkyApp.models import UserProfile, Qualification
+from django.contrib.auth import get_user_model
 
 
 class UserForm(forms.ModelForm):
