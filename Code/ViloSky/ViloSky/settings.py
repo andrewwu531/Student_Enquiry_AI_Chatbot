@@ -131,4 +131,4 @@ EMAIL_USE_TLS = True
 
 # Custom User model
 AUTH_USER_MODEL = 'ViloSkyApp.CustomUser'
-STATICFILES_DIRS = [STATIC_DIR,]
+STATICFILES_DIRS = [STATIC_DIR, ]

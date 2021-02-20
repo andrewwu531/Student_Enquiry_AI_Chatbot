@@ -387,7 +387,7 @@ def populate():
             'is_hr_representative': False,
             'company': 'Tesco Bank',
             'employment_sector': 'Banking&Finance',
-            'employment_status': 'unemployed/volounteer',
+            'employment_status': UserProfile.EmploymentStatusTypes.CAREER_BREAK,
             'time_worked_in_industry': UserProfile.TimeWorkedTypes.THREE_TO_FIVE_YEARS,
             'qualifications': [
                 {'level': 'MS', 'subjects': 'Mathematics & Finance'},
@@ -415,7 +415,7 @@ def populate():
             'is_hr_representative': False,
             'company': 'Urban Outfitters',
             'employment_sector': 'Retail',
-            'employment_status': 'Unemployed',
+            'employment_status': UserProfile.EmploymentStatusTypes.UNEMPLOYED_OR_VOLUNTEER,
             'time_worked_in_industry': UserProfile.TimeWorkedTypes.SEVEN_TO_TWELVE_MONTHS,
             'qualifications': [
                 {'level': 'Modern Apprentice', 'subjects': 'Retail Skills'},
@@ -441,7 +441,7 @@ def populate():
             'is_hr_representative': True,
             'company': 'JP Morgan',
             'employment_sector': 'IT',
-            'employment_status': 'Employed',
+            'employment_status': UserProfile.EmploymentStatusTypes.EMPLOYED,
             'time_worked_in_industry': UserProfile.TimeWorkedTypes.FIVE_TO_TEN_YEARS,
             'qualifications': [
                 {'level': 'UD', 'subjects': 'Computer Science'},
@@ -469,7 +469,7 @@ def populate():
             'is_hr_representative': False,
             'company': "",
             'employment_sector': 'Construction',
-            'employment_status': 'Unemployed',
+            'employment_status': UserProfile.EmploymentStatusTypes.UNEMPLOYED_OR_VOLUNTEER,
             'time_worked_in_industry': UserProfile.TimeWorkedTypes.NO_EXPERIENCE,
             'qualifications': [
                 {'level': 'HighSchool', 'subjects': 'Woodwork'},
@@ -497,7 +497,7 @@ def populate():
             'is_hr_representative': False,
             'company': 'ViloSky',
             'employment_sector': 'Consulting',
-            'employment_status': 'Employed',
+            'employment_status': UserProfile.EmploymentStatusTypes.SELFEMPLOYED,
             'time_worked_in_industry': UserProfile.TimeWorkedTypes.ONE_TO_TWO_YEARS,
             'qualifications': [
                 {'level': 'MS', 'subjects': 'Law'},
