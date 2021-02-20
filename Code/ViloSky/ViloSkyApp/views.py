@@ -163,6 +163,8 @@ def reports(request):
 
     reports_to_render = list(
         user.reports_assigned.all().values().order_by('-datetime_created'))
+    for report in reports_to_render:
+        report['datetime_created'] = localize(report['datetime_created'])
     template_headings = ["#", "Date Created"]
     model_keys = ["id", "datetime_created"]
 
