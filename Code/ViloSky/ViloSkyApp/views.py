@@ -14,7 +14,7 @@ from django.contrib.auth import logout as ulogout
 from django.contrib.auth.decorators import login_required
 import ViloSkyApp.models
 from .forms import UserForm, InputForm
-from .models import AdminInput, Keyword, Paragraph, Report, CreateReport, UserProfile
+from .models import AdminInput, Keyword, Paragraph, Report, CreateReport, UserProfile, PartialInput
 from difflib import SequenceMatcher
 from datetime import datetime
 # Create your views here.
@@ -86,33 +86,16 @@ def myactions(request):
 
 
 def report(request, *args, **kwargs):
-    keywords = Keyword.objects.all()
-    paragraphs = Paragraph.objects.all()
     inputs = request.session.get('saved')
-    #del inputs['csrfmiddlewaretoken']
-    #del inputs['submit']
-    paragraphs = []
-    scores_dict = {}
-    #create dictionary of paragraph score(how relevent paragraphs are to user input)
-    for key, value in inputs.items():
-        for keyword in keywords:
-            score = similarity(value, keyword.key)
-            para = keyword.paragraph
-            if para not in scores_dict.keys():
-                scores_dict[para] = score
-            else:
-                scores_dict[para] += score
-    #get 5 paragraphs with highest scores(most relevance)
-    for i in range(5):
-        highest_score = max(scores_dict, key=scores_dict.get)
-        paragraphs.append(highest_score)
-        del scores_dict[highest_score]
+    keys = []
+    values = []
     if request.user.is_authenticated:
-        report = Report.objects.save_report(paragraphs, UserProfile.user, datetime.now())
+        paras = get_paragraphs(inputs)
+        report = Report.objects.save_report(request.user, paras, datetime.now())
     else:
-        request.session['paras'] = paragraphs
-    context = {'paragraph':paragraphs}
-    return render(request, 'report.html', {})
+        paras = get_paragraphs(inputs)
+    context = {'paragraph':paras}
+    return render(request, 'report.html', context)
 
 @login_required(login_url='login')
 def roles(request):
@@ -174,3 +157,46 @@ def inputform(request):
 
 def similarity(a,b):
     return SequenceMatcher(None, a,b).ratio()
+
+def get_paragraphs(inputs_dictionary):
+    keywords = Keyword.objects.all()
+    paragraphs_list = []
+    scores_dict = {}
+    partials_list = PartialInput.objects.all()
+    partials = []
+    for i in partials_list:
+        partials.append(i.admin_input)
+    partials = set(partials)
+    # create dictionary of paragraph score(how relevant paragraphs are to user input)
+    question_list = AdminInput.objects.all()
+    answers = []
+    text_qs = 0
+    for key, value in inputs_dictionary.items():
+        answers.append(value)
+    counter = 0
+    for question in question_list:
+
+        if question.input_type == 'CHECKBOX':
+            if answers[counter] == 'True':
+                 counter+=1
+        if question.input_type == 'DROPDOWN':
+            for keyword in keywords:
+                if keyword == answers[counter]:
+                    paragraphs_list.append(keyword.paragraph)
+            counter+=1
+        else:
+            for keyword in keywords:
+                score = similarity(value, keyword.key)
+                para = keyword.paragraph
+                if para not in scores_dict.keys():
+                    scores_dict[para] = score
+                else:
+                    scores_dict[para] += score
+            text_qs+=1
+            counter+=1
+    num_paras = 2
+    for i in range(num_paras):
+        highest_score = max(scores_dict, key=scores_dict.get)
+        paragraphs_list.append(highest_score)
+        del scores_dict[highest_score]
+    return paragraphs_list

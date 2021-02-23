@@ -21,11 +21,10 @@ class InputForm(forms.Form):
                 d_q = DropdownAdminInput.objects.get(label=q.label)
                 choices = d_q.choices
                 choice_list = []
-                counter = 1
                 for i in choices:
-                    choice_list.append((counter, i))
+                    choice_list.append((i, i))
                 if q.is_required == 'True':
-                    self.fields['%s_field' % i] = forms.ChoiceField(label=d_q.label, choices =choice_list)
+                    self.fields['%s_field' % i] = forms.ChoiceField(label=d_q.label, choices=choice_list)
                 else:
                     self.fields['%s_field' % i] = forms.ChoiceField(label=d_q.label, choices=choice_list, required=False)
 
