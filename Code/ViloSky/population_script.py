@@ -7,7 +7,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE','ViloSky.settings')
 import django
 django.setup()
 
-from ViloSkyApp.models import CustomUser, UserProfile, Qualification, Keyword, Link, Paragraph, Report, Action, AdminInput, DropdownAdminInput, CheckboxAdminInput, TextAdminInput, TextareaAdminInput, Session, PartialInput, UserAction
+from ViloSkyApp.models import CustomUser, UserProfile, Qualification, Keyword, Link, Paragraph, Report, Action, AdminInput, \
+    DropdownAdminInput, CheckboxAdminInput, TextAdminInput, TextareaAdminInput, RadioButtonsAdminInput, Session, PartialInput, UserAction
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 timezone.now()
@@ -288,8 +289,8 @@ def populate():
         {
             'created_by': 'suzieMul23@gmail.com',
             'label': 'What best describes current work barriers (select all that apply):',
-            'input_type': AdminInput.AdminInputTypes.DROPDOWN,
-            'is_required': True,
+            'input_type': AdminInput.AdminInputTypes.RADIOBUTTONS,
+            'is_required': False,
             'choices': ['Childcare', 'Carer Responsibilities', 'Technical Skills',
                         'Leadership Skills', 'Flexibility', 'Workplace Culture', 'Confidence'],
             'partial_inputs':[
@@ -310,8 +311,8 @@ def populate():
         {
             'created_by': 'suzieMul23@gmail.com',
             'label': 'Industry interested in (select all that apply):',
-            'input_type': AdminInput.AdminInputTypes.DROPDOWN,
-            'is_required': True,
+            'input_type': AdminInput.AdminInputTypes.RADIOBUTTONS,
+            'is_required': False,
             'choices': ['Retail', 'Fashion', 'Media', 'Banking&Finance', 'Construction',
                         'Manuacturing', 'Law', 'Medical', 'Education', 'IT'],
             'partial_inputs':[
@@ -362,8 +363,8 @@ def populate():
         {
             'created_by': 'suzieMul23@gmail.com',
             'label': 'What would you like to achieve from your next role? (select all that apply)',
-            'input_type': AdminInput.AdminInputTypes.DROPDOWN,
-            'is_required': True,
+            'input_type': AdminInput.AdminInputTypes.RADIOBUTTONS,
+            'is_required': False,
             'choices': ['Re-establish career', 'Learn New Skills', 'Give Something Back', 'Confidence',
                         'Realise Full Potential', 'Promotion', 'Work/Life Balance', 'Ease', 'Good Salary',
                         'Working From Home', 'Low Stress', 'Flexibility', 'Greater Autonomy', 'More Responsibility',
@@ -622,6 +623,13 @@ def populate():
                         created_by=admin, default_value=False)[0]
                 elif inp_type == AdminInput.AdminInputTypes.DROPDOWN:
                     user_input = DropdownAdminInput.objects.get_or_create(
+                        admin_input=curr_input,
+                        is_required=inputs['is_required'],
+                        label=inputs['label'],
+                        input_type=inputs['input_type'],
+                        created_by=admin, choices=inputs['choices'])[0]
+                elif inp_type == AdminInput.AdminInputTypes.RADIOBUTTONS:
+                    user_input = RadioButtonsAdminInput.objects.get_or_create(
                         admin_input=curr_input,
                         is_required=inputs['is_required'],
                         label=inputs['label'],

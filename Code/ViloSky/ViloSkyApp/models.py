@@ -96,10 +96,6 @@ class Action(models.Model):
         Paragraph, on_delete=models.CASCADE, related_name='actions')
     title = models.CharField(max_length=255)
 
-class CreateReport(models.Manager):
-    def save_report(self,user, paragraphs, datetime_created):
-        report = self.create(user=user, paragraphs=paragraphs, datetime_created=datetime_created)
-        return report
 
 class Report(models.Model):
     """ A model to hold reports consisting of multiple paragraphs.
@@ -111,7 +107,6 @@ class Report(models.Model):
         UserProfile, on_delete=models.CASCADE, related_name='reports_assigned')
     datetime_created = models.DateTimeField()
 
-    objects = CreateReport()
 
 class UserAction(models.Model):
     """ A model to hold user actions, all related to an assigned report.
@@ -149,6 +144,7 @@ class AdminInput(models.Model):
         TEXT = 'TEXT'
         TEXTAREA = 'TEXTAREA'
         CHECKBOX = 'CHECKBOX'
+        RADIOBUTTONS = 'RADIOBUTTONS'
 
     created_by = models.ForeignKey(
         UserProfile, on_delete=models.CASCADE, related_name='admin_inputs_created')
@@ -171,6 +167,14 @@ class CheckboxAdminInput(AdminInput):
     admin_input = models.OneToOneField(
         AdminInput, parent_link=True, on_delete=models.CASCADE)
     default_value = models.BooleanField(default=False)
+
+
+class RadioButtonsAdminInput(AdminInput):
+    """ A model to information about radiobuttons admin inputs."""
+    admin_input = models.OneToOneField(
+        AdminInput, parent_link=True, on_delete=models.CASCADE)
+    # Must be an array of serialised values.
+    choices = models.JSONField()
 
 
 class TextareaAdminInput(AdminInput):

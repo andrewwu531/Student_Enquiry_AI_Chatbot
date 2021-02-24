@@ -1,8 +1,6 @@
-from django.shortcuts import render
 from django.shortcuts import render, redirect
+from django.core.serializers import serialize, deserialize
 from django.urls import reverse
-from django.http import HttpResponse
-from django.conf import settings
 from plotly.offline import plot
 import plotly.graph_objs as go
 from random import randint
@@ -12,9 +10,8 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as ulogin
 from django.contrib.auth import logout as ulogout
 from django.contrib.auth.decorators import login_required
-import ViloSkyApp.models
 from .forms import UserForm, InputForm
-from .models import AdminInput, Keyword, Paragraph, Report, CreateReport, UserProfile, PartialInput
+from .models import AdminInput, Keyword, Paragraph, Report, UserProfile, PartialInput
 from difflib import SequenceMatcher
 from datetime import datetime
 # Create your views here.
@@ -85,16 +82,26 @@ def myactions(request):
     return render(request, 'myactions.html', {}) 
 
 
-def report(request, *args, **kwargs):
+def report(request):
+    # Get the dictionary of inputs. Gathered in InputForm, saved to django session.
     inputs = request.session.get('saved')
-    keys = []
-    values = []
+    # Get a list of paragraphs based on the inputs
+    paras = get_paragraphs(inputs)
+
+    #If a user is logged in then create and save a report instance linked to their profile
     if request.user.is_authenticated:
-        paras = get_paragraphs(inputs)
-        report = Report.objects.save_report(request.user, paras, datetime.now())
+        current_user_profile = UserProfile.objects.filter(user=request.user).first()
+        # Create a report instance and add paragraphs to it
+        rep = Report(user=current_user_profile, datetime_created=datetime.now())
+        rep.save()
+        for p in paras:
+            rep.paragraphs.add(p)
+    # if a user is not logged in
     else:
-        paras = get_paragraphs(inputs)
-    context = {'paragraph':paras}
+        #serialize the paragraphs and save them to the session
+        request.session["temp_saved"] = serialize('json', paras)
+
+    context = {'paragraph': paras}
     return render(request, 'report.html', context)
 
 @login_required(login_url='login')
@@ -143,57 +150,83 @@ def data(request):
     return render(request, 'data.html', content_dict)
 
 def inputform(request):
+    # if this is a POST request we need to process the form data
     if request.method == 'POST':
+        # Create a form instance and fill it with the request data
         inputForm = InputForm(request.POST)
+
         if inputForm.is_valid():
             #data from the form is stored in a dictionary, 'cd'
             cd = inputForm.cleaned_data
             request.session['saved'] = cd
             return redirect('/report/')
+
+    # else if we arrive here from a GET method, i.e. via inputting a url.
     else:
+        # Create a new instance of the form
         inputForm = InputForm()
-    context = {'inputForm': inputForm, }
+
+        # Check if can populate the database from partial_inputs. i.e. if the user left without completing the form
+        if request.user.is_authenticated:
+            user = UserProfile.objects.get(user=request.user)
+            partials = PartialInput.objects.filter(created_by=user)
+            if partials:
+                # Dictionary to store partials, to be passed in to instantiated inputForm
+                partials_dict = {}
+                for p in partials:
+                    if p.admin_input.input_type == "DROPDOWN":
+                        partials_dict[p.admin_input.label] = (p.value, p.value)
+                    elif p.admin_input.input_type == "RADIOBUTTONS":
+                        partials_dict[p.admin_input.label] = p.value.strip("[]").replace("\'", "").split(", ")
+                        print(p.value)
+                    else:
+                        partials_dict[p.admin_input.label] = p.value
+                inputForm = InputForm(initial=partials_dict)
+
+
+
+    context = {'inputForm': inputForm,}
     return render(request, 'input_form.html',context)
+
 
 def similarity(a,b):
     return SequenceMatcher(None, a,b).ratio()
 
+
 def get_paragraphs(inputs_dictionary):
+    # Get all keywords, questions and list of answers
     keywords = Keyword.objects.all()
+    question_list = AdminInput.objects.all()
+    answers = [value for value in inputs_dictionary.values()]
+
+    # create dictionary of paragraph score(how relevant paragraphs are to user input)
     paragraphs_list = []
     scores_dict = {}
-    partials_list = PartialInput.objects.all()
-    partials = []
-    for i in partials_list:
-        partials.append(i.admin_input)
-    partials = set(partials)
-    # create dictionary of paragraph score(how relevant paragraphs are to user input)
-    question_list = AdminInput.objects.all()
-    answers = []
-    text_qs = 0
-    for key, value in inputs_dictionary.items():
-        answers.append(value)
     counter = 0
-    for question in question_list:
 
+    for question in question_list:
         if question.input_type == 'CHECKBOX':
             if answers[counter] == 'True':
                  counter+=1
-        if question.input_type == 'DROPDOWN':
+        elif question.input_type == 'DROPDOWN':
             for keyword in keywords:
                 if keyword == answers[counter]:
                     paragraphs_list.append(keyword.paragraph)
             counter+=1
+        elif question.input_type == 'RADIOBUTTONS':
+            for keyword in keywords:
+                if keyword in answers[counter]:
+                    paragraphs_list.append(keyword.paragraph)
         else:
             for keyword in keywords:
-                score = similarity(value, keyword.key)
+                score = similarity(answers[counter], keyword.key)
                 para = keyword.paragraph
                 if para not in scores_dict.keys():
                     scores_dict[para] = score
                 else:
                     scores_dict[para] += score
-            text_qs+=1
             counter+=1
+
     num_paras = 2
     for i in range(num_paras):
         highest_score = max(scores_dict, key=scores_dict.get)
