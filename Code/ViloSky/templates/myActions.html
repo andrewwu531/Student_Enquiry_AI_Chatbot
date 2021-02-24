@@ -7,80 +7,49 @@
 </div>
 <div class="margin">
 Week 1
-
 <form>
     <div class="row">            
-        {% for action in myactions %}
-        <p>
-            {{action.title}}
-        </p>
+        {% for i in next_few_week_actions %}
+        <div class="form-check form-check-inline">
+            <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
+            <label class="form-check-label" for="action1">{{i.title}}</label>
+        </div>
         {% endfor %}
-
-        <div class="form-check form-check-inline">
-            <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this first</label>
-        </div>
     </div>
 
-    <div class="row">
-        <div class="form-check form-check-inline">
-            <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this second</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-check form-check-inline">
-            <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this third</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-check form-check-inline">
-            <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this fourth</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-check form-check-inline">
-            <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this fifth</label>
-        </div>
-    </div>
-    
 </form>
-Week 2+
+Months 1+
 <form>
-    <div class="row">
+    <div class="row">            
+        {% for i in oneplusmonths_actions %}
         <div class="form-check form-check-inline">
             <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this first</label>
+            <label class="form-check-label" for="action1">{{i.title}}</label>
         </div>
-    </div>
-    <div class="row">
+        {% endfor %}
+    </div> 
+</form>
+6 Months
+<form>
+    <div class="row">            
+        {% for i in sixmonths_actions %}
         <div class="form-check form-check-inline">
             <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this second</label>
+            <label class="form-check-label" for="action1">{{i.title}}</label>
         </div>
-    </div>
-    <div class="row">
+        {% endfor %}
+    </div> 
+</form>
+7 Months
+<form>
+    <div class="row">            
+        {% for i in sevenmonths_actions %}
         <div class="form-check form-check-inline">
             <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this third</label>
+            <label class="form-check-label" for="action1">{{i.title}}</label>
         </div>
-    </div>
-    <div class="row">
-        <div class="form-check form-check-inline">
-            <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this fourth</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-check form-check-inline">
-            <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this fifth</label>
-        </div>
-    </div>
-    
+        {% endfor %}
+    </div> 
 </form>
 </div>
 {%endblock%}

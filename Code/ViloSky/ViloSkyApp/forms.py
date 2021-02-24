@@ -24,14 +24,7 @@ class UserForm(forms.ModelForm):
         fields = ( 'email', 'password', 'confirm_password')
 
 
-class ReportForm(forms.ModelForm):
-    datetime_created = forms.DateField(initial=datetime.date.today, widget=forms.HiddenInput())
-    class Meta:
-        model = Report
-        fields = [
-            'paragraphs', 'user', 'datetime_created'
-        ]
-        fields = ('email', 'password', 'confirm_password')
+
 
 
 class UserProfileForm(forms.ModelForm):

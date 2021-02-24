@@ -9,7 +9,6 @@ import plotly.graph_objs as go
 from random import randint
 from random import uniform
 from django.http import request
-from .forms import ReportForm
 from .models import *
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -18,9 +17,7 @@ from django.contrib.auth import login as ulogin
 from django.contrib.auth import logout as ulogout
 from plotly.offline import plot
 import plotly.graph_objs as go
-from ViloSkyApp.models import Qualification
 from ViloSkyApp.forms import UserForm, UserProfileForm, QualificationForm
-from .forms import UserProfileForm
 
 
 def index(request):
@@ -131,54 +128,47 @@ def mydetails(request):
 
 @login_required(login_url='login')
 def myactions(request):
-    report  = Report.objects.first()
-    paragraphs = report.paragraphs.all() 
-    next_few_week_actions = []
-    sixmonths_actions = []
-    oneplusmonths_actions = []
-    sevenmonths_actions = []
-    for paragraph in paragraphs:
-        if paragraph.static_text == "Next Few Weeks":
-            for i in paragraph.actions.all():
-                next_few_week_actions.append(i)
-                UserAction.objects.create(title=i.title)
-        if paragraph.static_text == "1+ months":
-            for j in paragraph.actions.all():
-                UserAction.objects.create(title=j.title, report = report)
-        if paragraph.static_text == "6 months":
-            for z in paragraph.actions.all():
-                UserAction.objects.create(title=z.title, report = report)
-        if paragraph.static_text == "7 months":
-            for a in paragraph.actions.all():
-                UserAction.objects.create(title=a.title, report = report)
-    myactions = UserAction.objects.filter(report=report)
+    user = UserProfile.objects.filter(user=request.user).first()
+    report  = Report.objects.filter(user=user).first()
+    action_plan = UserAction.objects.filter(report=report)
     context_dict = {
-        'next_few_week_actions' : next_few_week_actions,
-        '6months_actions' : sixmonths_actions,
-        '7month_actions' : sevenmonths_actions,
-        '1+months_actions' : oneplusmonths_actions,
-        'myactions' : myactions
+        'action_plan' : action_plan,
     }
     return render(request, 'myactions.html', context_dict) 
 
 @login_required(login_url='login')
 def show_report(request):
-    user = UserProfile.objects.get()
-    report = Report.objects.first()
-    paragraphs = report.paragraphs.all().order_by('-id')
-    link = []
-    for i in paragraphs:
-        for j in i.links.all():
-            link.append(j)
-    
+    user = UserProfile.objects.filter(user=request.user).first()
+    report  = Report.objects.filter(user=user).first()
+    paragraphs = report.paragraphs.all() 
+    #lists to hold action at different time interval
+    next_few_week_actions = []
+    sixmonths_actions = []
+    oneplusmonths_actions = []
+    sevenmonths_actions = []
+    for paragraph in paragraphs:
+        if paragraph.static_text == "Next Few Weeks:":
+            for i in paragraph.actions.all():
+                next_few_week_actions.append(i)
+        if paragraph.static_text == "1+ months:":
+            for j in paragraph.actions.all():
+                oneplusmonths_actions.append(j) 
+        if paragraph.static_text == "6 months:":
+            for z in paragraph.actions.all():
+                sixmonths_actions.append(z)
+        if paragraph.static_text == "7 months:":
+            for a in paragraph.actions.all():
+                sevenmonths_actions.append(a)
+                
+    myactions = UserAction.objects.filter(report=report)
     context_dict = {
-        'report' : report,
-        'paragraphs' : paragraphs,
-        'links' : link
+        'next_few_week_actions' : next_few_week_actions,
+        'sixmonths_actions' : sixmonths_actions,
+        'sevenmonths_actions' : sevenmonths_actions,
+        'oneplusmonths_actions' : oneplusmonths_actions,
+        'myactions' : myactions
     }
-
     return render(request, 'report.html', context_dict) 
-    return render(request, 'myactions.html', {})
 
 
 @login_required(login_url='login')
@@ -210,21 +200,6 @@ def editquestion(request):
 def outputdetails(request):
     return render(request, 'outputdetails.html', {})
 
-
-def createReport(request):
-    form = ReportForm()
-    if request.method == 'POST':
-        if form.is_valid():
-            instance = Report()
-            instance.datetime = request.POST['datetime_created']
-            instance.user = User.objects.get(username = request.user.username) 
-            return redirect('ViloSkyApp::report')
-    else:
-        print(form.errors)
-    context = {
-        'form' : form
-    }
-    return render(request, 'mydetails.html', context)
 
     
 @login_required(login_url='login')
