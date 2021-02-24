@@ -1,16 +1,19 @@
 ''' Views for the ViloSky app'''
 from random import uniform, randint
+from plotly.offline import plot
+import plotly.graph_objs as go
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as ulogin
 from django.contrib.auth import logout as ulogout
-from plotly.offline import plot
-import plotly.graph_objs as go
+from django.contrib.auth.decorators import login_required
+from django.utils.formats import localize
+from ViloSkyApp import models
+from ViloSkyApp.forms import UserForm
 from ViloSkyApp.models import Qualification
-from ViloSkyApp.forms import UserForm, UserProfileForm, QualificationForm
+from ViloSkyApp.forms import QualificationForm
 from .forms import UserProfileForm
 
 
@@ -79,11 +82,6 @@ def dashboard(request):
     return render(request, 'dashboard.html', {})
 
 
-@login_required
-def baseuser(request):
-    return render(request, 'baseuser.html', {})
-
-
 @login_required(login_url='login')
 def mydetails(request):
     p_form = UserProfileForm(instance=request.user.user_profile)
@@ -121,41 +119,118 @@ def mydetails(request):
 
 
 @login_required(login_url='login')
-def myactions(request):
-    return render(request, 'myactions.html', {})
+def action(request, action_id):
+    # Pass required info and update template
+    return render(request, 'action_plan.html', {'action_id': action_id})
 
 
 @login_required(login_url='login')
-def report(request):
-    return render(request, 'report.html', {})
+def actions(request):
+    user = models.UserProfile.objects.filter(user=request.user).first()
+
+    if user is None:
+        return render(request, "error.html")
+
+    user_reports = user.reports_assigned.all().order_by('-datetime_created')
+    entries = [{"id": report.id, "title": f"Action plan from {localize(report.datetime_created)}"}
+               for report in user_reports]
+    template_headings = ["#", "Title"]
+    model_keys = ["id", "title"]
+
+    return render(request, 'action_plans.html', {
+        "headings": template_headings, "model_keys": model_keys,
+        "entries": entries, "row_link_to": "/action/"
+    })
 
 
 @login_required(login_url='login')
+def report(request, report_id):
+    # Pass required info and update template
+    return render(request, 'report.html', {'report_id': report_id})
+
+
+@login_required
+def baseuser(request):
+    return render(request, 'baseuser.html', {})
+
+
+@login_required(login_url='login')
+def reports(request):
+    user = models.UserProfile.objects.filter(user=request.user).first()
+
+    if user is None:
+        return render(request, "error.html")
+
+    reports_to_render = list(
+        user.reports_assigned.all().values().order_by('-datetime_created'))
+    for report in reports_to_render:
+        report['datetime_created'] = localize(report['datetime_created'])
+    template_headings = ["#", "Date Created"]
+    model_keys = ["id", "datetime_created"]
+
+    return render(request, 'reports.html', {
+        "headings": template_headings, "model_keys": model_keys,
+        "entries": reports_to_render, "row_link_to": "/report/"
+    })
+
+
+@ login_required(login_url='login')
 def roles(request):
     return render(request, 'roles.html', {})
 
 
-@login_required(login_url='login')
-def input(request):
-    return render(request, 'input.html', {})
+@ login_required(login_url='login')
+def admin_input(request, admin_input_id):
+    # Pass required info and update template
+    return render(request, 'admin_input.html', {'admin_input_id': admin_input_id})
 
 
-@login_required(login_url='login')
-def output(request):
-    return render(request, 'output.html', {})
+@ login_required(login_url='login')
+def admin_inputs(request):
+    user = models.UserProfile.objects.filter(user=request.user).first()
+
+    if user is None:
+        return render(request, "error.html")
+
+    inputs_to_render = list(
+        models.AdminInput.objects.all().values('id', 'created_by__user__first_name', 'label', 'input_type', 'is_required'))
+    template_headings = ["#", "Created By", "Label", "Type", "Required"]
+    model_keys = ["id", "created_by__user__first_name",
+                  "label", "input_type", "is_required"]
+
+    return render(request, 'admin_inputs.html', {
+        "headings": template_headings, "model_keys": model_keys,
+        "entries": inputs_to_render, "row_link_to": "/admin_input/"
+    })
+
+    return render(request, 'admin_inputs.html', {})
 
 
-@login_required(login_url='login')
-def editquestion(request):
-    return render(request, 'editquestion.html', {})
+@ login_required(login_url='login')
+def paragraph(request, paragraph_id):
+    # Pass required info and update template
+    return render(request, 'paragraph.html', {'paragraph_id': paragraph_id})
 
 
-@login_required(login_url='login')
-def outputdetails(request):
-    return render(request, 'outputdetails.html', {})
+@ login_required(login_url='login')
+def paragraphs(request):
+    user = models.UserProfile.objects.filter(user=request.user).first()
+
+    if user is None:
+        return render(request, "error.html")
+
+    pars_to_render = list(
+        models.Paragraph.objects.all().values('id', 'created_by__user__first_name', 'static_text'))
+    template_headings = ["#", "Created By", "Text"]
+    model_keys = ["id", "created_by__user__first_name", "static_text"]
+
+    return render(request, 'paragraphs.html', {
+        "headings": template_headings, "model_keys": model_keys,
+        "entries": pars_to_render, "row_link_to": "/paragraph/"
+    })
 
 
-@login_required(login_url='login')
+@ login_required(login_url='login')
 def data(request):
     visitors = []
     registered_users = []
