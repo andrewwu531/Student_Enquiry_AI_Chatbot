@@ -11,13 +11,12 @@ class UserForm(forms.ModelForm):
         model = get_user_model()
         fields = ( 'email', 'password', 'confirm_password')
 
-
 class InputForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(InputForm, self).__init__(*args, **kwargs)
         for i, q in enumerate(AdminInput.objects.all()):
 
-            # Dropdowns
+            #dropdowns
             if q.input_type == 'DROPDOWN':
                 d_q = DropdownAdminInput.objects.get(label=q.label)
                 # Need to set the choices as a tuple of (choice, choice)
@@ -40,24 +39,23 @@ class InputForm(forms.Form):
                     self.fields[r_q.label] = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
                                                                        label=r_q.label, choices=choices)
                 else:
-                    self.fields[r_q.label] = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
-                                                                       label=r_q.label, choices=choices, required=False)
-            # Checkboxes
+                    self.fields[r_q.label] = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple, label=r_q.label, choices=choices, required=False)
+            #Checkboxes
             elif q.input_type == 'CHECKBOX':
                 check_q = CheckboxAdminInput.objects.get(label=q.label)
                 if q.is_required == 'True':
-                    self.fields[check_q.label] = forms.BooleanField(label=check_q.label)
+                    self.fields['%s_field' % i] = forms.BooleanField(label=check_q.label)
                 else:
-                    self.fields[check_q.label] = forms.BooleanField(label=check_q.label, required=False)
+                    self.fields['%s_field' % i] = forms.BooleanField(label=check_q.label, required=False)
             elif q.input_type  == 'TEXT':
                 text_q = TextAdminInput.objects.get(label=q.label)
                 if q.is_required:
-                    self.fields[text_q.label] = forms.CharField(max_length=text_q.max_length, label=q.label)
+                    self.fields['%s_field' % i] = forms.CharField(max_length=text_q.max_length, label=q.label)
                 else:
-                    self.fields[text_q.label] = forms.CharField(max_length=text_q.max_length, label=q.label, required=False)
+                    self.fields['%s_field' % i] = forms.CharField(max_length=text_q.max_length, label=q.label, required=False)
             else:
                 textarea_q = TextareaAdminInput.objects.get(label=q.label)
                 if q.is_required:
-                    self.fields[textarea_q.label] = forms.CharField(max_length=textarea_q.max_length, label=q.label)
+                    self.fields['%s_field' % i] = forms.CharField(max_length=textarea_q.max_length, label=q.label)
                 else:
-                    self.fields[textarea_q.label] = forms.CharField(max_length=textarea_q.max_length, label=q.label, required=False)
+                    self.fields['%s_field' % i] = forms.CharField(max_length=textarea_q.max_length, label=q.label, required=False)

@@ -97,6 +97,11 @@ class Action(models.Model):
     title = models.CharField(max_length=255)
 
 
+class CreateReport(models.Manager):
+    def save_report(self,user, paragraphs, datetime_created):
+        report = self.create(user=user, paragraphs=paragraphs, datetime_created=datetime_created)
+        return report
+
 class Report(models.Model):
     """ A model to hold reports consisting of multiple paragraphs.
     Each report is assigned to an individual user.
@@ -106,6 +111,8 @@ class Report(models.Model):
     user = models.ForeignKey(
         UserProfile, on_delete=models.CASCADE, related_name='reports_assigned')
     datetime_created = models.DateTimeField()
+
+    objects = CreateReport()
 
 
 class UserAction(models.Model):

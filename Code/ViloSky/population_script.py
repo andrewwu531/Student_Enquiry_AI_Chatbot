@@ -64,10 +64,9 @@ def populate():
         {
             'users': ['greid@gmail.com', ],
             'admin': 'Suzie Mulligan',
-            'text': 'Having been out of work for 3-5 years now it is understandable that your confidence would be low, but you have all the skills and experience you need to re-establish your career.',
+            'text': 'Having been out of work for 3-5 years now it is understandable that your confidence may be low, but you have all the skills and experience you need to re-establish your career.',
             'keywords': [
-                {'key': '3-5 Years', 'score': 5},
-                {'key': 'Confidence', 'score': 7},
+                {'key': '3-5 Years since last work', 'score': 5},
             ],
             'links': [],
             'actions':[]
@@ -121,14 +120,12 @@ def populate():
             'admin': 'Suzie Mulligan',
             'text': 'The following organisations are also well known for supporting flexible working and women returners so it is well worth checking their individual career pages too: ',
             'keywords':[
-                {'key': 'flexibility', 'score': 10},
-
                 # triggered if someone has been out of work for any amount of time
                 # score increases with time length
-                {'key': '1-6 Months', 'score': 4},
+                {'key': '1-6 Months ', 'score': 4},
                 {'key': '7-12 Months', 'score': 5},
                 {'key': '1-2 Years', 'score': 6},
-                {'key': '3-5 Years', 'score': 7},
+                {'key': '3-5 Years since last work', 'score': 7},
                 {'key': '5-10 Years', 'score': 8},
                 {'key': '10+ Years', 'score': 9},
             ],
@@ -303,7 +300,7 @@ def populate():
             'input_type': AdminInput.AdminInputTypes.DROPDOWN,
             'is_required': True,
             'choices': ['0 (Currently Working)', '1-6 Months', '7-12 Months', '1-2 Years',
-                        '3-5 Years', '5-10 Years', '10+ Years'],
+                        '3-5 Years since last work', '5-10 Years', '10+ Years'],
             'partial_inputs':[
                 {'created_by': 'greid@gmail.com', 'value': '10+ Years'},
             ]

@@ -1,6 +1,8 @@
+
 from django.shortcuts import render, redirect
-from django.core.serializers import serialize, deserialize
 from django.urls import reverse
+from django.http import HttpResponse
+from django.conf import settings
 from plotly.offline import plot
 import plotly.graph_objs as go
 from random import randint
@@ -10,10 +12,12 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as ulogin
 from django.contrib.auth import logout as ulogout
 from django.contrib.auth.decorators import login_required
+import ViloSkyApp.models
 from .forms import UserForm, InputForm
-from .models import AdminInput, Keyword, Paragraph, Report, UserProfile, PartialInput
+from .models import AdminInput, Keyword, Paragraph, Report, CreateReport, UserProfile, PartialInput
 from difflib import SequenceMatcher
 from datetime import datetime
+from django.core.serializers import serialize, deserialize
 # Create your views here.
 def index(request):
     return render(request, 'index.html', {}) 
@@ -205,6 +209,7 @@ def get_paragraphs(inputs_dictionary):
     counter = 0
 
     for question in question_list:
+
         if question.input_type == 'CHECKBOX':
             if answers[counter] == 'True':
                  counter+=1
@@ -215,7 +220,7 @@ def get_paragraphs(inputs_dictionary):
             counter+=1
         elif question.input_type == 'RADIOBUTTONS':
             for keyword in keywords:
-                if keyword in answers[counter]:
+                if str(keyword) in answers[counter]:
                     paragraphs_list.append(keyword.paragraph)
         else:
             for keyword in keywords:
@@ -227,8 +232,9 @@ def get_paragraphs(inputs_dictionary):
                     scores_dict[para] += score
             counter+=1
 
-    num_paras = 2
-    for i in range(num_paras):
+    num_paras = 5
+
+    for k in range(num_paras):
         highest_score = max(scores_dict, key=scores_dict.get)
         paragraphs_list.append(highest_score)
         del scores_dict[highest_score]
