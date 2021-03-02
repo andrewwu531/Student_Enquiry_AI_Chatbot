@@ -101,6 +101,7 @@ def populate():
         {
             'users': ['greid@gmail.com', ],
             'admin': 'Suzie Mulligan',
+
             'text': 'As you are looking for flexibility and a shorter working week (20hrs), we suggest the following job search sites: ',
             'keywords': [
                 {'key': 'Flexibility', 'score': 10},
@@ -122,12 +123,12 @@ def populate():
             'keywords':[
                 # triggered if someone has been out of work for any amount of time
                 # score increases with time length
-                {'key': '1-6 Months ', 'score': 4},
-                {'key': '7-12 Months', 'score': 5},
-                {'key': '1-2 Years', 'score': 6},
+                {'key': '1-6 Months since last work', 'score': 4},
+                {'key': '7-12 Months since last work', 'score': 5},
+                {'key': '1-2 Years since last work', 'score': 6},
                 {'key': '3-5 Years since last work', 'score': 7},
-                {'key': '5-10 Years', 'score': 8},
-                {'key': '10+ Years', 'score': 9},
+                {'key': '5-10 Years since last work', 'score': 8},
+                {'key': '10+ Years since last work', 'score': 9},
             ],
             'links': [],
             'actions':[]
@@ -299,10 +300,10 @@ def populate():
             'label': 'Time since last paid work:',
             'input_type': AdminInput.AdminInputTypes.DROPDOWN,
             'is_required': True,
-            'choices': ['0 (Currently Working)', '1-6 Months', '7-12 Months', '1-2 Years',
-                        '3-5 Years since last work', '5-10 Years', '10+ Years'],
+            'choices': ['0 (Currently Working)', '1-6 Months since last work', '7-12 Months since last work', '1-2 Years since last work',
+                        '3-5 Years since last work', '5-10 Years since last work', '10+ Years since last work'],
             'partial_inputs':[
-                {'created_by': 'greid@gmail.com', 'value': '10+ Years'},
+                {'created_by': 'greid@gmail.com', 'value': '10+ Years since last work'},
             ]
         },
         {
@@ -311,7 +312,7 @@ def populate():
             'input_type': AdminInput.AdminInputTypes.RADIOBUTTONS,
             'is_required': False,
             'choices': ['Retail', 'Fashion', 'Media', 'Banking&Finance', 'Construction',
-                        'Manuacturing', 'Law', 'Medical', 'Education', 'IT'],
+                        'Manufacturing', 'Law', 'Medical', 'Education', 'IT'],
             'partial_inputs':[
                 {'created_by': 'greid@gmail.com', 'value': 'Banking&Finance'},
             ]

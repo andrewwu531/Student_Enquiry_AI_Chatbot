@@ -14,7 +14,7 @@ from django.contrib.auth import logout as ulogout
 from django.contrib.auth.decorators import login_required
 import ViloSkyApp.models
 from .forms import UserForm, InputForm
-from .models import AdminInput, Keyword, Paragraph, Report, CreateReport, UserProfile, PartialInput
+from .models import AdminInput, Keyword, Paragraph, Report, CreateReport, UserProfile, PartialInput, Link, Action
 from difflib import SequenceMatcher
 from datetime import datetime
 from django.core.serializers import serialize, deserialize
@@ -91,7 +91,27 @@ def report(request):
     inputs = request.session.get('saved')
     # Get a list of paragraphs based on the inputs
     paras = get_paragraphs(inputs)
+    link_list = Link.objects.all()
+    actions_list = Action.objects.all()
+    links_dict = {}
 
+    #get the associated links and actions for each paragraph
+    for paragraph in paras:
+        temp = []
+        t = []
+        big_l = []
+        for link in link_list:
+            if paragraph == link.paragraph:
+                temp.append(link)
+        for action in actions_list:
+            if paragraph == action.paragraph:
+                t.append(action)
+        if temp:
+            big_l.append(temp)
+        if t:
+            big_l.append(t)
+        #list of the lists for links and actions added to dictionary
+        links_dict[paragraph] = big_l
     #If a user is logged in then create and save a report instance linked to their profile
     if request.user.is_authenticated:
         current_user_profile = UserProfile.objects.filter(user=request.user).first()
@@ -105,7 +125,7 @@ def report(request):
         #serialize the paragraphs and save them to the session
         request.session["temp_saved"] = serialize('json', paras)
 
-    context = {'paragraph': paras}
+    context = {'data':links_dict}
     return render(request, 'report.html', context)
 
 @login_required(login_url='login')
@@ -186,9 +206,6 @@ def inputform(request):
                     else:
                         partials_dict[p.admin_input.label] = p.value
                 inputForm = InputForm(initial=partials_dict)
-
-
-
     context = {'inputForm': inputForm,}
     return render(request, 'input_form.html',context)
 
@@ -209,7 +226,6 @@ def get_paragraphs(inputs_dictionary):
     counter = 0
 
     for question in question_list:
-
         if question.input_type == 'CHECKBOX':
             if answers[counter] == 'True':
                  counter+=1
@@ -220,8 +236,9 @@ def get_paragraphs(inputs_dictionary):
             counter+=1
         elif question.input_type == 'RADIOBUTTONS':
             for keyword in keywords:
-                if str(keyword) in answers[counter]:
+                if keyword.key in answers[counter]:
                     paragraphs_list.append(keyword.paragraph)
+            counter+=1
         else:
             for keyword in keywords:
                 score = similarity(answers[counter], keyword.key)

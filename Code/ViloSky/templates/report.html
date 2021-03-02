@@ -5,9 +5,23 @@
 <div>
     <h1>Report</h1>
     <ul>
-        {% for para in paragraph %}
+        {% for key,values in data.items %}
         <li>
-            {{ para.static_text }}
+            {{ key.static_text }}
+            <ul>
+                {% for list in values %}
+                    {% for item in list %}
+                        <li>
+                                {% if item.title == null %}
+                                    {{ item.url }}
+                                {% endif %}
+                                {% if item.url == null %}
+                                    {{item.title}}
+                                {% endif %}
+                        </li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
         </li>
         {% endfor %}
     </ul>
