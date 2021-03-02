@@ -1,7 +1,7 @@
 '''Forms for the ViloSky app'''
 import datetime
 from django import forms
-from ViloSkyApp.models import UserProfile, Qualification
+from ViloSkyApp.models import UserProfile, Qualification, AdminInput
 from django.contrib.auth import get_user_model
 
 
@@ -56,3 +56,10 @@ class QualificationForm(forms.ModelForm):
             'subjects'
         )
 #QualificationFormSet = modelformset_factory(QualificationForm, fields = ('user','level', 'subjects'), extra = 1)
+
+class AdminInputForm(forms.ModelForm):
+
+    class Meta:
+        model = AdminInput
+        fields = ('label',
+                  'input_type')

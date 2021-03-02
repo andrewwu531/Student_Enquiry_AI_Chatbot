@@ -11,9 +11,8 @@ from django.contrib.auth import logout as ulogout
 from django.contrib.auth.decorators import login_required
 from django.utils.formats import localize
 from ViloSkyApp import models
-from ViloSkyApp.forms import UserForm
+from ViloSkyApp.forms import UserForm, QualificationForm, AdminInputForm
 from ViloSkyApp.models import Qualification
-from ViloSkyApp.forms import QualificationForm
 from .forms import UserProfileForm
 
 
@@ -179,19 +178,57 @@ def roles(request):
     return render(request, 'roles.html', {})
 
 
+'''@ login_required(login_url='login')
+def admin_input(request, admin_input_id):
+    # Get admin_input data from the database
+    admin_input = models.AdminInput.objects.get(id=admin_input_id)
+    context_dict = {'admin_input_id': admin_input_id,
+                    'label': str(admin_input.label),
+                    'input_type': admin_input.input_type,
+                    'required': admin_input.is_required
+                    }
+
+    # Different input type require different data to be passed to the template
+    if admin_input.input_type=="DROPDOWN":
+        dropdown = models.DropdownAdminInput.objects.get(admin_input=admin_input)
+        context_dict['choices'] = dropdown.choices
+    #if admin_input.input_type=="RADIOBUTTONS":
+        #radiobutton = models.RadioButtonAdminInput.objects.get(admin_input=admin_input)
+        #context_dict['choices'] = admin_input.choices
+    if admin_input.input_type=="CHECKBOX":
+        checkbox = models.CheckboxAdminInput.objects.get(admin_input=admin_input)
+        context_dict['default_value'] = checkbox.default_value
+    # Pass required info and update template
+    return render(request, 'admin_input.html', context_dict)
+'''
 @ login_required(login_url='login')
 def admin_input(request, admin_input_id):
-    # Pass required info and update template
-    return render(request, 'admin_input.html', {'admin_input_id': admin_input_id})
+    if request.method=="POST":
+        # create a form instance and populate it with data from the request:
+        form = AdminInputForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            return render(request, 'admin_inputs.html')
+        # if a GET (or any other method) we'll create a blank form
+    else:
+        form = AdminInputForm()
+
+    return render(request, 'admin_input.html', {'form': form})
 
 
 @ login_required(login_url='login')
 def admin_inputs(request):
+    # Get User
     user = models.UserProfile.objects.filter(user=request.user).first()
 
+    # If no user logged in then show error.html
     if user is None:
         return render(request, "error.html")
 
+    # List Item to store admin ipunt details to be rendered
     inputs_to_render = list(
         models.AdminInput.objects.all().values('id', 'created_by__user__first_name', 'label', 'input_type', 'is_required'))
     template_headings = ["#", "Created By", "Label", "Type", "Required"]
@@ -202,8 +239,6 @@ def admin_inputs(request):
         "headings": template_headings, "model_keys": model_keys,
         "entries": inputs_to_render, "row_link_to": "/admin_input/"
     })
-
-    return render(request, 'admin_inputs.html', {})
 
 
 @ login_required(login_url='login')
