@@ -38,6 +38,13 @@ class UserProfile(models.Model):
         FIVE_TO_TEN_YEARS = '5-10 Years'
         TEN_PLUS_YEARS = '10+ Years'
 
+    class EmploymentStatusTypes(models.TextChoices):
+        UNEMPLOYED_OR_VOLUNTEER = 'Unemployed/Volunteer'
+        EMPLOYED = 'Employed'
+        SELFEMPLOYED = 'Self-Employed'
+        CAREER_BREAK = 'Career Break'
+        RETIRED = 'Retired'
+
     user = models.OneToOneField(
         CustomUser, on_delete=models.CASCADE, related_name='user_profile')
     is_vilosky_admin = models.BooleanField(default=False)
@@ -45,7 +52,8 @@ class UserProfile(models.Model):
     date_of_birth = models.DateField(null=True, blank=True)
     company = models.CharField(max_length=255, blank=True)
     employment_sector = models.CharField(max_length=255, blank=True)
-    employment_status = models.CharField(max_length=255, blank=True)
+    employment_status = models.CharField(
+        blank=True, choices=EmploymentStatusTypes.choices, max_length=255)
     time_worked_in_industry = models.CharField(
         blank=True, choices=TimeWorkedTypes.choices, max_length=255)
 

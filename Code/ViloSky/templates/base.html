@@ -13,14 +13,16 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
     <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous">
-    <link rel="stylesheet" href="../static/stylesheets/style.css">
-
+    <link rel="stylesheet" href="{% static '/stylesheets/style.css' %}">
+    {% block stylesheets %}
+    {% endblock %}
     <!-- Scrollbar Custom CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
 
     <!-- Font Awesome JS -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
@@ -48,22 +50,25 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
                   <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'input' %}">Input</a>
-                </li>
-                <li class="nav-item">
                   <a class="nav-link" href="{% url 'input_form' %}">New Report</a>
                 </li>
+                <li>
+                  <a class="nav-link" href="{% url 'reports' %}">Reports</a>
+                </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'output' %}">Output</a>
+                  <a class="nav-link" href="{% url 'admin_inputs' %}">Admin Inputs</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'paragraphs' %}">Paragraphs</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'data' %}">Data</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'mydetails' %}">MyDetails</a>
+                  <a class="nav-link" href="{% url 'mydetails' %}">My Details</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'myactions' %}">MyActions</a>
+                  <a class="nav-link" href="{% url 'actions' %}">My Actions</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'roles' %}">Roles</a>
@@ -168,8 +173,7 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
 });
 </script>
 <!--listener to adjust sidebar-->
-<script>
-  
-  </script>
+{% block script %}
+{% endblock %}
 </body>
 </html>

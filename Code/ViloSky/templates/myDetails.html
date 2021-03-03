@@ -2,118 +2,138 @@
 {% load static %}
 
 {% block body%}
+    <div id = "quals">
+        <button class ="btn-edit small" id ="edit" onclick=editQuals()>Edit</button>
+        <button class ="btn-edit small" style = "display: none;" id="cancel" onclick=cancel()>Cancel</button>
+        <br>
     <div class="largeText whiteText centerText">
-        MyDetails
+        My Qualifications
     </div>
-    <form class="center">
-        {% csrf_token %}
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    What best describes your current work barriers?
-                    <select class="form-control form-control-lg">
-                        <option>Stuff</option>
-                        <option>comes</option>
-                        <option>Here</option>
-                      </select>
-                </div>
-            </div>
+
+    <div id = "staticQ">
+    {% for q in qualifications %}
+    <div class="row bottomborder center centerText">
+        <div class="col">
+            {{q.level}}
         </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    What best describes your current work situation?
-                    <select class="form-control form-control-lg">
-                        <option>Stuff</option>
-                        <option>comes</option>
-                        <option>Here</option>
-                      </select>
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    Time since last paid work?
-                    <select class="form-control form-control-lg">
-                        <option>Stuff</option>
-                        <option>comes</option>
-                        <option>Here</option>
-                      </select>
-                </div>
-            </div>
+        <div class="col">
+            {{q.subjects}}
         </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    Do you have relevant formal qualifications in the area you are interested in?
-                    <select class="form-control form-control-lg">
-                        <option>Stuff</option>
-                        <option>comes</option>
-                        <option>Here</option>
-                      </select>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    Industry interested in?
-                    <select class="form-control form-control-lg">
-                        <option>Stuff</option>
-                        <option>comes</option>
-                        <option>Here</option>
-                      </select>
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    Area of interest?
-                    <select class="form-control form-control-lg">
-                        <option>Stuff</option>
-                        <option>comes</option>
-                        <option>Here</option>
-                      </select>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    What would you like to achieve from your next role?
-                    <select class="form-control form-control-lg">
-                        <option>Stuff</option>
-                        <option>comes</option>
-                        <option>Here</option>
-                      </select>
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    Hours per week you want to work?
-                    <input name="username" type="text" class="form-control"required>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    Tell us more about you:
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-group">
-                    <button type="button" class="btn btn-primary btn-block">Create new report</button>
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    <button type="button" class="btn btn-primary btn-block">Save details</button>
-                </div>
-            </div>
-        </div>
-		
+    </div>
+    {% endfor %}
+    </div>
+    
+    <div class = "center centerText" id = "dynamic" style ="display: none;">
+        <table class = "center">
+        <thead>
+            <th>Level</th>
+            <th>Subject</th>
+            <th>Delete</th>
+        </thead>
+        <tbody>
+        <form method = "POST">
+        {% csrf_token %} 
+        {% for q in qualifications %}
+            <tr>
+                <td>{{q.level}}</td>
+                <td> {{q.subjects}}</td>
+                <td><input type = "checkbox" name = "delete_list" value = "{{q.id}}"></td>
+            </tr>
+        {% endfor %}
+        </tbody>
         
+    </table>
+    <br>
+    <button type="submit" class = "btn-add" name = "delete_qualifications">Delete Selected</button>
     </form>
+    </div>
+
+    <br>
+    <div class = "center centerText" id = "editquals">
+        <form class="center" method = "POST" action="{% url 'mydetails' %}">
+            {% csrf_token %} 
+            <div class = "col">
+                {{ q_form.level }} 
+            </div>
+            <div class = "col">
+                {{ q_form.subjects}} 
+            </div>
+            <div>
+                <button type="submit" name = "addquals" class = "btn-add" >Add</button>
+            </div>
+        </div>
+
+        </form>
+    </div>
+    <br>
+    
+    <div class="largeText whiteText centerText">
+        <button id = "show" class="btn-profile" onclick="showDiv()">Update My Profile</button>
+    </div>
+
+    
+
+
+    <div id = "update" style="display: none;">
+        <div class="largeText whiteText centerText">
+            Update My Profile
+            <button  class = "btn-edit" id ="cancelP" style = "display: none;" onclick=cancel()>Cancel</button>
+        </div>
+    <div class="row center centerText">
+    <form class="center" method = "POST" action="{% url 'mydetails' %}">
+        {% csrf_token %} 
+
+        <div class="form-group">
+            <p>Date of Birth: </p> {{ p_form.date_of_birth}}
+            
+        </div>
+        <div class="form-group">
+            <p>Company: </p> {{ p_form.company}}
+            
+        </div>
+        <div class="form-group">
+            <p>Employment Status: </p> {{ p_form.employment_status}}
+            
+        </div>
+        <div class="form-group">
+            <p>Empoyment Sector: </p> {{ p_form.employment_sector}}
+            
+        </div>
+        <div class="form-group">
+            <p>Time Worked In Sector: </p>{{ p_form.time_worked_in_industry}}
+        </div>
+
+       
+        <div class="form-group">
+            <div class = "col">
+                <button type="submit" class="btn btn-primary ">Save Details</button><br><br>
+            </div>  
+        </div>
+   
+    </form>
+  
+    </div>
+    
+<script>        
+function showDiv() {
+    document.getElementById('update').style.display = "block";
+    document.getElementById('cancelP').style.display = "block";
+    document.getElementById('show').style.display = "none";
+    document.getElementById('quals').style.display = "none";
+}
+
+function cancel() {
+    window.location.reload();
+}
+
+function editQuals(){
+    document.getElementById('dynamic').style.display = "block";
+    document.getElementById('cancel').style.display = "block";
+    document.getElementById('edit').style.display = "none";
+    document.getElementById('show').style.display = "none";
+    document.getElementById('editquals').style.display = "none";
+    document.getElementById('staticQ').style.display = "none";
+}
+</script>
 {%endblock%}
+

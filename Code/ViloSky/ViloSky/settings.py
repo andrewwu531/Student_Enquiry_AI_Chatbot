@@ -121,7 +121,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+#forgot password
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'viloskys@gmail.com'
+EMAIL_HOST_PASSWORD = 'UofGPSD03'
+EMAIL_USE_TLS = True
+
 
 # Custom User model
 AUTH_USER_MODEL = 'ViloSkyApp.CustomUser'
-STATICFILES_DIRS = [STATIC_DIR,]
+STATICFILES_DIRS = [STATIC_DIR, ]
