@@ -1,5 +1,7 @@
 ''' Views for the ViloSky app'''
 from random import uniform, randint
+from datetime import datetime
+from difflib import SequenceMatcher
 from plotly.offline import plot
 import plotly.graph_objs as go
 from django.shortcuts import render, redirect
@@ -9,19 +11,17 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as ulogin
 from django.contrib.auth import logout as ulogout
 from django.contrib.auth.decorators import login_required
+from django.core.serializers import serialize
 from django.utils.formats import localize
 from ViloSkyApp import models
 from ViloSkyApp.forms import UserForm, InputForm
 from ViloSkyApp.models import Qualification
 from ViloSkyApp.forms import QualificationForm
-from difflib import SequenceMatcher
-from datetime import datetime
 from .forms import UserProfileForm
-from django.core.serializers import serialize, deserialize
 
 
 def index(request):
-    return render(request, 'index.html', {})
+    return redirect(reverse('login'))
 
 
 def login(request):
@@ -145,12 +145,6 @@ def actions(request):
     })
 
 
-@login_required(login_url='login')
-def report(request, report_id):
-    # Pass required info and update template
-    return render(request, 'report.html', {'report_id': report_id})
-
-
 @login_required
 def baseuser(request):
     return render(request, 'baseuser.html', {})
@@ -258,29 +252,35 @@ def data(request):
     return render(request, 'data.html', content_dict)
 
 
-def inputform(request):
+def report_create(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # Create a form instance and fill it with the request data
-        inputForm = InputForm(request.POST)
+        input_form = InputForm(request.POST)
 
-        if inputForm.is_valid():
+        if input_form.is_valid():
             # data from the form is stored in a dictionary, 'cd'
-            cd = inputForm.cleaned_data
+            cd = input_form.cleaned_data
             request.session['saved'] = cd
-            return redirect('/report/')
+            # Create report
+            report_id = create_report(request,
+                                      cd, request.user.is_authenticated)
+            if report_id is not None:
+                return redirect(reverse('report_view', kwargs={'report_id': report_id}))
+            else:
+                return redirect(reverse('report_view_public'))
 
-    # else if we arrive here from a GET method, i.e. via inputting a url.
+    # if we arrive here from a GET method, i.e. via inputting a url.
     else:
         # Create a new instance of the form
-        inputForm = InputForm()
+        input_form = InputForm()
 
         # Check if can populate the database from partial_inputs. i.e. if the user left without completing the form
         if request.user.is_authenticated:
             user = models.UserProfile.objects.get(user=request.user)
             partials = models.PartialInput.objects.filter(created_by=user)
             if partials:
-                # Dictionary to store partials, to be passed in to instantiated inputForm
+                # Dictionary to store partials, to be passed in to instantiated input_form
                 partials_dict = {}
                 for p in partials:
                     if p.admin_input.input_type == "DROPDOWN":
@@ -291,9 +291,44 @@ def inputform(request):
                         print(p.value)
                     else:
                         partials_dict[p.admin_input.label] = p.value
-                inputForm = InputForm(initial=partials_dict)
-    context = {'inputForm': inputForm, }
-    return render(request, 'input_form.html', context)
+                input_form = InputForm(initial=partials_dict)
+    context = {'inputForm': input_form, }
+    return render(request, 'report_create.html', context)
+
+
+@login_required(login_url='login')
+def report_view(request, report_id):
+    # Pass required info and update template
+    report = models.Report.objects.filter(id=int(report_id)).first()
+
+    if report is not None:
+        paras = report.paragraphs.all()
+        link_list = models.Link.objects.filter(paragraph__in=paras)
+        actions_list = models.Action.objects.filter(paragraph__in=paras)
+
+        links_dict = {}
+
+        # get the associated links and actions for each paragraph
+        for par in paras:
+            temp = []
+            t = []
+            big_l = []
+            for link in link_list:
+                if par == link.paragraph:
+                    temp.append(link)
+            for act in actions_list:
+                if par == act.paragraph:
+                    t.append(act)
+            if temp:
+                big_l.append(temp)
+            if t:
+                big_l.append(t)
+            # list of the lists for links and actions added to dictionary
+            links_dict[par] = big_l
+
+        return render(request, 'report.html', {'data': links_dict})
+
+    return render(request, "error.html")
 
 
 def similarity(a, b):
@@ -337,53 +372,73 @@ def get_paragraphs(inputs_dictionary):
 
     num_paras = 5
 
-    for k in range(num_paras):
+    for _ in range(num_paras):
         highest_score = max(scores_dict, key=scores_dict.get)
         paragraphs_list.append(highest_score)
         del scores_dict[highest_score]
     return paragraphs_list
 
 
-def report(request):
+def report_view_public(request):
     # Get the dictionary of inputs. Gathered in InputForm, saved to django session.
     inputs = request.session.get('saved')
     # Get a list of paragraphs based on the inputs
     paras = get_paragraphs(inputs)
-    link_list = models.Link.objects.all()
-    actions_list = models.Action.objects.all()
-    links_dict = {}
+    # Get all the relevant context for the paragraphs
+    links_dict = get_context_from_paragraphs(paras)
 
-    # get the associated links and actions for each paragraph
-    for paragraph in paras:
-        temp = []
-        t = []
-        big_l = []
-        for link in link_list:
-            if paragraph == link.paragraph:
-                temp.append(link)
-        for action in actions_list:
-            if paragraph == action.paragraph:
-                t.append(action)
-        if temp:
-            big_l.append(temp)
-        if t:
-            big_l.append(t)
-        # list of the lists for links and actions added to dictionary
-        links_dict[paragraph] = big_l
+    context = {'data': links_dict}
+    return render(request, 'report_public.html', context)
+
+
+def create_report(request, inputs, is_authenticated=False):
+    # Get a list of paragraphs based on the inputs
+    paras = get_paragraphs(inputs)
+    report_id = None
+
     # If a user is logged in then create and save a report instance linked to their profile
-    if request.user.is_authenticated:
+    if is_authenticated:
         current_user_profile = models.UserProfile.objects.filter(
             user=request.user).first()
         # Create a report instance and add paragraphs to it
         rep = models.Report(user=current_user_profile,
                             datetime_created=datetime.now())
         rep.save()
+        report_id = rep.id
         for p in paras:
             rep.paragraphs.add(p)
+
     # if a user is not logged in
     else:
         # serialize the paragraphs and save them to the session
         request.session["temp_saved"] = serialize('json', paras)
 
-    context = {'data': links_dict}
-    return render(request, 'report.html', context)
+    return report_id
+
+
+def get_context_from_paragraphs(paras):
+    ''' Helper method retrieving all required data from paragraphs
+    that is needed for rendering a report.
+    '''
+    link_list = models.Link.objects.all()
+    actions_list = models.Action.objects.all()
+    links_dict = {}
+
+    # get the associated links and actions for each paragraph
+    for par in paras:
+        temp = []
+        t = []
+        big_l = []
+        for link in link_list:
+            if par == link.paragraph:
+                temp.append(link)
+        for action in actions_list:
+            if par == action.paragraph:
+                t.append(action)
+        if temp:
+            big_l.append(temp)
+        if t:
+            big_l.append(t)
+        # list of the lists for links and actions added to dictionary
+        links_dict[par] = big_l
+    return links_dict
