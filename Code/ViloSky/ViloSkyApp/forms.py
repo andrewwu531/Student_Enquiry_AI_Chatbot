@@ -1,7 +1,7 @@
 '''Forms for the ViloSky app'''
 import datetime
 from django import forms
-from ViloSkyApp.models import UserProfile, Qualification
+from ViloSkyApp.models import UserProfile, Qualification, UserAction
 from django.contrib.auth import get_user_model
 
 
@@ -37,7 +37,6 @@ class UserProfileForm(forms.ModelForm):
             'employment_status',
             'time_worked_in_industry'
         )
-
 
 class QualificationForm(forms.ModelForm):
     level = forms.CharField(max_length=160, widget=forms.TextInput(attrs={
