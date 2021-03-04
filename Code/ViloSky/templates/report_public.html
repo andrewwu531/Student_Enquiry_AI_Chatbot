@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block bodyblock%}
+<div class="divbackground widediv">
+    <div class="largeText whiteText centerText">
+        Report
+    </div>
+        <ul>
+            {% for key,values in data.items %}
+            <li>
+                {{ key.static_text }}
+                <ul>
+                    {% for list in values %}
+                        {% for item in list %}
+                            <li>
+                                    {% if item.title == null %}
+                                        {{ item.url }}
+                                    {% endif %}
+                                    {% if item.url == null %}
+                                        {{item.title}}
+                                    {% endif %}
+                            </li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{%endblock%}

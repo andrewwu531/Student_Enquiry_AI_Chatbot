@@ -1,5 +1,7 @@
 ''' Views for the ViloSky app'''
 from random import uniform, randint
+from datetime import datetime
+from difflib import SequenceMatcher
 from plotly.offline import plot
 import plotly.graph_objs as go
 from django.shortcuts import render, redirect
@@ -9,16 +11,17 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as ulogin
 from django.contrib.auth import logout as ulogout
 from django.contrib.auth.decorators import login_required
+from django.core.serializers import serialize
 from django.utils.formats import localize
 from ViloSkyApp import models
-from ViloSkyApp.forms import UserForm
+from ViloSkyApp.forms import UserForm, InputForm
 from ViloSkyApp.models import Qualification
 from ViloSkyApp.forms import QualificationForm
 from .forms import UserProfileForm
 
 
 def index(request):
-    return render(request, 'index.html', {})
+    return redirect(reverse('login'))
 
 
 def login(request):
@@ -110,7 +113,6 @@ def mydetails(request):
                 return redirect(reverse('mydetails'))
             else:
                 p_form = UserProfileForm(instance=request.user.user_profile)
-
     qualifications = Qualification.objects.filter(
         user=request.user.user_profile)
     context_dict = {'p_form': p_form, 'q_form': q_form,
@@ -141,12 +143,6 @@ def actions(request):
         "headings": template_headings, "model_keys": model_keys,
         "entries": entries, "row_link_to": "/action/"
     })
-
-
-@login_required(login_url='login')
-def report(request, report_id):
-    # Pass required info and update template
-    return render(request, 'report.html', {'report_id': report_id})
 
 
 @login_required
@@ -254,3 +250,195 @@ def data(request):
     out_div = plot(out_fig, output_type='div')
     content_dict = {"vis_div": vis_div, "inp_div": inp_div, "out_div": out_div}
     return render(request, 'data.html', content_dict)
+
+
+def report_create(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # Create a form instance and fill it with the request data
+        input_form = InputForm(request.POST)
+
+        if input_form.is_valid():
+            # data from the form is stored in a dictionary, 'cd'
+            cd = input_form.cleaned_data
+            request.session['saved'] = cd
+            # Create report
+            report_id = create_report(request,
+                                      cd, request.user.is_authenticated)
+            if report_id is not None:
+                return redirect(reverse('report_view', kwargs={'report_id': report_id}))
+            else:
+                return redirect(reverse('report_view_public'))
+
+    # if we arrive here from a GET method, i.e. via inputting a url.
+    else:
+        # Create a new instance of the form
+        input_form = InputForm()
+
+        # Check if can populate the database from partial_inputs. i.e. if the user left without completing the form
+        if request.user.is_authenticated:
+            user = models.UserProfile.objects.get(user=request.user)
+            partials = models.PartialInput.objects.filter(created_by=user)
+            if partials:
+                # Dictionary to store partials, to be passed in to instantiated input_form
+                partials_dict = {}
+                for p in partials:
+                    if p.admin_input.input_type == "DROPDOWN":
+                        partials_dict[p.admin_input.label] = (p.value, p.value)
+                    elif p.admin_input.input_type == "RADIOBUTTONS":
+                        partials_dict[p.admin_input.label] = p.value.strip(
+                            "[]").replace("\'", "").split(", ")
+                        print(p.value)
+                    else:
+                        partials_dict[p.admin_input.label] = p.value
+                input_form = InputForm(initial=partials_dict)
+    context = {'inputForm': input_form, }
+    return render(request, 'report_create.html', context)
+
+
+@login_required(login_url='login')
+def report_view(request, report_id):
+    # Pass required info and update template
+    report = models.Report.objects.filter(id=int(report_id)).first()
+
+    if report is not None:
+        paras = report.paragraphs.all()
+        link_list = models.Link.objects.filter(paragraph__in=paras)
+        actions_list = models.Action.objects.filter(paragraph__in=paras)
+
+        links_dict = {}
+
+        # get the associated links and actions for each paragraph
+        for par in paras:
+            temp = []
+            t = []
+            big_l = []
+            for link in link_list:
+                if par == link.paragraph:
+                    temp.append(link)
+            for act in actions_list:
+                if par == act.paragraph:
+                    t.append(act)
+            if temp:
+                big_l.append(temp)
+            if t:
+                big_l.append(t)
+            # list of the lists for links and actions added to dictionary
+            links_dict[par] = big_l
+
+        return render(request, 'report.html', {'data': links_dict})
+
+    return render(request, "error.html")
+
+
+def similarity(a, b):
+    return SequenceMatcher(None, a, b).ratio()
+
+
+def get_paragraphs(inputs_dictionary):
+    # Get all keywords, questions and list of answers
+    keywords = models.Keyword.objects.all()
+    question_list = models.AdminInput.objects.all()
+    answers = [value for value in inputs_dictionary.values()]
+
+    # create dictionary of paragraph score(how relevant paragraphs are to user input)
+    paragraphs_list = []
+    scores_dict = {}
+    counter = 0
+
+    for question in question_list:
+        if question.input_type == 'CHECKBOX':
+            if answers[counter] == 'True':
+                counter += 1
+        elif question.input_type == 'DROPDOWN':
+            for keyword in keywords:
+                if keyword == answers[counter]:
+                    paragraphs_list.append(keyword.paragraph)
+            counter += 1
+        elif question.input_type == 'RADIOBUTTONS':
+            for keyword in keywords:
+                if keyword.key in answers[counter]:
+                    paragraphs_list.append(keyword.paragraph)
+            counter += 1
+        else:
+            for keyword in keywords:
+                score = similarity(answers[counter], keyword.key)
+                para = keyword.paragraph
+                if para not in scores_dict.keys():
+                    scores_dict[para] = score
+                else:
+                    scores_dict[para] += score
+            counter += 1
+
+    num_paras = 5
+
+    for _ in range(num_paras):
+        highest_score = max(scores_dict, key=scores_dict.get)
+        paragraphs_list.append(highest_score)
+        del scores_dict[highest_score]
+    return paragraphs_list
+
+
+def report_view_public(request):
+    # Get the dictionary of inputs. Gathered in InputForm, saved to django session.
+    inputs = request.session.get('saved')
+    # Get a list of paragraphs based on the inputs
+    paras = get_paragraphs(inputs)
+    # Get all the relevant context for the paragraphs
+    links_dict = get_context_from_paragraphs(paras)
+
+    context = {'data': links_dict}
+    return render(request, 'report_public.html', context)
+
+
+def create_report(request, inputs, is_authenticated=False):
+    # Get a list of paragraphs based on the inputs
+    paras = get_paragraphs(inputs)
+    report_id = None
+
+    # If a user is logged in then create and save a report instance linked to their profile
+    if is_authenticated:
+        current_user_profile = models.UserProfile.objects.filter(
+            user=request.user).first()
+        # Create a report instance and add paragraphs to it
+        rep = models.Report(user=current_user_profile,
+                            datetime_created=datetime.now())
+        rep.save()
+        report_id = rep.id
+        for p in paras:
+            rep.paragraphs.add(p)
+
+    # if a user is not logged in
+    else:
+        # serialize the paragraphs and save them to the session
+        request.session["temp_saved"] = serialize('json', paras)
+
+    return report_id
+
+
+def get_context_from_paragraphs(paras):
+    ''' Helper method retrieving all required data from paragraphs
+    that is needed for rendering a report.
+    '''
+    link_list = models.Link.objects.all()
+    actions_list = models.Action.objects.all()
+    links_dict = {}
+
+    # get the associated links and actions for each paragraph
+    for par in paras:
+        temp = []
+        t = []
+        big_l = []
+        for link in link_list:
+            if par == link.paragraph:
+                temp.append(link)
+        for action in actions_list:
+            if par == action.paragraph:
+                t.append(action)
+        if temp:
+            big_l.append(temp)
+        if t:
+            big_l.append(t)
+        # list of the lists for links and actions added to dictionary
+        links_dict[par] = big_l
+    return links_dict
