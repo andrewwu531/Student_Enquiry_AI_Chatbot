@@ -36,8 +36,14 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
 
             <ul class="list-unstyled components">
               {% if not request.user.is_authenticated %}
+                <!-- <li class="nav-item">
+                  <a class="nav-link" aria-current="page" href="{% url 'index' %}">Home</a>
+                </li> -->
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
+                  <a class="nav-link" href="{% url 'report_create' %}">New Report</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'report_view_public' %}">View Report</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'login' %}">Login</a>
@@ -49,7 +55,7 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
                 </li>
-                <li class="nav-item">
+                <li>
                   <a class="nav-link" href="{% url 'reports' %}">Reports</a>
                 </li>
                 <li class="nav-item">

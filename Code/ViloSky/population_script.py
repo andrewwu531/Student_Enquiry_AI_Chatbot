@@ -7,7 +7,8 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE','ViloSky.settings')
 import django
 django.setup()
 
-from ViloSkyApp.models import CustomUser, UserProfile, Qualification, Keyword, Link, Paragraph, Report, Action, AdminInput, DropdownAdminInput, CheckboxAdminInput, TextAdminInput, TextareaAdminInput, Session, PartialInput, UserAction
+from ViloSkyApp.models import CustomUser, UserProfile, Qualification, Keyword, Link, Paragraph, Report, Action, AdminInput, \
+    DropdownAdminInput, CheckboxAdminInput, TextAdminInput, TextareaAdminInput, RadioButtonsAdminInput, Session, PartialInput, UserAction
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 timezone.now()
@@ -63,10 +64,9 @@ def populate():
         {
             'users': ['greid@gmail.com', ],
             'admin': 'Suzie Mulligan',
-            'text': 'Having been out of work for 3-5 years now it is understandable that your confidence would be low, but you have all the skills and experience you need to re-establish your career.',
+            'text': 'Having been out of work for 3-5 years now it is understandable that your confidence may be low, but you have all the skills and experience you need to re-establish your career.',
             'keywords': [
-                {'key': '3-5 Years', 'score': 5},
-                {'key': 'Confidence', 'score': 7},
+                {'key': '3-5 Years since last work', 'score': 5},
             ],
             'links': [],
             'actions':[]
@@ -101,6 +101,7 @@ def populate():
         {
             'users': ['greid@gmail.com', ],
             'admin': 'Suzie Mulligan',
+
             'text': 'As you are looking for flexibility and a shorter working week (20hrs), we suggest the following job search sites: ',
             'keywords': [
                 {'key': 'Flexibility', 'score': 10},
@@ -120,16 +121,14 @@ def populate():
             'admin': 'Suzie Mulligan',
             'text': 'The following organisations are also well known for supporting flexible working and women returners so it is well worth checking their individual career pages too: ',
             'keywords':[
-                {'key': 'flexibility', 'score': 10},
-
                 # triggered if someone has been out of work for any amount of time
                 # score increases with time length
-                {'key': '1-6 Months', 'score': 4},
-                {'key': '7-12 Months', 'score': 5},
-                {'key': '1-2 Years', 'score': 6},
-                {'key': '3-5 Years', 'score': 7},
-                {'key': '5-10 Years', 'score': 8},
-                {'key': '10+ Years', 'score': 9},
+                {'key': '1-6 Months since last work', 'score': 4},
+                {'key': '7-12 Months since last work', 'score': 5},
+                {'key': '1-2 Years since last work', 'score': 6},
+                {'key': '3-5 Years since last work', 'score': 7},
+                {'key': '5-10 Years since last work', 'score': 8},
+                {'key': '10+ Years since last work', 'score': 9},
             ],
             'links': [],
             'actions':[]
@@ -288,8 +287,8 @@ def populate():
         {
             'created_by': 'suzieMul23@gmail.com',
             'label': 'What best describes current work barriers (select all that apply):',
-            'input_type': AdminInput.AdminInputTypes.DROPDOWN,
-            'is_required': True,
+            'input_type': AdminInput.AdminInputTypes.RADIOBUTTONS,
+            'is_required': False,
             'choices': ['Childcare', 'Carer Responsibilities', 'Technical Skills',
                         'Leadership Skills', 'Flexibility', 'Workplace Culture', 'Confidence'],
             'partial_inputs':[
@@ -301,19 +300,19 @@ def populate():
             'label': 'Time since last paid work:',
             'input_type': AdminInput.AdminInputTypes.DROPDOWN,
             'is_required': True,
-            'choices': ['0 (Currently Working)', '1-6 Months', '7-12 Months', '1-2 Years',
-                        '3-5 Years', '5-10 Years', '10+ Years'],
+            'choices': ['0 (Currently Working)', '1-6 Months since last work', '7-12 Months since last work', '1-2 Years since last work',
+                        '3-5 Years since last work', '5-10 Years since last work', '10+ Years since last work'],
             'partial_inputs':[
-                {'created_by': 'greid@gmail.com', 'value': '10+ Years'},
+                {'created_by': 'greid@gmail.com', 'value': '10+ Years since last work'},
             ]
         },
         {
             'created_by': 'suzieMul23@gmail.com',
             'label': 'Industry interested in (select all that apply):',
-            'input_type': AdminInput.AdminInputTypes.DROPDOWN,
-            'is_required': True,
+            'input_type': AdminInput.AdminInputTypes.RADIOBUTTONS,
+            'is_required': False,
             'choices': ['Retail', 'Fashion', 'Media', 'Banking&Finance', 'Construction',
-                        'Manuacturing', 'Law', 'Medical', 'Education', 'IT'],
+                        'Manufacturing', 'Law', 'Medical', 'Education', 'IT'],
             'partial_inputs':[
                 {'created_by': 'greid@gmail.com', 'value': 'Banking&Finance'},
             ]
@@ -362,8 +361,8 @@ def populate():
         {
             'created_by': 'suzieMul23@gmail.com',
             'label': 'What would you like to achieve from your next role? (select all that apply)',
-            'input_type': AdminInput.AdminInputTypes.DROPDOWN,
-            'is_required': True,
+            'input_type': AdminInput.AdminInputTypes.RADIOBUTTONS,
+            'is_required': False,
             'choices': ['Re-establish career', 'Learn New Skills', 'Give Something Back', 'Confidence',
                         'Realise Full Potential', 'Promotion', 'Work/Life Balance', 'Ease', 'Good Salary',
                         'Working From Home', 'Low Stress', 'Flexibility', 'Greater Autonomy', 'More Responsibility',
@@ -622,6 +621,13 @@ def populate():
                         created_by=admin, default_value=False)[0]
                 elif inp_type == AdminInput.AdminInputTypes.DROPDOWN:
                     user_input = DropdownAdminInput.objects.get_or_create(
+                        admin_input=curr_input,
+                        is_required=inputs['is_required'],
+                        label=inputs['label'],
+                        input_type=inputs['input_type'],
+                        created_by=admin, choices=inputs['choices'])[0]
+                elif inp_type == AdminInput.AdminInputTypes.RADIOBUTTONS:
+                    user_input = RadioButtonsAdminInput.objects.get_or_create(
                         admin_input=curr_input,
                         is_required=inputs['is_required'],
                         label=inputs['label'],

@@ -1,7 +1,7 @@
 '''Forms for the ViloSky app'''
 import datetime
 from django import forms
-from ViloSkyApp.models import UserProfile, Qualification, UserAction
+from ViloSkyApp.models import UserProfile, Qualification, 
 from django.contrib.auth import get_user_model
 
 
