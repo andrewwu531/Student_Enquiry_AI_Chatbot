@@ -47,6 +47,6 @@ test:
   variables:
     DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
   script:
-  cd  ./Code/ViloSky
+  - cd  ./Code/ViloSky
 
     - python manage.py test
