@@ -15,7 +15,7 @@ from django.core.serializers import serialize
 from django.utils.formats import localize
 from ViloSkyApp import models
 from ViloSkyApp.forms import UserForm, InputForm
-from ViloSkyApp.models import Qualification
+from ViloSkyApp.models import Qualification, Paragraph, Link, Action, Keyword
 from ViloSkyApp.forms import QualificationForm
 from .forms import UserProfileForm
 
@@ -205,7 +205,17 @@ def admin_inputs(request):
 @ login_required(login_url='login')
 def paragraph(request, paragraph_id):
     # Pass required info and update template
-    return render(request, 'paragraph.html', {'paragraph_id': paragraph_id})
+    para = Paragraph.objects.filter(id = paragraph_id)
+    links = Link.objects.filter(paragraph = paragraph_id)
+    actions = Action.objects.filter(paragraph = paragraph_id)
+    keywords = Keyword.objects.filter(paragraph = paragraph_id)
+
+    if request.method == 'POST':
+        Paragraph.objects.filter(id = paragraph_id).delete()
+        return redirect(reverse('paragraphs'))
+
+    return render(request, 'paragraph.html', {'paragraph_id': paragraph_id, 'para':para, 'links':links,
+    'keywords':keywords, 'actions':actions})
 
 
 @ login_required(login_url='login')

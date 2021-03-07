@@ -4,70 +4,27 @@
 {% block bodyblock%}
 <div class="divbackground widediv">
     <h1>Paragraph with ID: {{paragraph_id}}</h1>
-    <div class="largeText whiteText centerText">
-        Output type
-        <div class="row">
-            <div class="col bottommargin">
-                <button type="button" class="btn btn-primary btn-block">Link</button>
-            </div>
-            <div class="col bottommargin">
-                <button type="button" class="btn btn-primary btn-block">Paragraph</button>
-            </div>
-            <div class="col bottommargin">
-                <button type="button" class="btn btn-primary btn-block">Action</button>
-            </div>
-        </div>
-    </div>
-    <div class="centerText whiteText largeText">
-        Corresponding input
-        <form id="outputform">
-            <div class="row">
-                <div class="col">
-                    <div class="form-group">
-                        <select class="form-control form-control-lg">
-                            <option>Industry interested in</option>
-                            <option>Sexual orientation</option>
-                            <option>Hours per week you want to work?</option>
-                          </select>
-                    </div>
-                </div>
-                <div class="col">---></div>
-                <div class="col">
-                    <div class="form-group">
-                        <select class="form-control form-control-lg">
-                            <option>Potential</option>
-                            <option>Answet</option>
-                            <option>To the question</option>
-                          </select>
-                    </div>
-                </div>
-            </div>
-            <button type="button" class="btn btn-primary btn-block bottommargin">Add new corresponding input</button>
-            Content
-            <input name="link" type="text" class="form-control" value="only shows if link selected"required>
-            <div class="form-group">
-                Select week number:
-                <select class="form-control form-control-lg">
-                    <option>Week 1</option>
-                    <option>Week 2</option>
-                    <option>Only shows if Action selected</option>
-                  </select>
-            </div>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">Only shows if Report paragraph selected or action selected</textarea>
-            Description of link:
-            <input name="linkdescription" type="text" class="form-control" value="only shows if link selected"required>
-        </form>
-    </div>
+    <div>
+        Text: 
+        <p>{{ para.static_text }}</p>
+        
+        {% for l in links %}
+    <p>{{ l.url }}</p>
+        {% endfor %}
 
-    <div class="centerText">
-        <div class="row">
-            <div class = col>
-                <button type="button" class="btn btn-primary btn-block">Go back</button>
-            </div>
-            <div class = col>
-                <button type="button" class="btn btn-primary btn-block">Save</button>
-            </div>
-        </div>
+        {% for k in keywords %}
+        <p>{{ k.key }} {{ k.score }}</p>
+        {% endfor %}
+
+        {% for a in actions %}
+        <p>{{ a.title }}</p>
+        {% endfor %}
+    </div>
+    <div class="center">
+        <form  method = "POST">
+            {% csrf_token %}
+            <button type="submit" class = "btn-delete" >Delete</button>
+        </form>
     </div>
 </div>
 {%endblock%}
