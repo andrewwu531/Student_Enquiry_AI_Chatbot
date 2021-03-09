@@ -16,7 +16,7 @@ from django.utils.formats import localize
 from ViloSkyApp import models
 from ViloSkyApp.forms import UserForm, InputForm
 from ViloSkyApp.models import Qualification, Paragraph, Link, Action, Keyword
-from ViloSkyApp.forms import QualificationForm
+from ViloSkyApp.forms import QualificationForm, ParagraphForm, LinksForm, ActionForm, KeyWordForm
 from .forms import UserProfileForm
 
 
@@ -204,18 +204,47 @@ def admin_inputs(request):
 
 @ login_required(login_url='login')
 def paragraph(request, paragraph_id):
+    created_by = models.UserProfile.objects.filter(user=request.user).first()
+
     # Pass required info and update template
-    para = Paragraph.objects.filter(id = paragraph_id)
+    para = Paragraph.objects.filter(id = paragraph_id)[0]
     links = Link.objects.filter(paragraph = paragraph_id)
     actions = Action.objects.filter(paragraph = paragraph_id)
     keywords = Keyword.objects.filter(paragraph = paragraph_id)
 
+    #all these forms are to edit paragraphs
+    p_form = ParagraphForm(request.POST)
+    link_form = LinksForm(request.POST)
+    action_form = ActionForm(request.POST)
+    keywords_form = KeyWordForm(request.POST )
+
+    
     if request.method == 'POST':
-        Paragraph.objects.filter(id = paragraph_id).delete()
-        return redirect(reverse('paragraphs'))
+        if 'edit' in request.POST:
+            if p_form.is_valid():
+                p = p_form.save(commit=False)
+                p.created_by = created_by
+                p.save()
+            if link_form.is_valid():
+                l = link_form.save(commit=False)
+                l.paragraph = Paragraph.objects.filter(id = paragraph_id)[0]
+                l.save()
+            if action_form.is_valid():
+                a = action_form.save(commit=False)
+                a.paragraph = Paragraph.objects.filter(id = paragraph_id)[0]
+                a.save()
+            if keywords_form.is_valid():
+                k = keywords_form.save(commit=False)
+                k.paragraph = Paragraph.objects.filter(id = paragraph_id)[0]
+                k.save()
+            return redirect(reverse('paragraphs'))
+        else:
+            Paragraph.objects.filter(id = paragraph_id).delete()
+            return redirect(reverse('paragraphs'))
 
     return render(request, 'paragraph.html', {'paragraph_id': paragraph_id, 'para':para, 'links':links,
-    'keywords':keywords, 'actions':actions})
+    'keywords':keywords, 'actions':actions, 'p_form':p_form, 'l_form': link_form, 'a_form': action_form,
+    'k_form': keywords_form})
 
 
 @ login_required(login_url='login')

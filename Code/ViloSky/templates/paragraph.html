@@ -3,28 +3,112 @@
 
 {% block bodyblock%}
 <div class="divbackground widediv">
-    <h1>Paragraph with ID: {{paragraph_id}}</h1>
-    <div>
-        Text: 
-        <p>{{ para.static_text }}</p>
-        
-        {% for l in links %}
-    <p>{{ l.url }}</p>
-        {% endfor %}
-
-        {% for k in keywords %}
-        <p>{{ k.key }} {{ k.score }}</p>
-        {% endfor %}
-
-        {% for a in actions %}
-        <p>{{ a.title }}</p>
-        {% endfor %}
+    <div class="largeText whiteText centerText">
+    <h1>Paragraph {{paragraph_id}}</h1>
     </div>
-    <div class="center">
-        <form  method = "POST">
+    <div id = "view" class = "centerText">
+        Static Text
+        <table class = "paratable">
+            <tbody>
+                <tr>
+                    <td>
+                        {{ para.static_text }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        {% if links %}
+        Links
+        <table class = "paratable">
+            <thead>
+                <th>ID</th>
+                <th>URL</th>
+            </thead>
+            <tbody>
+                {% for l in links %}
+                <tr>
+                <td>{{ l.id }}</td> 
+                <td>{{ l.url }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+ 
+        <br>
+        {% if keywords %}
+        Keywords
+        <table class = "paratable">
+        <thead>
+            <th>Word</th>
+            <th>Score</th>
+        </thead>
+        <tbody>
+            {% for k in keywords %}
+            <tr>
+            <td>{{ k.key }}</td>
+            <td>{{ k.score }}</td> 
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+        {% endif %}
+       
+    <br>
+        {% if actions %}
+        Actions
+        <table class="paratable">
+            <thead>
+                <th>ID</th>
+                <th>Text</th>
+            </thead>
+            <tbody>
+                {% for a in actions %}
+                <tr>
+                    <td>
+                        {{ a.id }}
+                    </td>
+                    <td>
+                        {{ a.title }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+        <br>
+        <div class="center">
+            <form  method = "POST">
             {% csrf_token %}
             <button type="submit" class = "btn-delete" >Delete</button>
+            </form>
+        </div>
+        
+        <button class = "btn-delete" onclick=edit()>Edit</button>
+    </div>
+
+    
+    <div id="editForm" style="display: none;">
+        <form method = "POST">
+            {% csrf_token %}
+            <p> Paragraph
+            {{ p_form.as_p}}</p>
+            <p>Links
+            {{ l_form.as_p }}</p>
+            <p>Key words
+            {{ k_form.as_p }}</p>
+            <p>Actions
+            {{ a_form.as_p }}</p>
+            <button type="submit" name="edit" class = "btn-delete" >Done</button>
         </form>
     </div>
 </div>
+
+<script>
+    function edit(){
+        document.getElementById('editForm').style.display = "block";
+        document.getElementById('view').style.display = "none";
+    }
+</script>
 {%endblock%}
