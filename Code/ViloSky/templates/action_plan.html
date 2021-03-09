@@ -5,32 +5,40 @@
 <div class="mediumText  centerText">
     Action Plan {{action_id}}
 </div>
-<div id="action_display">
-<form class="w-75 mx-auto">
-    {% for action in actions %}
-    {% if action.is_completed %}
-            <div class="m-2 form-check ">
-                <input class="form-check-input actioninput" type="checkbox" checked=checked disabled = disabled>
-                <label class="form-check-label">{{action.title}}</label>
-            </div>
-    {% else %}
-            <div class="m-2 form-check ">
-                <input class="form-check-input actioninput" type="checkbox" disabled= disabled>
-                <label class="form-check-label">{{action.title}}</label>
-            </div>
-    {% endif %}
-    {% endfor %}
-</form>
-</div>
+{% if actions|length == 0 %}
 
-<div class="centerText">
-    <button id = "show" class="btn-profile" onclick="showDiv()">Update</button>
-</div>
+        <hr/>
+        <h3 class="text-center">
+            No actions for this report
+        </h3>
+        {% else %}
+        <div id="action_display">
+        <form class="w-75 mx-auto">
+            <hr/>
+            {% for action in actions %}
+            {% if action.is_completed %}
+                <div class="m-2 form-check ">
+                    <input class="form-check-input actioninput" type="checkbox" checked=checked disabled = disabled>
+                    <label class="form-check-label">{{action.title}}</label>
+                </div>
+            {% else %}
+                <div class="m-2 form-check ">
+                    <input class="form-check-input actioninput" type="checkbox" disabled= disabled>
+                    <label class="form-check-label">{{action.title}}</label>
+                </div>
+            {% endif %}
+            {% endfor %}
+
+        </form>
+        </div>
+
+    <div class="centerText">
+        <button id = "show" class="btn-profile" onclick="showDiv()">Update</button>
+    </div>
+{% endif %}
 
 <div id = "update" style="display: none;">
-    <div class="smallText  centerText">
-        Update
-    </div>
+    <hr/>
     <form class="w-75 mx-auto" method = "POST">
         {% csrf_token %}
         {% for action in actions %}
