@@ -212,37 +212,44 @@ def paragraph(request, paragraph_id):
     actions = Action.objects.filter(paragraph = paragraph_id)
     keywords = Keyword.objects.filter(paragraph = paragraph_id)
 
+    paragraph = Paragraph.objects.get(id=paragraph_id)
+
     #all these forms are to edit paragraphs
-    p_form = ParagraphForm(request.POST)
+    p_form = ParagraphForm(request.POST, instance = paragraph)
     link_form = LinksForm(request.POST)
     action_form = ActionForm(request.POST)
-    keywords_form = KeyWordForm(request.POST )
+    keywords_form = KeyWordForm(request.POST)
 
-    
     if request.method == 'POST':
-        if 'edit' in request.POST:
+        if 'editText' in request.POST:
             if p_form.is_valid():
                 p = p_form.save(commit=False)
                 p.created_by = created_by
                 p.save()
+                return redirect(reverse('paragraphs'))
+        elif 'editLinks' in request.POST:
             if link_form.is_valid():
                 l = link_form.save(commit=False)
-                l.paragraph = Paragraph.objects.filter(id = paragraph_id)[0]
+                l.paragraph = Paragraph.objects.get(id = paragraph_id)
                 l.save()
+                return redirect(reverse('paragraphs'))
+        elif 'editActions' in request.POST:
             if action_form.is_valid():
                 a = action_form.save(commit=False)
-                a.paragraph = Paragraph.objects.filter(id = paragraph_id)[0]
+                a.paragraph = Paragraph.objects.get(id = paragraph_id)
                 a.save()
+                return redirect(reverse('paragraphs'))
+        elif 'editKeys' in request.POST:
             if keywords_form.is_valid():
                 k = keywords_form.save(commit=False)
-                k.paragraph = Paragraph.objects.filter(id = paragraph_id)[0]
+                k.paragraph = Paragraph.objects.get(id = paragraph_id)
                 k.save()
-            return redirect(reverse('paragraphs'))
+                return redirect(reverse('paragraphs'))
         else:
             Paragraph.objects.filter(id = paragraph_id).delete()
             return redirect(reverse('paragraphs'))
 
-    return render(request, 'paragraph.html', {'paragraph_id': paragraph_id, 'para':para, 'links':links,
+    return render(request, 'paragraph.html', {'paragraph_id': paragraph_id, 'created_by':created_by, 'para':para, 'links':links,
     'keywords':keywords, 'actions':actions, 'p_form':p_form, 'l_form': link_form, 'a_form': action_form,
     'k_form': keywords_form})
 
