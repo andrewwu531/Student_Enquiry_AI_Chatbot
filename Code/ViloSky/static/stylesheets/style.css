@@ -334,10 +334,6 @@ a.article:hover {
   }
 }
 
-.margin {
-  margin-left: 50px;
-}
-
 .bottommargin {
   margin-bottom: 20px;
 }
@@ -359,6 +355,9 @@ p {
 }
 .mediumText {
   font-size: 35px;
+}
+.smallText {
+  font-size: 25px;
 }
 .whiteText {
   color: black;
@@ -450,11 +449,18 @@ p {
 }
 
 /*Checkbox*/
-.actioninput {
-  width: 50px;
-  height: 50px;
-  border-radius: 80px !important;
-}
+/* .actioninput {
+  width: 3vh;
+  height: 3vh;
+  border-radius: 5vh !important;
+} */
+/* input[type="checkbox"] {
+  -ms-transform: scale(2);  IE 
+  -moz-transform: scale(2);  FF 
+  -webkit-transform: scale(2);  Safari and Chrome 
+  -o-transform: scale(2);  Opera 
+  padding: 10px;
+} */
 
 .btn-edit {
   font-size: 15px;
@@ -484,12 +490,14 @@ p {
 }
 
 .btn-profile {
-  font-size: 25px;
-  border-radius: 20px;
+  font-size: 3vh;
+  border-radius: 1.5vh;
   color: white;
   border: #cc00cc;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding-top: 0.75vh;
+  padding-bottom: 0.75vh;
+  padding-left: 1.5vh;
+  padding-right: 1.5vh;
   -webkit-animation-duration: 1s;
   animation-duration: 1;
   -webkit-animation-fill-mode: both;

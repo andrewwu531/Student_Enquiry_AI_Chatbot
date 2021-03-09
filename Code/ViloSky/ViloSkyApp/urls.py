@@ -9,7 +9,7 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('mydetails/', views.mydetails, name='mydetails'),
-    re_path('action/(?P<action_id>\w+)/$', views.action, name='action'),
+    re_path('action/(?P<report_id>\w+)/$', views.action, name='action'),
     path('actions/', views.actions, name='actions'),
     re_path('report/(?P<report_id>\w+)/$',
             views.report_view, name='report_view'),
