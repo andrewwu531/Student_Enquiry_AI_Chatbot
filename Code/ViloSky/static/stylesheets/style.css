@@ -519,12 +519,6 @@ p {
     width: 100%;
     margin: 0 auto;
     position: relative;
+    padding:0 15px;
   }
 
-.astext {
-    background:none;
-    border:none;
-    margin:0;
-    padding:0;
-    cursor: pointer;
-}

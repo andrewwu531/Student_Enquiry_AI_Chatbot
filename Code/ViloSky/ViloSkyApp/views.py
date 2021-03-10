@@ -205,7 +205,7 @@ def admin_inputs(request):
 @ login_required(login_url='login')
 def paragraph(request, paragraph_id):
     created_by = models.UserProfile.objects.filter(user=request.user).first()
-
+    page = 'paragraph/' + paragraph_id + '/'
     # Pass required info and update template
     para = Paragraph.objects.filter(id = paragraph_id)[0]
     links = Link.objects.filter(paragraph = paragraph_id)
@@ -244,7 +244,19 @@ def paragraph(request, paragraph_id):
                 k = keywords_form.save(commit=False)
                 k.paragraph = Paragraph.objects.get(id = paragraph_id)
                 k.save()
-                return redirect(reverse('paragraphs'))
+                return redirect('paragraphs')
+        elif 'delete_actions' in request.POST:
+            Action.objects.filter(
+                pk__in=request.POST.getlist('delete_list')).delete()
+            return redirect(reverse('paragraphs'))
+        elif 'delete_links' in request.POST:
+            Links.objects.filter(
+                pk__in=request.POST.getlist('delete_list')).delete()
+            return redirect(reverse('paragraphs'))
+        elif 'delete_keywords' in request.POST:
+            Keyword.objects.filter(
+                pk__in=request.POST.getlist('delete_list')).delete()
+            return redirect(reverse('paragraphs'))
         else:
             Paragraph.objects.filter(id = paragraph_id).delete()
             return redirect(reverse('paragraphs'))
