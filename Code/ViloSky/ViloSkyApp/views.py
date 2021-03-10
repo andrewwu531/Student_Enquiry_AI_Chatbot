@@ -482,5 +482,6 @@ def create_paragraphs(request):
     linkformset = LinksFormSet()
     actionformset = ActionFormSet()
     keywordformset = KeywordFormSet()
-    context = {"newParaForm":newParaForm, 'linkformset':linkformset, 'actionformset':actionformset,'keywordformset':keywordformset}
+    helper = MyFormSetHelper()
+    context = {"newParaForm":newParaForm, 'linkformset':linkformset, 'actionformset':actionformset,'keywordformset':keywordformset, 'helper':helper}
     return render(request, 'create_paragraphs.html', context)
