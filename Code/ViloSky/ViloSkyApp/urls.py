@@ -32,4 +32,5 @@ urlpatterns = [
          PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset-password/complete/', PasswordResetCompleteView.as_view(),
          name='password_reset_complete'),
+path('create_paragraphs/', views.create_paragraphs, name='create_paragraphs'),
 ]

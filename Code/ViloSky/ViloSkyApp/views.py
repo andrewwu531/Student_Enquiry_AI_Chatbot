@@ -14,11 +14,11 @@ from django.contrib.auth.decorators import login_required
 from django.core.serializers import serialize
 from django.utils.formats import localize
 from ViloSkyApp import models
-from ViloSkyApp.forms import UserForm, InputForm
-from ViloSkyApp.models import Qualification
+from ViloSkyApp.forms import UserForm, InputForm, NewParaForm
+from ViloSkyApp.models import Qualification, Link
 from ViloSkyApp.forms import QualificationForm
-from .forms import UserProfileForm
-
+from .forms import UserProfileForm, NewActionForm, NewLinkForm, NewKeywordForm
+from django.forms import modelformset_factory, formset_factory
 
 def index(request):
     return redirect(reverse('login'))
@@ -442,3 +442,85 @@ def get_context_from_paragraphs(paras):
         # list of the lists for links and actions added to dictionary
         links_dict[par] = big_l
     return links_dict
+
+@login_required(login_url='login')
+def create_paragraphs(request):
+    LinksFormSet = formset_factory(NewLinkForm, extra=2)
+    ActionFormSet = formset_factory(NewActionForm, extra=2)
+    KeywordFormSet = formset_factory(NewKeywordForm, extra=5)
+    if request.method == "POST":
+        newParaForm = NewParaForm(request.POST)
+        linkformset = LinksFormSet(request.POST)
+        actionformset = ActionFormSet(request.POST)
+        keywordformset = KeywordFormSet(request.POST)
+        if newParaForm.is_valid():
+            para = newParaForm.save(commit=False)
+            para.created_by = models.UserProfile.objects.filter(user=request.user).first()
+            para.save()
+            if linkformset.is_valid():
+                for a_link in linkformset:
+                    link = a_link.save(commit=False)
+                    if link.url != '':
+                        link.paragraph = models.Paragraph.objects.all().order_by('-id').first()
+                        link.save()
+            if actionformset.is_valid():
+                for an_action in actionformset:
+                    action = an_action.save(commit=False)
+                    if action.title != '':
+                        action.paragraph = models.Paragraph.objects.all().order_by('-id').first()
+                        action.save()
+            if keywordformset.is_valid():
+                for a_keyword in keywordformset:
+                    keyword = a_keyword.save(commit=False)
+                    if keyword.key != '':
+                        keyword.paragraph = models.Paragraph.objects.all().order_by('-id').first()
+                        keyword.save()
+            return redirect(reverse('paragraphs'))
+        return redirect(reverse('paragraphs'))
+    newParaForm = NewParaForm()
+    linkformset = LinksFormSet()
+    actionformset = ActionFormSet()
+    keywordformset = KeywordFormSet()
+    context = {"newParaForm":newParaForm, 'linkformset':linkformset, 'actionformset':actionformset,'keywordformset':keywordformset}
+    return render(request, 'create_paragraphs.html', context)
+
+'''
+login_required(login_url='login')
+def create_paragraphs(request):
+    if request.method == "POST":
+        newParaForm = NewParaForm(request.POST)
+        newLinkForm = NewLinkForm(request.POST)
+        newActionForm = NewActionForm(request.POST)
+        newKeywordForm = NewKeywordForm(request.POST)
+        LinkFormSet = modelformset_factory(NewLinkForm, extra=2)
+        # form validation if links also entered
+        if newParaForm.is_valid():
+            para = newParaForm.save(commit=False)
+            para.created_by = models.UserProfile.objects.filter(user=request.user).first()
+            para.save()
+            if newLinkForm.is_valid():
+                print(len(models.Link.objects.all()))
+                link = newLinkForm.save(commit=False)
+                if link.url != '':
+                    link.paragraph = models.Paragraph.objects.all().order_by('-id').first()
+                    link.save()
+                print(len(models.Link.objects.all()))
+            if newActionForm.is_valid():
+                action = newActionForm.save(commit=False)
+                action.paragraph = models.Paragraph.objects.all().order_by('-id').first()
+                action.save()
+            if newKeywordForm.is_valid():
+                keyword = newActionForm.save(commit=False)
+                keyword.paragraph = models.Paragraph.objects.all().order_by('-id').first()
+                keyword.save()
+
+            return redirect(reverse('paragraphs'))
+        return redirect(reverse('paragraphs'))
+    newParaForm = NewParaForm()
+    newLinkForm = NewLinkForm()
+    newActionForm = NewActionForm()
+    newKeywordForm = NewKeywordForm()
+
+    context = {"newParaForm": newParaForm, 'newLinkForm': newLinkForm, 'newActionForm': newActionForm,
+               'newKeywordForm': newKeywordForm}
+    return render(request, 'create_paragraphs.html', context)'''

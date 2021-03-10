@@ -2,7 +2,7 @@
 import datetime
 from django import forms
 from django.contrib.auth import get_user_model
-from .models import UserProfile, AdminInput, DropdownAdminInput, CheckboxAdminInput, TextareaAdminInput, TextAdminInput, RadioButtonsAdminInput, Qualification
+from .models import UserProfile, AdminInput, DropdownAdminInput, CheckboxAdminInput, TextareaAdminInput, TextAdminInput, RadioButtonsAdminInput, Qualification, Paragraph, Link, Keyword, Action
 
 
 class UserForm(forms.ModelForm):
@@ -112,3 +112,43 @@ class QualificationForm(forms.ModelForm):
         model = Qualification
         fields = ('level', 'subjects')
 #QualificationFormSet = modelformset_factory(QualificationForm, fields = ('user','level', 'subjects'), extra = 1)
+
+class NewParaForm(forms.ModelForm):
+    class Meta:
+        model = Paragraph
+        fields = ('static_text',)
+        widgets = {
+            'static_text' :  forms.Textarea(attrs={'placeholder': 'Having been out of work for over a year...'})}
+
+class NewLinkForm(forms.ModelForm):
+    class Meta:
+        model = Link
+        fields = ('url',)
+        widgets = {
+            'url': forms.TextInput(attrs={'placeholder': 'https://www.bt.com/sport/watch/live-now/bt-sport-2'})}
+    def __init__(self, *args, **kwargs):
+        super(NewLinkForm, self).__init__(*args, **kwargs)
+        self.fields['url'].required = False
+
+class NewActionForm(forms.ModelForm):
+    class Meta:
+        model = Action
+        fields = ('title',)
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'Grab a beer'})}
+    def __init__(self, *args, **kwargs):
+        super(NewActionForm, self).__init__(*args, **kwargs)
+        self.fields['title'].required = False
+
+class NewKeywordForm(forms.ModelForm):
+    class Meta:
+        model = Keyword
+        fields = ('key','score')
+        widgets = {
+            'key': forms.TextInput(attrs={'placeholder': 'Risk Management'}),
+            'score': forms.TextInput(attrs={'placeholder': '10'})
+        }
+    def __init__(self, *args, **kwargs):
+        super(NewKeywordForm, self).__init__(*args, **kwargs)
+        self.fields['key'].required = False
+        self.fields['score'].required = False
