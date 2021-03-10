@@ -113,6 +113,7 @@ class QualificationForm(forms.ModelForm):
         fields = ('level', 'subjects')
 #QualificationFormSet = modelformset_factory(QualificationForm, fields = ('user','level', 'subjects'), extra = 1)
 
+
 class NewParaForm(forms.ModelForm):
     class Meta:
         model = Paragraph

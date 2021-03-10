@@ -1,0 +1,31 @@
+{% extends 'baseuser.html' %}
+{% load static %}
+
+{% block bodyblock%}
+<div class="divbackground widediv">
+    <div class="largeText whiteText centerText">
+        Create New Outputs
+    </div>
+
+ <form class="" action="" method = "POST">
+     {% csrf_token %}
+     <div class="field">
+         <label class="label">Paragraph Text</label>
+         {{ newParaForm.static_text }}
+     </div>
+    <div class ="field">
+        <label class="label">Links</label>
+         {{ linkformset }}
+    </div>
+     <div class ="field">
+        <label class="label">Actions</label>
+        {{ actionformset}}
+     </div>
+     <div class ="field">
+        <label class="label">Keywords</label>
+        {{ keywordformset.as_p }}
+     </div>
+     <input type="submit" name="submit" class="btn btn-primary btn-block"/>
+ </form>
+</div>
+{%endblock%}
