@@ -8,8 +8,7 @@
     </div>
     <div id = "view" class = "centerText">
         <p>Created By: {{ created_by.user }}</p>
-        Text
-        <button style= "float: right;" onclick=editText()>Edit</button>
+        <button class = "btn btn-link" onclick=editText()>Text</button>
         <table class = "paratable">
             <tbody>
                 <tr>
@@ -19,10 +18,10 @@
                 </tr>
             </tbody>
         </table>
+
         <br>
         {% if links %}
-        Links
-        <button style= "float: right;" onclick=editLinks()>Edit</button>
+        <button class = "btn btn-link" onclick=editLinks()>Links</button>
         <table class = "paratable">
             <thead>
                 <th>ID</th>
@@ -37,12 +36,27 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        Links
+        <div class = "row center centerText">
+        <table class = "paratable">
+            <tbody>
+                <tr>
+                    <td>
+                        No links to display.
+                    </td>
+                    <td>
+                        <button style= "float: right;" onclick=editLinks()>Add</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
         {% endif %}
  
         <br>
         {% if keywords %}
-        Keywords
-        <button style= "float: right;" onclick=editKeys()>Edit</button>
+        <button class = "btn btn-link" onclick=editKeys()>Keywords</button>
         <table class = "paratable">
         <thead>
             <th>Word</th>
@@ -56,13 +70,28 @@
         </tr>
         {% endfor %}
         </tbody>
-    </table>
+        </table>
+        {% else %}
+        Keywords
+        <div class = "row center centerText">
+        <table class = "paratable">
+            <tbody>
+                <tr>
+                    <td>
+                        No keywords to display.
+                    </td>
+                    <td>
+                        <button style= "float: right;" onclick=editKeys()>Add</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
         {% endif %}
        
-    <br>
+        <br>
         {% if actions %}
-        Actions
-        <button style= "float: right;" onclick=editActions()>Edit</button>
+        <button class = "btn btn-link" onclick=editActions()>Actions</button>
         <table class="paratable">
             <thead>
                 <th>ID</th>
@@ -81,12 +110,30 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        {% else %}
+        Actions
+        <div class = "row center centerText">
+        <table class = "paratable">
+            <tbody>
+                <tr>
+                    <td>
+                        No actions to display.
+                    </td>
+                    <td>
+                        <button style= "float: right;" onclick=editActions()>Add</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
         {% endif %}
+       
         <br>
         <div class="center">
             <form  method = "POST">
             {% csrf_token %}
-            <button type="submit" class = "btn-delete" >Delete</button>
+            <button type="submit" class = "btn-delete" >Delete Paragraph</button>
             </form>
         </div>
     </div>
@@ -95,9 +142,21 @@
     <div id="editText" style="display: none;">
         <form method = "POST">
             {% csrf_token %}
-            <p> Paragraph
+            Current Text:
+            <table class = "paratable">
+                <tbody>
+                    <tr>
+                        <td>
+                            {{ para.static_text }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <br>
             {{ p_form.as_p}}</p>
-            <button type="submit" name="editText" class = "btn-delete" >Done</button>
+            <button type="submit" name="editText" class = "btn-delete" >Update</button>
+            <button  class = "btn-delete"  onclick=cancel()>Cancel</button>
         </form>
     </div>
 
@@ -106,7 +165,8 @@
             {% csrf_token %}
             <p> Links
             {{ l_form.as_p}}</p>
-            <button type="submit" name="editLinks" class = "btn-delete" >Done</button>
+            <button type="submit" name="editLinks" class = "btn-delete" >Update</button>
+            <button  class = "btn-delete"  onclick=cancel()>Cancel</button>
         </form>
     </div>
 
@@ -115,7 +175,8 @@
             {% csrf_token %}
             <p> Keywords
             {{ k_form.as_p}}</p>
-            <button type="submit" name="editKeys" class = "btn-delete" >Done</button>
+            <button type="submit" name="editKeys" class = "btn-delete" >Update</button>
+            <button  class = "btn-delete"  onclick=cancel()>Cancel</button>
         </form>
     </div>
 
@@ -124,30 +185,11 @@
             {% csrf_token %}
             <p> Actions
             {{ a_form.as_p}}</p>
-            <button type="submit" name="editActions" class = "btn-delete" >Done</button>
+            <button type="submit" name="editActions" class = "btn-delete" >Update</button>
+            <button  class = "btn-delete" onclick=cancel()>Cancel</button>
         </form>
     </div>
 </div>
 
-<script>
-    function editText(){
-        document.getElementById('editText').style.display = "block";
-        document.getElementById('view').style.display = "none";
-    }
-
-    function editLinks(){
-        document.getElementById('editLinks').style.display = "block";
-        document.getElementById('view').style.display = "none";
-    }
-
-    function editKeys(){
-        document.getElementById('editKeys').style.display = "block";
-        document.getElementById('view').style.display = "none";
-    }
-
-    function editActions(){
-        document.getElementById('editActions').style.display = "block";
-        document.getElementById('view').style.display = "none";
-    }
-</script>
+<script type="text/javascript" src="{% static 'js/paragraphs.js' %}" ></script>
 {%endblock%}
