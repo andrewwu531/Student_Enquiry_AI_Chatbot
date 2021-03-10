@@ -449,6 +449,7 @@ def create_paragraphs(request):
     ActionFormSet = formset_factory(NewActionForm, extra=2)
     KeywordFormSet = formset_factory(NewKeywordForm, extra=5)
     if request.method == "POST":
+        print("ON Branch")
         newParaForm = NewParaForm(request.POST)
         linkformset = LinksFormSet(request.POST)
         actionformset = ActionFormSet(request.POST)

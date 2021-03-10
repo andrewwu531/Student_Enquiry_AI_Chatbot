@@ -3,7 +3,7 @@ import datetime
 from django import forms
 from django.contrib.auth import get_user_model
 from .models import UserProfile, AdminInput, DropdownAdminInput, CheckboxAdminInput, TextareaAdminInput, TextAdminInput, RadioButtonsAdminInput, Qualification, Paragraph, Link, Keyword, Action
-
+from crispy_forms.helper import FormHelper, Layout
 
 class UserForm(forms.ModelForm):
     email = forms.CharField(widget=forms.EmailInput(
@@ -153,6 +153,7 @@ class NewKeywordForm(forms.ModelForm):
         super(NewKeywordForm, self).__init__(*args, **kwargs)
         self.fields['key'].required = False
         self.fields['score'].required = False
+
 
 class MyFormSetHelper(FormHelper):
     def __init__(self, *args, **kwargs):
