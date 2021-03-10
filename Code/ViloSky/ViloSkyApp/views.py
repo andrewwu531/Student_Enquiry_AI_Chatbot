@@ -250,7 +250,7 @@ def paragraph(request, paragraph_id):
                 pk__in=request.POST.getlist('delete_list')).delete()
             return redirect(reverse('paragraphs'))
         elif 'delete_links' in request.POST:
-            Links.objects.filter(
+            Link.objects.filter(
                 pk__in=request.POST.getlist('delete_list')).delete()
             return redirect(reverse('paragraphs'))
         elif 'delete_keywords' in request.POST:
