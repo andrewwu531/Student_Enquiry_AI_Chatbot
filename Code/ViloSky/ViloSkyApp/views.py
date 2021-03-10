@@ -17,7 +17,7 @@ from ViloSkyApp import models
 from ViloSkyApp.forms import UserForm, InputForm, NewParaForm
 from ViloSkyApp.models import Qualification, Link
 from ViloSkyApp.forms import QualificationForm
-from .forms import UserProfileForm, NewActionForm, NewLinkForm, NewKeywordForm
+from .forms import UserProfileForm, NewActionForm, NewLinkForm, NewKeywordForm, MyFormSetHelper
 from django.forms import modelformset_factory, formset_factory
 
 def index(request):

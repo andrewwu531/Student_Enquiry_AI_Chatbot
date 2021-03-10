@@ -153,3 +153,11 @@ class NewKeywordForm(forms.ModelForm):
         super(NewKeywordForm, self).__init__(*args, **kwargs)
         self.fields['key'].required = False
         self.fields['score'].required = False
+
+class MyFormSetHelper(FormHelper):
+    def __init__(self, *args, **kwargs):
+        super(MyFormSetHelper, self).__init__(*args, **kwargs)
+        self.layout = Layout(
+            'field1',
+        )
+        self.template = 'bootstrap/table_inline_formset.html'
