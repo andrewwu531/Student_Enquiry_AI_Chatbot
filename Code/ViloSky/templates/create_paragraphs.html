@@ -1,31 +1,34 @@
 {% extends 'baseuser.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
+{% block bodyblock %}
 
-{% block bodyblock%}
 <div class="divbackground widediv">
     <div class="largeText whiteText centerText">
         Create New Outputs
     </div>
-
- <form class="" action="" method = "POST">
-     {% csrf_token %}
-     <div class="field">
-         <label class="label">Paragraph Text</label>
-         {{ newParaForm.static_text }}
-     </div>
-    <div class ="field">
-        <label class="label">Links</label>
-         {{ linkformset }}
-    </div>
-     <div class ="field">
-        <label class="label">Actions</label>
-        {{ actionformset}}
-     </div>
-     <div class ="field">
-        <label class="label">Keywords</label>
-        {{ keywordformset.as_p }}
-     </div>
-     <input type="submit" name="submit" class="btn btn-primary btn-block"/>
- </form>
+    <form class="" action="" method="POST">
+        {% csrf_token %}
+        <div class="field">
+            <h4>Paragraph Text</h4>
+            {{ newParaForm.static_text }}            
+        </div>
+        <div class="field">
+            <h4>Links</h4>
+            {% crispy linkformset helper %}          
+        </div>
+        <div class="field">
+            <h4>Actions</h4>
+            {{ actionformset|crispy }}
+        </div>
+        <p></p>
+        <div class="field">
+            <h4>Keywords</h4>
+            <p>Please enter keys and corresponding score for the paragraph.</p>
+            <p>Enter up to 5 keys. If you wish to add more this can be done on the edit paragraph page.</p>
+            {% crispy keywordformset helper %}
+        </div>
+        <input type="submit" name="submit" class="btn btn-primary btn-block"/>
+    </form>
 </div>
-{%endblock%}
+{% endblock %}
