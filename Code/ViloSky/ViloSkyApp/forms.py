@@ -110,7 +110,7 @@ class QualificationForm(forms.ModelForm):
 
 
 class ParagraphForm(forms.ModelForm):
-
+    static_text = forms.Textarea()
     class Meta:
         model = Paragraph
         fields = ('static_text', )
@@ -123,8 +123,8 @@ class ActionForm(forms.ModelForm):
         fields = ('title', )
 
 class KeyWordForm(forms.ModelForm):
-    key = forms.CharField(required = False)
-    score = forms.IntegerField(required = False)
+    key = forms.CharField(required = True)
+    score = forms.IntegerField(required = True)
     class Meta:
         model = Keyword
         fields = ('key', 'score')
