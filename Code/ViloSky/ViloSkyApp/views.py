@@ -19,6 +19,9 @@ from ViloSkyApp.models import Qualification, Link
 from ViloSkyApp.forms import QualificationForm
 from .forms import UserProfileForm, NewActionForm, NewLinkForm, NewKeywordForm
 from django.forms import modelformset_factory, formset_factory
+from fpdf import FPDF
+from django.http import FileResponse
+import io
 
 def index(request):
     return redirect(reverse('login'))
@@ -300,34 +303,9 @@ def report_create(request):
 def report_view(request, report_id):
     # Pass required info and update template
     report = models.Report.objects.filter(id=int(report_id)).first()
-
     if report is not None:
-        paras = report.paragraphs.all()
-        link_list = models.Link.objects.filter(paragraph__in=paras)
-        actions_list = models.Action.objects.filter(paragraph__in=paras)
-
-        links_dict = {}
-
-        # get the associated links and actions for each paragraph
-        for par in paras:
-            temp = []
-            t = []
-            big_l = []
-            for link in link_list:
-                if par == link.paragraph:
-                    temp.append(link)
-            for act in actions_list:
-                if par == act.paragraph:
-                    t.append(act)
-            if temp:
-                big_l.append(temp)
-            if t:
-                big_l.append(t)
-            # list of the lists for links and actions added to dictionary
-            links_dict[par] = big_l
-
-        return render(request, 'report.html', {'data': links_dict})
-
+        links_dict = compile_report(report)
+        return render(request, 'report.html', {'data': links_dict, 'report_id':report_id})
     return render(request, "error.html")
 
 
@@ -378,6 +356,46 @@ def get_paragraphs(inputs_dictionary):
         del scores_dict[highest_score]
     return paragraphs_list
 
+def compile_report(report):
+    paras = report.paragraphs.all()
+    link_list = models.Link.objects.filter(paragraph__in=paras)
+    actions_list = models.Action.objects.filter(paragraph__in=paras)
+
+    links_dict = {}
+
+    # get the associated links and actions for each paragraph
+    for par in paras:
+        temp = []
+        t = []
+        big_l = []
+        for link in link_list:
+            if par == link.paragraph:
+                temp.append(link)
+        for act in actions_list:
+            if par == act.paragraph:
+                t.append(act)
+        if temp:
+            big_l.append(temp)
+        if t:
+            big_l.append(t)
+        # list of the lists for links and actions added to dictionary
+        links_dict[par] = big_l
+    return links_dict
+
+
+def create_pdf(request, report_id):
+    # Pass required info and update template
+    report = models.Report.objects.filter(id=int(report_id)).first()
+
+    if report is not None:
+        links_dict = compile_report(report)
+        #now start constructing the pdf
+        pdf_file = pdf_creator(links_dict)
+        binaryIO = io.BytesIO(pdf_file)
+        binaryIO.seek(0)
+        return FileResponse(binaryIO, content_type='application/pdf', as_attachment=True, filename='report.pdf')
+
+    return render(request, "error.html")
 
 def report_view_public(request):
     # Get the dictionary of inputs. Gathered in InputForm, saved to django session.
@@ -386,13 +404,26 @@ def report_view_public(request):
     paras = get_paragraphs(inputs)
     # Get all the relevant context for the paragraphs
     links_dict = get_context_from_paragraphs(paras)
-
     context = {'data': links_dict}
     return render(request, 'report_public.html', context)
 
+def create_pdf_public(request):
+    # Get the dictionary of inputs. Gathered in InputForm, saved to django session.
+    inputs = request.session.get('saved')
+    # Get a list of paragraphs based on the inputs
+    paras = get_paragraphs(inputs)
+    # Get all the relevant context for the paragraphs
+    links_dict = get_context_from_paragraphs(paras)
+    pdf_file = pdf_creator(links_dict)
+    binaryIO = io.BytesIO(pdf_file)
+    binaryIO.seek(0)
+    return FileResponse(binaryIO, content_type='application/pdf', as_attachment=True, filename='report.pdf')
 
 def create_report(request, inputs, is_authenticated=False):
     # Get a list of paragraphs based on the inputs
+    if(request.GET.get("pdfbutton")):
+        create_pdf()
+
     paras = get_paragraphs(inputs)
     report_id = None
 
@@ -415,6 +446,31 @@ def create_report(request, inputs, is_authenticated=False):
 
     return report_id
 
+def pdf_creator(dataset):
+    pdf = FPDF()
+    pdf.alias_nb_pages()
+    pdf.add_page()
+    pdf.add_font('FreeSans', '', './static/fonts/FreeSans.ttf', uni=True)
+    pdf.add_font('FreeSans', 'B', './static/fonts/FreeSansBold.ttf', uni=True)
+    pdf.add_font('FreeSans', 'I', './static/fonts/FreeSansOblique.ttf', uni=True)
+    pdf.image('./static/images/logo_small.png',10,8,33)
+    pdf.set_font('FreeSans', 'B', 16)
+    pdf.cell(80)
+    pdf.cell(30, 10, 'Report', 1, 0, 'C')
+    pdf.ln(20)
+    pdf.set_font('FreeSans', '', 12)
+    for key,values in dataset.items():
+        pdf.multi_cell(0,5, key.static_text)
+        pdf.ln('0.1')
+        for ls in values:
+            for item in ls:
+                if(hasattr(item,"url")):
+                    pdf.multi_cell(0,5,"-"+item.url)
+                if(hasattr(item,"title")):
+                    pdf.multi_cell(0,5,"-"+item.title)
+        pdf.ln('0.3')
+    pdf_file = pdf.output(dest='S').encode('latin-1')
+    return pdf_file
 
 def get_context_from_paragraphs(paras):
     ''' Helper method retrieving all required data from paragraphs

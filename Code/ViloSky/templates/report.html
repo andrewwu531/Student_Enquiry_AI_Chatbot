@@ -25,5 +25,6 @@
         </li>
         {% endfor %}
     </ul>
+    <button type="submit" class="btn btn-primary btn-block" onclick="location.href='{% url 'create_pdf' report_id=1 %}'">Download as pdf</button>
 </div>
 {%endblock%}
