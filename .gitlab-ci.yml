@@ -50,3 +50,8 @@ test:
   script:
 
   - python manage.py test
+
+deploy:
+  script:
+    - cd Code/ViloSky
+    - dpl --provider=heroku --app=$HEROKU_NAME --api-key=$HEROKU_API_KEY
