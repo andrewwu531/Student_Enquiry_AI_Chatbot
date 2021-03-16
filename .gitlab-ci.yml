@@ -27,6 +27,9 @@ before_script:
   # Uncomment next line if your Django app needs a JS runtime:
   # - apt-get update -q && apt-get install nodejs -yqq
   - pip install -r requirements.txt
+  - apt-get -qq update -qy
+  - apt-get -qq install -y ruby-dev
+  - gem install -q dpl
 
 # To get Django tests to work you may need to create a settings file using
 # the following DATABASES:
