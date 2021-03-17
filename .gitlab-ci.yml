@@ -9,8 +9,6 @@ image: python:latest
 services:
   - mysql:latest
   - postgres:latest
-environment:
-  - "POSTGRES_HOST_AUTH_METHOD=trust"
 
 variables:
   POSTGRES_DB: database_name
