@@ -33,6 +33,7 @@ before_script:
   - apt-get -qq update -qy
   - apt-get -qq install -y ruby-dev
   - gem install -q dpl
+  - python manage.py migrate
 
 # To get Django tests to work you may need to create a settings file using
 # the following DATABASES:
