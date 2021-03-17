@@ -92,12 +92,12 @@ if os.environ.get('GITLAB_WORKFLOW'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'ci',
+            'NAME': 'project_ci_test',
             'USER': 'postgres',
-            'PASSWORD': 'postgres',
-            'HOST': 'postgres',
-            'PORT': '5432',
-        },
+            'PASSWORD': '',
+            'HOST': 'postgres'
+            'PORT': '5432'
+        }
     }
 
 # Password validation
