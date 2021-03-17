@@ -8,8 +8,8 @@ variables:
     # variables:
     # DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
   GITLAB_WORKFLOW: "True"
-  POSTGRES_DB: project_ci_test
-  POSTGRES_USER: postgres
+  POSTGRES_DB: "project_ci_test"
+  POSTGRES_USER: "postgres"
   POSTGRES_PASSWORD: ""
 
 # Pick zero or more services to be used on all builds.
