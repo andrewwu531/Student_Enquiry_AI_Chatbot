@@ -15,18 +15,22 @@
         </div>
         <div class="field">
             <h4>Links</h4>
-            {% crispy linkformset helper %}          
+            {{ linkformset.as_p}}          
         </div>
         <div class="field">
             <h4>Actions</h4>
-            {{ actionformset|crispy }}
+            {{ actionformset.as_p }}
         </div>
         <p></p>
         <div class="field">
             <h4>Keywords</h4>
             <p>Please enter keys and corresponding score for the paragraph.</p>
             <p>Enter up to 5 keys. If you wish to add more this can be done on the edit paragraph page.</p>
-            {% crispy keywordformset helper %}
+            {% for form in keywordformset %}
+            <ul style="list-style-type:none;">
+                <li>Key: {{form.key}}        Score:{{form.score}}</li>
+            </ul>
+            {% endfor %}
         </div>
         <input type="submit" name="submit" class="btn btn-primary btn-block"/>
     </form>

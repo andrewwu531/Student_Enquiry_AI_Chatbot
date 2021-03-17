@@ -126,7 +126,7 @@ class NewLinkForm(forms.ModelForm):
         model = Link
         fields = ('url',)
         widgets = {
-            'url': forms.TextInput(attrs={'placeholder': 'https://www.bt.com/sport/watch/live-now/bt-sport-2'})}
+            'url': forms.TextInput(attrs={'placeholder': 'https://womenreturners.com'})}
     def __init__(self, *args, **kwargs):
         super(NewLinkForm, self).__init__(*args, **kwargs)
         self.fields['url'].required = False
@@ -136,7 +136,7 @@ class NewActionForm(forms.ModelForm):
         model = Action
         fields = ('title',)
         widgets = {
-            'title': forms.TextInput(attrs={'placeholder': 'Grab a beer'})}
+            'title': forms.TextInput(attrs={'placeholder': 'List your skills...'})}
     def __init__(self, *args, **kwargs):
         super(NewActionForm, self).__init__(*args, **kwargs)
         self.fields['title'].required = False
@@ -153,12 +153,3 @@ class NewKeywordForm(forms.ModelForm):
         super(NewKeywordForm, self).__init__(*args, **kwargs)
         self.fields['key'].required = False
         self.fields['score'].required = False
-
-
-class MyFormSetHelper(FormHelper):
-    def __init__(self, *args, **kwargs):
-        super(MyFormSetHelper, self).__init__(*args, **kwargs)
-        self.layout = Layout(
-            'field1',
-        )
-        self.template = 'bootstrap/table_inline_formset.html'

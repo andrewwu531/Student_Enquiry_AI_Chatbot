@@ -17,7 +17,7 @@ from ViloSkyApp import models
 from ViloSkyApp.forms import UserForm, InputForm, NewParaForm
 from ViloSkyApp.models import Qualification, Link
 from ViloSkyApp.forms import QualificationForm
-from .forms import UserProfileForm, NewActionForm, NewLinkForm, NewKeywordForm, MyFormSetHelper
+from .forms import UserProfileForm, NewActionForm, NewLinkForm, NewKeywordForm
 from django.forms import modelformset_factory, formset_factory
 
 def index(request):
@@ -445,11 +445,10 @@ def get_context_from_paragraphs(paras):
 
 @login_required(login_url='login')
 def create_paragraphs(request):
-    LinksFormSet = formset_factory(NewLinkForm, extra=2)
-    ActionFormSet = formset_factory(NewActionForm, extra=2)
+    LinksFormSet = formset_factory(NewLinkForm, extra=3)
+    ActionFormSet = formset_factory(NewActionForm, extra=3)
     KeywordFormSet = formset_factory(NewKeywordForm, extra=5)
     if request.method == "POST":
-        print("ON Branch")
         newParaForm = NewParaForm(request.POST)
         linkformset = LinksFormSet(request.POST)
         actionformset = ActionFormSet(request.POST)
@@ -482,6 +481,5 @@ def create_paragraphs(request):
     linkformset = LinksFormSet()
     actionformset = ActionFormSet()
     keywordformset = KeywordFormSet()
-    helper = MyFormSetHelper()
-    context = {"newParaForm":newParaForm, 'linkformset':linkformset, 'actionformset':actionformset,'keywordformset':keywordformset, 'helper':helper}
+    context = {"newParaForm":newParaForm, 'linkformset':linkformset, 'actionformset':actionformset,'keywordformset':keywordformset}
     return render(request, 'create_paragraphs.html', context)
