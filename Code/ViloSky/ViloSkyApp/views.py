@@ -67,6 +67,11 @@ def register(request):
                         request, "The passwords provided do not match.")
                 else:
                     registered = True
+
+                if registered:
+                    user_profile = models.UserProfile.objects.create(
+                        user=user, date_of_birth=None, company="", employment_sector="", employment_status="", time_worked_in_industry="")
+                    user_profile.save()
         else:
             user_form = UserForm()
         context_dict = {

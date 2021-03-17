@@ -7,11 +7,12 @@ from .models import UserProfile, AdminInput, DropdownAdminInput, CheckboxAdminIn
 
 class UserForm(forms.ModelForm):
     email = forms.CharField(widget=forms.EmailInput(
-        attrs={'class': 'form-control txtbox'}))
+        attrs={'class': 'form-control form-control-lg', 'id': 'inputEmail3', 'placeholder': 'Enter email'}))
     password = forms.CharField(widget=forms.PasswordInput(
-        attrs={'class': 'form-control txtbox'}))
+        attrs={'class': 'form-control form-control-lg', 'id': 'inputPassword4', 'placeholder': 'Enter password'}))
     confirm_password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control txtbox'}))
+        widget=forms.PasswordInput(
+            attrs={'class': 'form-control form-control-lg', 'id': 'inputPassword5', 'placeholder': 'Confirm password'}))
 
     class Meta:
         model = get_user_model()
@@ -113,12 +114,14 @@ class QualificationForm(forms.ModelForm):
         fields = ('level', 'subjects')
 #QualificationFormSet = modelformset_factory(QualificationForm, fields = ('user','level', 'subjects'), extra = 1)
 
+
 class NewParaForm(forms.ModelForm):
     class Meta:
         model = Paragraph
         fields = ('static_text',)
         widgets = {
-            'static_text' :  forms.Textarea(attrs={'placeholder': 'Having been out of work for over a year...'})}
+            'static_text':  forms.Textarea(attrs={'placeholder': 'Having been out of work for over a year...'})}
+
 
 class NewLinkForm(forms.ModelForm):
     class Meta:
@@ -126,9 +129,11 @@ class NewLinkForm(forms.ModelForm):
         fields = ('url',)
         widgets = {
             'url': forms.TextInput(attrs={'placeholder': 'https://www.bt.com/sport/watch/live-now/bt-sport-2'})}
+
     def __init__(self, *args, **kwargs):
         super(NewLinkForm, self).__init__(*args, **kwargs)
         self.fields['url'].required = False
+
 
 class NewActionForm(forms.ModelForm):
     class Meta:
@@ -136,18 +141,21 @@ class NewActionForm(forms.ModelForm):
         fields = ('title',)
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Grab a beer'})}
+
     def __init__(self, *args, **kwargs):
         super(NewActionForm, self).__init__(*args, **kwargs)
         self.fields['title'].required = False
 
+
 class NewKeywordForm(forms.ModelForm):
     class Meta:
         model = Keyword
-        fields = ('key','score')
+        fields = ('key', 'score')
         widgets = {
             'key': forms.TextInput(attrs={'placeholder': 'Risk Management'}),
             'score': forms.TextInput(attrs={'placeholder': '10'})
         }
+
     def __init__(self, *args, **kwargs):
         super(NewKeywordForm, self).__init__(*args, **kwargs)
         self.fields['key'].required = False
