@@ -15,8 +15,7 @@ from django.core.serializers import serialize
 from django.utils.formats import localize
 from ViloSkyApp import models
 from ViloSkyApp.forms import UserForm, InputForm, NewParaForm
-from ViloSkyApp.models import Qualification, Link
-from ViloSkyApp.forms import QualificationForm
+from ViloSkyApp.forms import QualificationForm, ParagraphForm, LinksForm, ActionForm, KeyWordForm
 from .forms import UserProfileForm, NewActionForm, NewLinkForm, NewKeywordForm
 from django.forms import modelformset_factory, formset_factory
 from fpdf import FPDF
@@ -110,7 +109,7 @@ def mydetails(request):
             else:
                 q_form = QualificationForm(instance=request.user.user_profile)
         elif 'delete_qualifications' in request.POST:
-            Qualification.objects.filter(
+            models.Qualification.objects.filter(
                 pk__in=request.POST.getlist('delete_list')).delete()
             return redirect(reverse('mydetails'))
         else:
@@ -122,7 +121,7 @@ def mydetails(request):
                 return redirect(reverse('mydetails'))
             else:
                 p_form = UserProfileForm(instance=request.user.user_profile)
-    qualifications = Qualification.objects.filter(
+    qualifications = models.Qualification.objects.filter(
         user=request.user.user_profile)
     context_dict = {'p_form': p_form, 'q_form': q_form,
                     'qualifications': qualifications}
@@ -213,8 +212,66 @@ def admin_inputs(request):
 
 @ login_required(login_url='login')
 def paragraph(request, paragraph_id):
+    created_by = models.UserProfile.objects.filter(user=request.user).first()
+    page = 'paragraph/' + paragraph_id + '/'
     # Pass required info and update template
-    return render(request, 'paragraph.html', {'paragraph_id': paragraph_id})
+    para = models.Paragraph.objects.filter(id=paragraph_id)[0]
+    links = models.Link.objects.filter(paragraph=paragraph_id)
+    actions = models.Action.objects.filter(paragraph=paragraph_id)
+    keywords = models.Keyword.objects.filter(paragraph=paragraph_id)
+
+    paragraph = models.Paragraph.objects.get(id=paragraph_id)
+
+    # all these forms are to edit paragraphs
+    p_form = ParagraphForm(request.POST, instance=paragraph)
+    link_form = LinksForm(request.POST)
+    action_form = ActionForm(request.POST)
+    keywords_form = KeyWordForm(request.POST)
+
+    if request.method == 'POST':
+        if 'editText' in request.POST:
+            if p_form.is_valid():
+                p = p_form.save(commit=False)
+                p.created_by = created_by
+                p.save()
+                return redirect(reverse('paragraphs'))
+        elif 'editLinks' in request.POST:
+            if link_form.is_valid():
+                l = link_form.save(commit=False)
+                l.paragraph = models.Paragraph.objects.get(id=paragraph_id)
+                l.save()
+                return redirect(reverse('paragraphs'))
+        elif 'editActions' in request.POST:
+            if action_form.is_valid():
+                a = action_form.save(commit=False)
+                a.paragraph = models.Paragraph.objects.get(id=paragraph_id)
+                a.save()
+                return redirect(reverse('paragraphs'))
+        elif 'editKeys' in request.POST:
+            if keywords_form.is_valid():
+                k = keywords_form.save(commit=False)
+                k.paragraph = models.Paragraph.objects.get(id=paragraph_id)
+                k.save()
+                return redirect('paragraphs')
+        elif 'delete_actions' in request.POST:
+            models.Action.objects.filter(
+                pk__in=request.POST.getlist('delete_list')).delete()
+            return redirect(reverse('paragraphs'))
+        elif 'delete_links' in request.POST:
+            models.Link.objects.filter(
+                pk__in=request.POST.getlist('delete_list')).delete()
+            return redirect(reverse('paragraphs'))
+        elif 'delete_keywords' in request.POST:
+            models.Keyword.objects.filter(
+                pk__in=request.POST.getlist('delete_list')).delete()
+            return redirect(reverse('paragraphs'))
+        else:
+            models.Paragraph.objects.filter(id=paragraph_id).delete()
+            return redirect(reverse('paragraphs'))
+
+    return render(request, 'paragraph.html', {'paragraph_id': paragraph_id, 'created_by': created_by, 'para': para, 'links': links,
+                                              'keywords': keywords, 'actions': actions, 'p_form': p_form, 'l_form': link_form, 'a_form': action_form,
+                                              'k_form': keywords_form})
 
 
 @ login_required(login_url='login')

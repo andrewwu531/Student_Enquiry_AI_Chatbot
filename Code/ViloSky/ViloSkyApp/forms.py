@@ -82,11 +82,6 @@ class UserProfileForm(forms.ModelForm):
     cur_year = datetime.datetime.today().year
     date_of_birth = forms.DateField(widget=forms.SelectDateWidget(
         years=tuple([i for i in range(cur_year - 80, cur_year - 16)])))
-    #company = forms.CharField(widget=forms.TextInput())
-    #employment_status = forms.CharField(max_length = 1, widget = forms.Select(choices=UserProfile.EmploymentStatusTypes))
-    #employment_status = forms.CharField()
-    #employment_sector = forms.CharField(widget=forms.TextInput())
-    #time_worked_in_industry = forms.Select(choices=UserProfile.TimeWorkedTypes)
 
     class Meta:
         model = UserProfile
@@ -160,3 +155,36 @@ class NewKeywordForm(forms.ModelForm):
         super(NewKeywordForm, self).__init__(*args, **kwargs)
         self.fields['key'].required = False
         self.fields['score'].required = False
+
+
+class ParagraphForm(forms.ModelForm):
+    static_text = forms.Textarea()
+
+    class Meta:
+        model = Paragraph
+        fields = ('static_text', )
+
+
+class ActionForm(forms.ModelForm):
+    title = forms.CharField(required=False)
+
+    class Meta:
+        model = Action
+        fields = ('title', )
+
+
+class KeyWordForm(forms.ModelForm):
+    key = forms.CharField(required=True)
+    score = forms.IntegerField(required=True)
+
+    class Meta:
+        model = Keyword
+        fields = ('key', 'score')
+
+
+class LinksForm(forms.ModelForm):
+    url = forms.URLField(required=False)
+
+    class Meta:
+        model = Link
+        fields = ('url', )
