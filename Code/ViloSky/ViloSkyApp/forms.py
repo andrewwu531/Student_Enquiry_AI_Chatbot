@@ -1,7 +1,8 @@
 '''Forms for the ViloSky app'''
 import datetime
 from django import forms
-from ViloSkyApp.models import UserProfile, Qualification, AdminInput
+from ViloSkyApp.models import (UserProfile, Qualification, AdminInput, DropdownAdminInput,
+                               TextAdminInput, TextareaAdminInput, CheckboxAdminInput)
 from django.contrib.auth import get_user_model
 
 
@@ -55,11 +56,49 @@ class QualificationForm(forms.ModelForm):
             'level',
             'subjects'
         )
-#QualificationFormSet = modelformset_factory(QualificationForm, fields = ('user','level', 'subjects'), extra = 1)
+# QualificationFormSet = modelformset_factory(QualificationForm, fields = ('user','level', 'subjects'), extra = 1)
 
-class AdminInputForm(forms.ModelForm):
+
+class DropdownAdminInputForm(forms.ModelForm):
+    choices = forms.CharField(widget=forms.Textarea)
 
     class Meta:
-        model = AdminInput
-        fields = ('label',
-                  'input_type')
+        model = DropdownAdminInput
+        fields = [
+            'label',
+            'is_required',
+            'choices',
+        ]
+
+
+class CheckboxAdminInputForm(forms.ModelForm):
+
+    class Meta:
+        model = CheckboxAdminInput
+        fields = [
+            'label',
+            'is_required',
+            'default_value',
+        ]
+
+
+class TextAdminInputForm(forms.ModelForm):
+
+    class Meta:
+        model = TextAdminInput
+        fields = [
+            'label',
+            'is_required',
+            'max_length',
+        ]
+
+
+class TextareaAdminInputForm(forms.ModelForm):
+
+    class Meta:
+        model = TextareaAdminInput
+        fields = [
+            'label',
+            'is_required',
+            'max_length',
+        ]
