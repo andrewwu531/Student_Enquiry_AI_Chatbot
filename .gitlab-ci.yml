@@ -13,6 +13,9 @@ services:
 variables:
   POSTGRES_DB: database_name
 
+stages:
+  - CI
+  - CD
 # This folder is cached between builds
 # http://docs.gitlab.com/ce/ci/yaml/README.html#cache
 cache:
@@ -48,6 +51,7 @@ before_script:
 # and then adding `--settings app.settings.ci` (or similar) to the test command
 
 test:
+  stage: CI
   variables:
     DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
   script:
@@ -55,6 +59,7 @@ test:
   - python manage.py test
 
 deploy:
+  stage: CD
   script:
     - dpl --provider=heroku --app=$HEROKU_NAME --api-key=$HEROKU_API_KEY
   only:
