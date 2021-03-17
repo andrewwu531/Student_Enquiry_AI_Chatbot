@@ -3,8 +3,8 @@
 
 {% block body%}
     <div id = "quals">
-        <button class ="btn-edit small" id ="edit" onclick=editQuals()>Edit</button>
-        <button class ="btn-edit small" style = "display: none;" id="cancel" onclick=cancel()>Cancel</button>
+        <button class ="btn btn-outline-dark" id ="edit" onclick=editQuals()>Edit</button>
+        <button class ="btn btn-outline-dark" style = "display: none;" id="cancel" onclick=cancel()>Cancel</button>
         <br>
     <div class="largeText whiteText centerText">
         My Qualifications
@@ -59,7 +59,7 @@
                 {{ q_form.subjects}} 
             </div>
             <div>
-                <button type="submit" name = "addquals" class = "btn-add" >Add</button>
+                <button type="submit" name = "addquals" class = "btn btn-success" >Add</button>
             </div>
         </div>
 
@@ -68,7 +68,7 @@
     <br>
     
     <div class="largeText whiteText centerText">
-        <button id = "show" class="btn-profile" onclick="showDiv()">Update My Profile</button>
+        <button id = "show" class="btn btn-outline-dark" onclick="showDiv()">Update My Profile</button>
     </div>
 
     
@@ -106,7 +106,7 @@
        
         <div class="form-group">
             <div class = "col">
-                <button type="submit" class="btn btn-primary ">Save Details</button><br><br>
+                <button type="submit" class="btn btn-success ">Save Details</button><br><br>
             </div>  
         </div>
    
