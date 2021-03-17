@@ -12,7 +12,6 @@ services:
 
 variables:
   POSTGRES_DB: database_name
-  GITLAB_WORKFLOW: True
 
 stages:
   - CI
@@ -41,6 +40,7 @@ test:
   stage: CI
   variables:
     DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
+    GITLAB_WORKFLOW: "True"
   script:
 
   - python manage.py test
