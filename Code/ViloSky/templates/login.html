@@ -6,11 +6,11 @@
     <div class="largeText whiteText centerText">
         Login
     </div>
-    <form class="center">
+    <form class="center" method='post' action="{% url 'login' %}">
         {% csrf_token %}
         <div class="form-group">
 			<p>Username:</p>
-			<input name="username" type="text" class="form-control txtbox"required>
+			<input name="email" type="email" class="form-control txtbox" required>
 		</div>
 		<div class="form-group">
 			<p>Password:</p>
@@ -20,7 +20,7 @@
 			<button type="submit" class="btn btn-primary btn-block">Log in</button>
         </div>
         <div class="form-group">
-			<p href="#">Forgot password/username</p>
+			<a href="{% url 'password_reset' %}">Forgot password/username</a>
 		</div>
         
     </form>

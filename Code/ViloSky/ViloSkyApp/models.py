@@ -1,7 +1,7 @@
 """ Models for the ViloSky app. """
 from django.db import models
 from cuser.models import AbstractCUser
-
+from django.contrib.auth.models import User
 
 class CustomUser(AbstractCUser):
     """ A model to hold the user entity with a unique email instead of username.
@@ -38,6 +38,13 @@ class UserProfile(models.Model):
         FIVE_TO_TEN_YEARS = '5-10 Years'
         TEN_PLUS_YEARS = '10+ Years'
 
+    class EmploymentStatusTypes(models.TextChoices):
+        UNEMPLOYED_OR_VOLUNTEER = 'Unemployed/Volunteer'
+        EMPLOYED = 'Employed'
+        SELFEMPLOYED = 'Self-Employed'
+        CAREER_BREAK = 'Career Break'
+        RETIRED = 'Retired'
+
     user = models.OneToOneField(
         CustomUser, on_delete=models.CASCADE, related_name='user_profile')
     is_vilosky_admin = models.BooleanField(default=False)
@@ -45,7 +52,8 @@ class UserProfile(models.Model):
     date_of_birth = models.DateField(null=True, blank=True)
     company = models.CharField(max_length=255, blank=True)
     employment_sector = models.CharField(max_length=255, blank=True)
-    employment_status = models.CharField(max_length=255, blank=True)
+    employment_status = models.CharField(
+        blank=True, choices=EmploymentStatusTypes.choices, max_length=255)
     time_worked_in_industry = models.CharField(
         blank=True, choices=TimeWorkedTypes.choices, max_length=255)
 
@@ -97,6 +105,11 @@ class Action(models.Model):
     title = models.CharField(max_length=255)
 
 
+class CreateReport(models.Manager):
+    def save_report(self,user, paragraphs, datetime_created):
+        report = self.create(user=user, paragraphs=paragraphs, datetime_created=datetime_created)
+        return report
+
 class Report(models.Model):
     """ A model to hold reports consisting of multiple paragraphs.
     Each report is assigned to an individual user.
@@ -107,9 +120,11 @@ class Report(models.Model):
         UserProfile, on_delete=models.CASCADE, related_name='reports_assigned')
     datetime_created = models.DateTimeField()
 
+    objects = CreateReport()
+
 
 class UserAction(models.Model):
-    """ A model to hold user actions, all related to an assigned report. 
+    """ A model to hold user actions, all related to an assigned report.
     As it is for each user, it has a value (changeable by the user).
     """
     report = models.ForeignKey(
@@ -144,6 +159,7 @@ class AdminInput(models.Model):
         TEXT = 'TEXT'
         TEXTAREA = 'TEXTAREA'
         CHECKBOX = 'CHECKBOX'
+        RADIOBUTTONS = 'RADIOBUTTONS'
 
     created_by = models.ForeignKey(
         UserProfile, on_delete=models.CASCADE, related_name='admin_inputs_created')
@@ -166,6 +182,14 @@ class CheckboxAdminInput(AdminInput):
     admin_input = models.OneToOneField(
         AdminInput, parent_link=True, on_delete=models.CASCADE)
     default_value = models.BooleanField(default=False)
+
+
+class RadioButtonsAdminInput(AdminInput):
+    """ A model to information about radiobuttons admin inputs."""
+    admin_input = models.OneToOneField(
+        AdminInput, parent_link=True, on_delete=models.CASCADE)
+    # Must be an array of serialised values.
+    choices = models.JSONField()
 
 
 class TextareaAdminInput(AdminInput):

@@ -1,0 +1,7 @@
+#generic_list tbody tr:hover {
+  cursor: pointer;
+}
+
+.thead-light {
+  background-color: #e9ecef;
+}
