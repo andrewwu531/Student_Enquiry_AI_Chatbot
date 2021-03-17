@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import django_heroku
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
@@ -80,6 +81,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'CONN_MAX_AGE': 500,
     }
 }
 
@@ -121,7 +123,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-#forgot password
+STATIC_ROOT = STATIC_DIR
+# forgot password
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'viloskys@gmail.com'
@@ -132,3 +135,6 @@ EMAIL_USE_TLS = True
 # Custom User model
 AUTH_USER_MODEL = 'ViloSkyApp.CustomUser'
 STATICFILES_DIRS = [STATIC_DIR, ]
+
+# Configure Django App for Heroku.
+django_heroku.settings(locals())
