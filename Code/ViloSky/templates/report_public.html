@@ -2,33 +2,43 @@
 {% load static %}
 
 {% block bodyblock%}
-<div class="divbackground widediv">
-    <div class="largeText whiteText centerText">
-        Report
+{% if error %}
+    <div class="divbackground widediv">
+        <div class="mediumText whiteText centerText">
+            You have not created a report yet
+        </div>
+        <hr/>
+        <button type="submit" class="btn btn-primary btn-block"  onclick="location.href='{% url 'report_create'%}'">Create report</button>
     </div>
-        <ul>
-            {% for key,values in data.items %}
-            <li>
-                {{ key.static_text }}
-                <ul>
-                    {% for list in values %}
-                        {% for item in list %}
-                            <li>
-                                    {% if item.title == null %}
-                                        {{ item.url }}
-                                    {% endif %}
-                                    {% if item.url == null %}
-                                        {{item.title}}
-                                    {% endif %}
-                            </li>
+{% else %}
+    <div class="divbackground widediv">
+        <div class="largeText whiteText centerText">
+            Report
+        </div>
+            <ul>
+                {% for key,values in data.items %}
+                <li>
+                    {{ key.static_text }}
+                    <ul>
+                        {% for list in values %}
+                            {% for item in list %}
+                                <li>
+                                        {% if item.title == null %}
+                                            {{ item.url }}
+                                        {% endif %}
+                                        {% if item.url == null %}
+                                            {{item.title}}
+                                        {% endif %}
+                                </li>
+                            {% endfor %}
                         {% endfor %}
-                    {% endfor %}
-                </ul>
-            </li>
-            {% endfor %}
-        </ul>
-        <button type="submit" class="btn btn-primary btn-block"  onclick="location.href='{% url 'create_pdf_public'%}'">Download as pdf</button>
+                    </ul>
+                </li>
+                {% endfor %}
+            </ul>
+            <hr/>
+            <button type="submit" class="btn btn-primary btn-block"  onclick="location.href='{% url 'create_pdf_public'%}'">Download as pdf</button>
+        </div>
     </div>
-</div>
-
+{% endif %}
 {%endblock%}

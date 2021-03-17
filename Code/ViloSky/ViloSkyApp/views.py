@@ -23,6 +23,7 @@ from fpdf import FPDF
 from django.http import FileResponse
 import io
 
+
 def index(request):
     return redirect(reverse('login'))
 
@@ -305,7 +306,7 @@ def report_view(request, report_id):
     report = models.Report.objects.filter(id=int(report_id)).first()
     if report is not None:
         links_dict = compile_report(report)
-        return render(request, 'report.html', {'data': links_dict, 'report_id':report_id})
+        return render(request, 'report.html', {'data': links_dict, 'report_id': report_id})
     return render(request, "error.html")
 
 
@@ -314,6 +315,8 @@ def similarity(a, b):
 
 
 def get_paragraphs(inputs_dictionary):
+    if not inputs_dictionary:
+        return None
     # Get all keywords, questions and list of answers
     keywords = models.Keyword.objects.all()
     question_list = models.AdminInput.objects.all()
@@ -356,6 +359,7 @@ def get_paragraphs(inputs_dictionary):
         del scores_dict[highest_score]
     return paragraphs_list
 
+
 def compile_report(report):
     paras = report.paragraphs.all()
     link_list = models.Link.objects.filter(paragraph__in=paras)
@@ -389,7 +393,7 @@ def create_pdf(request, report_id):
 
     if report is not None:
         links_dict = compile_report(report)
-        #now start constructing the pdf
+        # now start constructing the pdf
         pdf_file = pdf_creator(links_dict)
         binaryIO = io.BytesIO(pdf_file)
         binaryIO.seek(0)
@@ -397,15 +401,19 @@ def create_pdf(request, report_id):
 
     return render(request, "error.html")
 
+
 def report_view_public(request):
     # Get the dictionary of inputs. Gathered in InputForm, saved to django session.
     inputs = request.session.get('saved')
     # Get a list of paragraphs based on the inputs
     paras = get_paragraphs(inputs)
+    if paras is None:
+        return render(request, 'report_public.html', {'error': True})
     # Get all the relevant context for the paragraphs
     links_dict = get_context_from_paragraphs(paras)
     context = {'data': links_dict}
     return render(request, 'report_public.html', context)
+
 
 def create_pdf_public(request):
     # Get the dictionary of inputs. Gathered in InputForm, saved to django session.
@@ -418,6 +426,7 @@ def create_pdf_public(request):
     binaryIO = io.BytesIO(pdf_file)
     binaryIO.seek(0)
     return FileResponse(binaryIO, content_type='application/pdf', as_attachment=True, filename='report.pdf')
+
 
 def create_report(request, inputs, is_authenticated=False):
     # Get a list of paragraphs based on the inputs
@@ -446,31 +455,34 @@ def create_report(request, inputs, is_authenticated=False):
 
     return report_id
 
+
 def pdf_creator(dataset):
     pdf = FPDF()
     pdf.alias_nb_pages()
     pdf.add_page()
     pdf.add_font('FreeSans', '', './static/fonts/FreeSans.ttf', uni=True)
     pdf.add_font('FreeSans', 'B', './static/fonts/FreeSansBold.ttf', uni=True)
-    pdf.add_font('FreeSans', 'I', './static/fonts/FreeSansOblique.ttf', uni=True)
-    pdf.image('./static/images/logo_small.png',10,8,33)
+    pdf.add_font('FreeSans', 'I',
+                 './static/fonts/FreeSansOblique.ttf', uni=True)
+    pdf.image('./static/images/logo_small.png', 10, 8, 33)
     pdf.set_font('FreeSans', 'B', 16)
     pdf.cell(80)
     pdf.cell(30, 10, 'Report', 1, 0, 'C')
     pdf.ln(20)
     pdf.set_font('FreeSans', '', 12)
-    for key,values in dataset.items():
-        pdf.multi_cell(0,5, key.static_text)
+    for key, values in dataset.items():
+        pdf.multi_cell(0, 5, key.static_text)
         pdf.ln('0.1')
         for ls in values:
             for item in ls:
-                if(hasattr(item,"url")):
-                    pdf.multi_cell(0,5,"-"+item.url)
-                if(hasattr(item,"title")):
-                    pdf.multi_cell(0,5,"-"+item.title)
+                if(hasattr(item, "url")):
+                    pdf.multi_cell(0, 5, "• "+item.url)
+                if(hasattr(item, "title")):
+                    pdf.multi_cell(0, 5, "• "+item.title)
         pdf.ln('0.3')
     pdf_file = pdf.output(dest='S').encode('latin-1')
     return pdf_file
+
 
 def get_context_from_paragraphs(paras):
     ''' Helper method retrieving all required data from paragraphs
@@ -499,6 +511,7 @@ def get_context_from_paragraphs(paras):
         links_dict[par] = big_l
     return links_dict
 
+
 @login_required(login_url='login')
 def create_paragraphs(request):
     LinksFormSet = formset_factory(NewLinkForm, extra=2)
@@ -511,7 +524,8 @@ def create_paragraphs(request):
         keywordformset = KeywordFormSet(request.POST)
         if newParaForm.is_valid():
             para = newParaForm.save(commit=False)
-            para.created_by = models.UserProfile.objects.filter(user=request.user).first()
+            para.created_by = models.UserProfile.objects.filter(
+                user=request.user).first()
             para.save()
             if linkformset.is_valid():
                 for a_link in linkformset:
@@ -537,8 +551,10 @@ def create_paragraphs(request):
     linkformset = LinksFormSet()
     actionformset = ActionFormSet()
     keywordformset = KeywordFormSet()
-    context = {"newParaForm":newParaForm, 'linkformset':linkformset, 'actionformset':actionformset,'keywordformset':keywordformset}
+    context = {"newParaForm": newParaForm, 'linkformset': linkformset,
+               'actionformset': actionformset, 'keywordformset': keywordformset}
     return render(request, 'create_paragraphs.html', context)
+
 
 '''
 login_required(login_url='login')
