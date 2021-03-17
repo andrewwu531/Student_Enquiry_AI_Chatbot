@@ -95,7 +95,7 @@ if os.environ.get('GITLAB_WORKFLOW'):
             'NAME': 'project_ci_test',
             'USER': 'postgres',
             'PASSWORD': '',
-            'HOST': 'postgres'
+            'HOST': 'postgres',
             'PORT': '5432'
         }
     }
