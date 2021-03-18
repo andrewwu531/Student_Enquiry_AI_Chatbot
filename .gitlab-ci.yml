@@ -8,10 +8,10 @@ image: python:latest
 # Check out: http://docs.gitlab.com/ce/ci/docker/using_docker_images.html#what-is-a-service
 services:
   - mysql:5.7
+  - postgres:latest
 
 variables:
-  MYSQL_DATABASE: ${MYSQL_DATABASE}
-  MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+  POSTGRES_DB: database_name
 
 stages:
   - CI
