@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 import django_heroku
 import dj_database_url
+import environ
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
@@ -80,29 +81,12 @@ WSGI_APPLICATION = 'ViloSky.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ci',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'postgres',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME':  BASE_DIR / 'db.sqlite3',
     }
 }
 
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
 
-if os.environ.get('GITLAB_WORKFLOW'):
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'project_ci_test',
-            'USER': 'postgres',
-            'PASSWORD': '',
-            'HOST': 'postgres',
-            'PORT': '5432'
-        }
-    }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
