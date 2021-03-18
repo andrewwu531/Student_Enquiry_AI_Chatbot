@@ -52,8 +52,10 @@ before_script:
 
 test:
   stage: CI
+  variables:
+    DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
   script:
-  - python manage.py test
+    - python manage.py test
 
 deploy:
   stage: CD
