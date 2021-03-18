@@ -10,7 +10,8 @@ services:
   - mysql:5.7
 
 variables:
-  POSTGRES_DB: database_name
+  MYSQL_DATABASE: ${MYSQL_DATABASE}
+  MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 
 stages:
   - CI
