@@ -80,11 +80,12 @@ WSGI_APPLICATION = 'ViloSky.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'vilodb',
-        'USER': os.environ.get('MYSQL_USER'),
-        'PASSWORD': os.environ.get('MYSQL_PASSWORD'),
-        'HOST': 'mysql',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'ci',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+        'HOST': 'postgres',
+        'PORT': '5432',
     }
 }
 
