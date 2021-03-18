@@ -7,13 +7,10 @@ image: python:latest
 # Only needed when using a docker container to run your tests in.
 # Check out: http://docs.gitlab.com/ce/ci/docker/using_docker_images.html#what-is-a-service
 services:
-  - postgres:latest
+  - mysql:latest
 
 variables:
-  GITLAB_WORKFLOW: "True"
-  POSTGRES_DB: "project_ci_test"
-  POSTGRES_USER: "postgres"
-  POSTGRES_PASSWORD: ""
+  POSTGRES_DB: database_name
 
 stages:
   - CI
@@ -28,21 +25,34 @@ cache:
 # services such as redis or postgres
 before_script:
   - cd  ./Code/ViloSky
-  - apt-get -qq update -qy
-  - apt-get -qq install -y python-dev python-pip
   - python -V  # Print out python version for debugging
+  # Uncomment next line if your Django app needs a JS runtime:
+  # - apt-get update -q && apt-get install nodejs -yqq
   - pip install -r requirements.txt
+  - apt-get -qq update -qy
+  - apt-get -qq install -y ruby-dev
+  - gem install -q dpl
 
+# To get Django tests to work you may need to create a settings file using
+# the following DATABASES:
+#
+# DATABASES = {
+#     'default': {
+#        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#        'NAME': 'ci',
+#        'USER': 'postgres',
+#        'PASSWORD': 'postgres',
+#        'HOST': 'postgres',
+#        'PORT': '5432',
+#    },
+# }
+#
 # and then adding `--settings app.settings.ci` (or similar) to the test command
 
 test:
   stage: CI
-
   script:
-    - export DATABASE_URL=postgres://postgres:@postgres:5432/project_ci_test
-    - python manage.py makemigrations
-    - python manage.py migrate
-    - python manage.py test
+  - python manage.py test
 
 deploy:
   stage: CD
