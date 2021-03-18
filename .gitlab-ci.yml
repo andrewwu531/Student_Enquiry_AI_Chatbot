@@ -55,6 +55,8 @@ test:
   variables:
     DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/$POSTGRES_DB"
   script:
+    - python manage.py makemigrations
+    - python manage.py migrate
     - python manage.py test
 
 deploy:
