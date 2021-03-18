@@ -9,8 +9,7 @@ image: python:latest
 services:
   - mysql:latest
 
-variables:
-  POSTGRES_DB: database_name
+
 
 stages:
   - CI
@@ -52,7 +51,7 @@ before_script:
 test:
   stage: CI
   script:
-  - python manage.py test
+  - python manage.py makemigrations
 
 deploy:
   stage: CD
