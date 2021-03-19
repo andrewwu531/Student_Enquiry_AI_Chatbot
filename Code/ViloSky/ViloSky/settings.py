@@ -12,7 +12,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
+import sys
 import django_heroku
+import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
@@ -80,10 +82,10 @@ WSGI_APPLICATION = 'ViloSky.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        'CONN_MAX_AGE': 500,
+        'NAME':  BASE_DIR / 'db.sqlite3',
     }
 }
+
 
 
 # Password validation
@@ -123,7 +125,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = STATIC_DIR
+#STATIC_ROOT = os.path.join(BASE_DIR, "static")
 # forgot password
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -137,4 +139,4 @@ AUTH_USER_MODEL = 'ViloSkyApp.CustomUser'
 STATICFILES_DIRS = [STATIC_DIR, ]
 
 # Configure Django App for Heroku.
-django_heroku.settings(locals())
+#django_heroku.settings(locals())
