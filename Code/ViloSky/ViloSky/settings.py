@@ -139,4 +139,4 @@ AUTH_USER_MODEL = 'ViloSkyApp.CustomUser'
 STATICFILES_DIRS = [STATIC_DIR, ]
 
 # Configure Django App for Heroku.
-#django_heroku.settings(locals())
+django_heroku.settings(locals())
