@@ -81,11 +81,6 @@ class UserProfileForm(forms.ModelForm):
     cur_year = datetime.datetime.today().year
     date_of_birth = forms.DateField(widget=forms.SelectDateWidget(
         years=tuple([i for i in range(cur_year - 80, cur_year - 16)])))
-    #company = forms.CharField(widget=forms.TextInput())
-    #employment_status = forms.CharField(max_length = 1, widget = forms.Select(choices=UserProfile.EmploymentStatusTypes))
-    #employment_status = forms.CharField()
-    #employment_sector = forms.CharField(widget=forms.TextInput())
-    #time_worked_in_industry = forms.Select(choices=UserProfile.TimeWorkedTypes)
 
     class Meta:
         model = UserProfile
