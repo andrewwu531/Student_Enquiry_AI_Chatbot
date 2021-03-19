@@ -54,7 +54,6 @@ test:
   stage: CI
   script:
     - python manage.py makemigrations --merge
-    - y
     - python manage.py migrate
     - python manage.py test
 
