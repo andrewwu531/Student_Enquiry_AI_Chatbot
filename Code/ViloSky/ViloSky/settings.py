@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 import os
 import sys
-import django_heroku
+
 import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -139,5 +139,6 @@ AUTH_USER_MODEL = 'ViloSkyApp.CustomUser'
 STATICFILES_DIRS = [STATIC_DIR, ]
 
 # Configure Django App for Heroku.
-if '/app' in os.environ['HOME']:
+if 'HEROKU_PROJECT' in os.environ:
+    import django_heroku
     django_heroku.settings(locals())
