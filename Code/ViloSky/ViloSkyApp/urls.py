@@ -32,4 +32,9 @@ urlpatterns = [
          PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset-password/complete/', PasswordResetCompleteView.as_view(),
          name='password_reset_complete'),
+path('create_paragraphs/', views.create_paragraphs, name='create_paragraphs'),
+    path('create_pdf/(?P<report_id>\w+)/$', views.create_pdf, name='create_pdf'),
+    path('create_pdf_public', views.create_pdf_public, name='create_pdf_public'),
 ]
+
+

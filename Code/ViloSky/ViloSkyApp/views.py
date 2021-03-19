@@ -14,10 +14,13 @@ from django.contrib.auth.decorators import login_required
 from django.core.serializers import serialize
 from django.utils.formats import localize
 from ViloSkyApp import models
-from ViloSkyApp.forms import UserForm, InputForm
-from ViloSkyApp.models import Qualification, Paragraph, Link, Action, Keyword
+from ViloSkyApp.forms import UserForm, InputForm, NewParaForm
 from ViloSkyApp.forms import QualificationForm, ParagraphForm, LinksForm, ActionForm, KeyWordForm
-from .forms import UserProfileForm
+from .forms import UserProfileForm, NewActionForm, NewLinkForm, NewKeywordForm
+from django.forms import modelformset_factory, formset_factory
+from fpdf import FPDF
+from django.http import FileResponse
+import io
 
 
 def index(request):
@@ -63,6 +66,11 @@ def register(request):
                         request, "The passwords provided do not match.")
                 else:
                     registered = True
+
+                if registered:
+                    user_profile = models.UserProfile.objects.create(
+                        user=user, date_of_birth=None, company="", employment_sector="", employment_status="", time_worked_in_industry="")
+                    user_profile.save()
         else:
             user_form = UserForm()
         context_dict = {
@@ -101,7 +109,7 @@ def mydetails(request):
             else:
                 q_form = QualificationForm(instance=request.user.user_profile)
         elif 'delete_qualifications' in request.POST:
-            Qualification.objects.filter(
+            models.Qualification.objects.filter(
                 pk__in=request.POST.getlist('delete_list')).delete()
             return redirect(reverse('mydetails'))
         else:
@@ -113,7 +121,7 @@ def mydetails(request):
                 return redirect(reverse('mydetails'))
             else:
                 p_form = UserProfileForm(instance=request.user.user_profile)
-    qualifications = Qualification.objects.filter(
+    qualifications = models.Qualification.objects.filter(
         user=request.user.user_profile)
     context_dict = {'p_form': p_form, 'q_form': q_form,
                     'qualifications': qualifications}
@@ -207,15 +215,15 @@ def paragraph(request, paragraph_id):
     created_by = models.UserProfile.objects.filter(user=request.user).first()
     page = 'paragraph/' + paragraph_id + '/'
     # Pass required info and update template
-    para = Paragraph.objects.filter(id = paragraph_id)[0]
-    links = Link.objects.filter(paragraph = paragraph_id)
-    actions = Action.objects.filter(paragraph = paragraph_id)
-    keywords = Keyword.objects.filter(paragraph = paragraph_id)
+    para = models.Paragraph.objects.filter(id=paragraph_id)[0]
+    links = models.Link.objects.filter(paragraph=paragraph_id)
+    actions = models.Action.objects.filter(paragraph=paragraph_id)
+    keywords = models.Keyword.objects.filter(paragraph=paragraph_id)
 
-    paragraph = Paragraph.objects.get(id=paragraph_id)
+    paragraph = models.Paragraph.objects.get(id=paragraph_id)
 
-    #all these forms are to edit paragraphs
-    p_form = ParagraphForm(request.POST, instance = paragraph)
+    # all these forms are to edit paragraphs
+    p_form = ParagraphForm(request.POST, instance=paragraph)
     link_form = LinksForm(request.POST)
     action_form = ActionForm(request.POST)
     keywords_form = KeyWordForm(request.POST)
@@ -230,40 +238,40 @@ def paragraph(request, paragraph_id):
         elif 'editLinks' in request.POST:
             if link_form.is_valid():
                 l = link_form.save(commit=False)
-                l.paragraph = Paragraph.objects.get(id = paragraph_id)
+                l.paragraph = models.Paragraph.objects.get(id=paragraph_id)
                 l.save()
                 return redirect(reverse('paragraphs'))
         elif 'editActions' in request.POST:
             if action_form.is_valid():
                 a = action_form.save(commit=False)
-                a.paragraph = Paragraph.objects.get(id = paragraph_id)
+                a.paragraph = models.Paragraph.objects.get(id=paragraph_id)
                 a.save()
                 return redirect(reverse('paragraphs'))
         elif 'editKeys' in request.POST:
             if keywords_form.is_valid():
                 k = keywords_form.save(commit=False)
-                k.paragraph = Paragraph.objects.get(id = paragraph_id)
+                k.paragraph = models.Paragraph.objects.get(id=paragraph_id)
                 k.save()
                 return redirect('paragraphs')
         elif 'delete_actions' in request.POST:
-            Action.objects.filter(
+            models.Action.objects.filter(
                 pk__in=request.POST.getlist('delete_list')).delete()
             return redirect(reverse('paragraphs'))
         elif 'delete_links' in request.POST:
-            Link.objects.filter(
+            models.Link.objects.filter(
                 pk__in=request.POST.getlist('delete_list')).delete()
             return redirect(reverse('paragraphs'))
         elif 'delete_keywords' in request.POST:
-            Keyword.objects.filter(
+            models.Keyword.objects.filter(
                 pk__in=request.POST.getlist('delete_list')).delete()
             return redirect(reverse('paragraphs'))
         else:
-            Paragraph.objects.filter(id = paragraph_id).delete()
+            models.Paragraph.objects.filter(id=paragraph_id).delete()
             return redirect(reverse('paragraphs'))
 
-    return render(request, 'paragraph.html', {'paragraph_id': paragraph_id, 'created_by':created_by, 'para':para, 'links':links,
-    'keywords':keywords, 'actions':actions, 'p_form':p_form, 'l_form': link_form, 'a_form': action_form,
-    'k_form': keywords_form})
+    return render(request, 'paragraph.html', {'paragraph_id': paragraph_id, 'created_by': created_by, 'para': para, 'links': links,
+                                              'keywords': keywords, 'actions': actions, 'p_form': p_form, 'l_form': link_form, 'a_form': action_form,
+                                              'k_form': keywords_form})
 
 
 @ login_required(login_url='login')
@@ -358,34 +366,9 @@ def report_create(request):
 def report_view(request, report_id):
     # Pass required info and update template
     report = models.Report.objects.filter(id=int(report_id)).first()
-
     if report is not None:
-        paras = report.paragraphs.all()
-        link_list = models.Link.objects.filter(paragraph__in=paras)
-        actions_list = models.Action.objects.filter(paragraph__in=paras)
-
-        links_dict = {}
-
-        # get the associated links and actions for each paragraph
-        for par in paras:
-            temp = []
-            t = []
-            big_l = []
-            for link in link_list:
-                if par == link.paragraph:
-                    temp.append(link)
-            for act in actions_list:
-                if par == act.paragraph:
-                    t.append(act)
-            if temp:
-                big_l.append(temp)
-            if t:
-                big_l.append(t)
-            # list of the lists for links and actions added to dictionary
-            links_dict[par] = big_l
-
-        return render(request, 'report.html', {'data': links_dict})
-
+        links_dict = compile_report(report)
+        return render(request, 'report.html', {'data': links_dict, 'report_id': report_id})
     return render(request, "error.html")
 
 
@@ -394,6 +377,8 @@ def similarity(a, b):
 
 
 def get_paragraphs(inputs_dictionary):
+    if not inputs_dictionary:
+        return None
     # Get all keywords, questions and list of answers
     keywords = models.Keyword.objects.all()
     question_list = models.AdminInput.objects.all()
@@ -437,20 +422,79 @@ def get_paragraphs(inputs_dictionary):
     return paragraphs_list
 
 
+def compile_report(report):
+    paras = report.paragraphs.all()
+    link_list = models.Link.objects.filter(paragraph__in=paras)
+    actions_list = models.Action.objects.filter(paragraph__in=paras)
+
+    links_dict = {}
+
+    # get the associated links and actions for each paragraph
+    for par in paras:
+        temp = []
+        t = []
+        big_l = []
+        for link in link_list:
+            if par == link.paragraph:
+                temp.append(link)
+        for act in actions_list:
+            if par == act.paragraph:
+                t.append(act)
+        if temp:
+            big_l.append(temp)
+        if t:
+            big_l.append(t)
+        # list of the lists for links and actions added to dictionary
+        links_dict[par] = big_l
+    return links_dict
+
+
+def create_pdf(request, report_id):
+    # Pass required info and update template
+    report = models.Report.objects.filter(id=int(report_id)).first()
+
+    if report is not None:
+        links_dict = compile_report(report)
+        # now start constructing the pdf
+        pdf_file = pdf_creator(links_dict)
+        binaryIO = io.BytesIO(pdf_file)
+        binaryIO.seek(0)
+        return FileResponse(binaryIO, content_type='application/pdf', as_attachment=True, filename='report.pdf')
+
+    return render(request, "error.html")
+
+
 def report_view_public(request):
+    # Get the dictionary of inputs. Gathered in InputForm, saved to django session.
+    inputs = request.session.get('saved')
+    # Get a list of paragraphs based on the inputs
+    paras = get_paragraphs(inputs)
+    if paras is None:
+        return render(request, 'report_public.html', {'error': True})
+    # Get all the relevant context for the paragraphs
+    links_dict = get_context_from_paragraphs(paras)
+    context = {'data': links_dict}
+    return render(request, 'report_public.html', context)
+
+
+def create_pdf_public(request):
     # Get the dictionary of inputs. Gathered in InputForm, saved to django session.
     inputs = request.session.get('saved')
     # Get a list of paragraphs based on the inputs
     paras = get_paragraphs(inputs)
     # Get all the relevant context for the paragraphs
     links_dict = get_context_from_paragraphs(paras)
-
-    context = {'data': links_dict}
-    return render(request, 'report_public.html', context)
+    pdf_file = pdf_creator(links_dict)
+    binaryIO = io.BytesIO(pdf_file)
+    binaryIO.seek(0)
+    return FileResponse(binaryIO, content_type='application/pdf', as_attachment=True, filename='report.pdf')
 
 
 def create_report(request, inputs, is_authenticated=False):
     # Get a list of paragraphs based on the inputs
+    if(request.GET.get("pdfbutton")):
+        create_pdf()
+
     paras = get_paragraphs(inputs)
     report_id = None
 
@@ -472,6 +516,34 @@ def create_report(request, inputs, is_authenticated=False):
         request.session["temp_saved"] = serialize('json', paras)
 
     return report_id
+
+
+def pdf_creator(dataset):
+    pdf = FPDF()
+    pdf.alias_nb_pages()
+    pdf.add_page()
+    pdf.add_font('FreeSans', '', './static/fonts/FreeSans.ttf', uni=True)
+    pdf.add_font('FreeSans', 'B', './static/fonts/FreeSansBold.ttf', uni=True)
+    pdf.add_font('FreeSans', 'I',
+                 './static/fonts/FreeSansOblique.ttf', uni=True)
+    pdf.image('./static/images/logo_small.png', 10, 8, 33)
+    pdf.set_font('FreeSans', 'B', 16)
+    pdf.cell(80)
+    pdf.cell(30, 10, 'Report', 1, 0, 'C')
+    pdf.ln(20)
+    pdf.set_font('FreeSans', '', 12)
+    for key, values in dataset.items():
+        pdf.multi_cell(0, 5, key.static_text)
+        pdf.ln('0.1')
+        for ls in values:
+            for item in ls:
+                if(hasattr(item, "url")):
+                    pdf.multi_cell(0, 5, "• "+item.url)
+                if(hasattr(item, "title")):
+                    pdf.multi_cell(0, 5, "• "+item.title)
+        pdf.ln('0.3')
+    pdf_file = pdf.output(dest='S').encode('latin-1')
+    return pdf_file
 
 
 def get_context_from_paragraphs(paras):
@@ -500,3 +572,89 @@ def get_context_from_paragraphs(paras):
         # list of the lists for links and actions added to dictionary
         links_dict[par] = big_l
     return links_dict
+
+
+@login_required(login_url='login')
+def create_paragraphs(request):
+    LinksFormSet = formset_factory(NewLinkForm, extra=2)
+    ActionFormSet = formset_factory(NewActionForm, extra=2)
+    KeywordFormSet = formset_factory(NewKeywordForm, extra=5)
+    if request.method == "POST":
+        newParaForm = NewParaForm(request.POST)
+        linkformset = LinksFormSet(request.POST)
+        actionformset = ActionFormSet(request.POST)
+        keywordformset = KeywordFormSet(request.POST)
+        if newParaForm.is_valid():
+            para = newParaForm.save(commit=False)
+            para.created_by = models.UserProfile.objects.filter(
+                user=request.user).first()
+            para.save()
+            if linkformset.is_valid():
+                for a_link in linkformset:
+                    link = a_link.save(commit=False)
+                    if link.url != '':
+                        link.paragraph = models.Paragraph.objects.all().order_by('-id').first()
+                        link.save()
+            if actionformset.is_valid():
+                for an_action in actionformset:
+                    action = an_action.save(commit=False)
+                    if action.title != '':
+                        action.paragraph = models.Paragraph.objects.all().order_by('-id').first()
+                        action.save()
+            if keywordformset.is_valid():
+                for a_keyword in keywordformset:
+                    keyword = a_keyword.save(commit=False)
+                    if keyword.key != '':
+                        keyword.paragraph = models.Paragraph.objects.all().order_by('-id').first()
+                        keyword.save()
+            return redirect(reverse('paragraphs'))
+        return redirect(reverse('paragraphs'))
+    newParaForm = NewParaForm()
+    linkformset = LinksFormSet()
+    actionformset = ActionFormSet()
+    keywordformset = KeywordFormSet()
+    context = {"newParaForm": newParaForm, 'linkformset': linkformset,
+               'actionformset': actionformset, 'keywordformset': keywordformset}
+    return render(request, 'create_paragraphs.html', context)
+
+
+'''
+login_required(login_url='login')
+def create_paragraphs(request):
+    if request.method == "POST":
+        newParaForm = NewParaForm(request.POST)
+        newLinkForm = NewLinkForm(request.POST)
+        newActionForm = NewActionForm(request.POST)
+        newKeywordForm = NewKeywordForm(request.POST)
+        LinkFormSet = modelformset_factory(NewLinkForm, extra=2)
+        # form validation if links also entered
+        if newParaForm.is_valid():
+            para = newParaForm.save(commit=False)
+            para.created_by = models.UserProfile.objects.filter(user=request.user).first()
+            para.save()
+            if newLinkForm.is_valid():
+                print(len(models.Link.objects.all()))
+                link = newLinkForm.save(commit=False)
+                if link.url != '':
+                    link.paragraph = models.Paragraph.objects.all().order_by('-id').first()
+                    link.save()
+                print(len(models.Link.objects.all()))
+            if newActionForm.is_valid():
+                action = newActionForm.save(commit=False)
+                action.paragraph = models.Paragraph.objects.all().order_by('-id').first()
+                action.save()
+            if newKeywordForm.is_valid():
+                keyword = newActionForm.save(commit=False)
+                keyword.paragraph = models.Paragraph.objects.all().order_by('-id').first()
+                keyword.save()
+
+            return redirect(reverse('paragraphs'))
+        return redirect(reverse('paragraphs'))
+    newParaForm = NewParaForm()
+    newLinkForm = NewLinkForm()
+    newActionForm = NewActionForm()
+    newKeywordForm = NewKeywordForm()
+
+    context = {"newParaForm": newParaForm, 'newLinkForm': newLinkForm, 'newActionForm': newActionForm,
+               'newKeywordForm': newKeywordForm}
+    return render(request, 'create_paragraphs.html', context)'''
