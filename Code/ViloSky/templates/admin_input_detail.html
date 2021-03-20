@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block bodyblock%}
+<div class="divbackground widediv">
+    <h1>{{ object.label }}</h1>
+    <p>Created By: {{ object.created_by }}</p>
+    <p>Required: {{ object.is_required }}</p>
+    <p>Question Type: {{ object.input_type }}</p>
+    <div>
+        {% if object.input_type == "DROPDOWN" %}
+            <a class="btn btn-secondary" href="{% url 'dropdown_admin_input_update' object.id %}">Edit</a>
+        {% endif %}
+        {% if object.input_type == "CHECKBOX" %}
+            <a class="btn btn-secondary" href="{% url 'checkbox_admin_input_update' object.id %}">Edit</a>
+        {% endif %}
+        {% if object.input_type == "TEXT" %}
+            <a class="btn btn-secondary" href="{% url 'text_admin_input_update' object.id %}">Edit</a>
+        {% endif %}
+        {% if object.input_type == "TEXTAREA" %}
+            <a class="btn btn-secondary" href="{% url 'textarea_admin_input_update' object.id %}">Edit</a>
+        {% endif %}
+
+        <a class="btn btn-danger" href="{% url 'admin_input_delete' object.id %}">Delete</a>
+    </div>
+
+</div>
+{%endblock%}

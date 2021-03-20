@@ -2,7 +2,9 @@
 import datetime
 from django import forms
 from django.contrib.auth import get_user_model
-from .models import UserProfile, AdminInput, DropdownAdminInput, CheckboxAdminInput, TextareaAdminInput, TextAdminInput, RadioButtonsAdminInput, Qualification, Paragraph, Link, Keyword, Action
+from ViloSkyApp.models import (UserProfile, Qualification, AdminInput, DropdownAdminInput,
+                               TextAdminInput, TextareaAdminInput, CheckboxAdminInput,
+                               RadioButtonsAdminInput, Paragraph, Link, Keyword, Action)
 
 
 class UserForm(forms.ModelForm):
@@ -106,8 +108,56 @@ class QualificationForm(forms.ModelForm):
 
     class Meta:
         model = Qualification
-        fields = ('level', 'subjects')
-#QualificationFormSet = modelformset_factory(QualificationForm, fields = ('user','level', 'subjects'), extra = 1)
+        fields = (
+            'level',
+            'subjects'
+        )
+# QualificationFormSet = modelformset_factory(QualificationForm, fields = ('user','level', 'subjects'), extra = 1)
+
+
+class DropdownAdminInputForm(forms.ModelForm):
+    choices = forms.CharField(widget=forms.Textarea)
+
+    class Meta:
+        model = DropdownAdminInput
+        fields = [
+            'label',
+            'is_required',
+            'choices',
+        ]
+
+
+class CheckboxAdminInputForm(forms.ModelForm):
+
+    class Meta:
+        model = CheckboxAdminInput
+        fields = [
+            'label',
+            'is_required',
+            'default_value',
+        ]
+
+
+class TextAdminInputForm(forms.ModelForm):
+
+    class Meta:
+        model = TextAdminInput
+        fields = [
+            'label',
+            'is_required',
+            'max_length',
+        ]
+
+
+class TextareaAdminInputForm(forms.ModelForm):
+
+    class Meta:
+        model = TextareaAdminInput
+        fields = [
+            'label',
+            'is_required',
+            'max_length',
+        ]
 
 
 class NewParaForm(forms.ModelForm):

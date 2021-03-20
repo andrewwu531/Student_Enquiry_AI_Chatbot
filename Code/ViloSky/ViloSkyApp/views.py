@@ -1,10 +1,11 @@
-''' Views for the ViloSky app'''
+""" Views for the ViloSky app"""
+import json
 from random import uniform, randint
 from datetime import datetime
 from difflib import SequenceMatcher
 from plotly.offline import plot
 import plotly.graph_objs as go
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate
@@ -14,8 +15,11 @@ from django.contrib.auth.decorators import login_required
 from django.core.serializers import serialize
 from django.utils.formats import localize
 from ViloSkyApp import models
-from ViloSkyApp.forms import UserForm, InputForm, NewParaForm, QualificationForm
-from .forms import UserProfileForm, NewActionForm, NewLinkForm, NewKeywordForm
+from ViloSkyApp.forms import (UserForm, QualificationForm, UserProfileForm, DropdownAdminInputForm,
+                              CheckboxAdminInputForm, TextAdminInputForm, TextareaAdminInputForm,
+                              InputForm, NewParaForm, NewActionForm, NewLinkForm, NewKeywordForm)
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 from django.forms import modelformset_factory, formset_factory
 from fpdf import FPDF
 from django.http import FileResponse
@@ -99,7 +103,7 @@ def mydetails(request):
 
     if request.method == 'POST':
         if 'addquals' in request.POST:
-            #q_form = QualificationForm(request.POST, instance = request.user.user_profile)
+            # q_form = QualificationForm(request.POST, instance = request.user.user_profile)
             if q_form.is_valid():
                 quals = q_form.save(commit=False)
                 quals.user = request.user.user_profile
@@ -182,21 +186,121 @@ def roles(request):
     return render(request, 'roles.html', {})
 
 
-@ login_required(login_url='login')
-def admin_input(request, admin_input_id):
-    # Pass required info and update template
-    return render(request, 'admin_input.html', {'admin_input_id': admin_input_id})
+class AdminInputDetail(LoginRequiredMixin, DetailView):
+    model = models.AdminInput
+    template_name = 'admin_input_detail.html'
+    # By default django looks for "pk" in the url
+    # By changing this it will now look for admin_input_id instead, as is already written in urls.py
+    pk_url_kwarg = 'admin_input_id'
+
+
+class DropdownAdminInput(LoginRequiredMixin, CreateView):
+    form_class = DropdownAdminInputForm
+    template_name = 'admin_input_form.html'
+
+    def form_valid(self, form):
+        form.instance.created_by = get_object_or_404(
+            models.UserProfile, user=self.request.user)
+        form.instance.input_type = "DROPDOWN"
+
+        for ch in [' ', '[', ']', '\\', '\"']:
+            if ch in form.instance.choices:
+                form.instance.choices = form.instance.choices.replace(ch, '')
+        form.instance.choices = json.dumps(form.instance.choices.split(','))
+
+        return super().form_valid(form)
+
+
+class DropdownAdminInputUpdate(LoginRequiredMixin, UpdateView):
+    form_class = DropdownAdminInputForm
+    model = models.DropdownAdminInput
+    template_name = 'admin_input_form.html'
+    pk_url_kwarg = 'admin_input_id'
+
+    def form_valid(self, form):
+        for ch in [' ', '[', ']', '\\', '\"']:
+            if ch in form.instance.choices:
+                form.instance.choices = form.instance.choices.replace(ch, '')
+        form.instance.choices = json.dumps(form.instance.choices.split(','))
+        return super().form_valid(form)
+
+
+class CheckboxAdminInput(LoginRequiredMixin, CreateView):
+    form_class = CheckboxAdminInputForm
+    template_name = 'admin_input_form.html'
+
+    def form_valid(self, form):
+        form.instance.created_by = get_object_or_404(
+            models.UserProfile, user=self.request.user)
+        form.instance.input_type = "CHECKBOX"
+        return super().form_valid(form)
+
+
+class CheckboxAdminInputUpdate(LoginRequiredMixin, UpdateView):
+    form_class = CheckboxAdminInputForm
+    model = models.CheckboxAdminInput
+    template_name = 'admin_input_form.html'
+    pk_url_kwarg = 'admin_input_id'
+
+
+class TextAdminInput(LoginRequiredMixin, CreateView):
+    form_class = TextAdminInputForm
+    template_name = 'admin_input_form.html'
+
+    def form_valid(self, form):
+        form.instance.created_by = get_object_or_404(
+            models.UserProfile, user=self.request.user)
+        form.instance.input_type = "TEXT"
+        return super().form_valid(form)
+
+
+class TextAdminInputUpdate(LoginRequiredMixin, UpdateView):
+    form_class = TextAdminInputForm
+    model = models.TextAdminInput
+    template_name = 'admin_input_form.html'
+    pk_url_kwarg = 'admin_input_id'
+
+
+class TextAreaAdminInput(LoginRequiredMixin, CreateView):
+    form_class = TextareaAdminInputForm
+    template_name = 'admin_input_form.html'
+
+    def form_valid(self, form):
+        form.instance.created_by = get_object_or_404(
+            models.UserProfile, user=self.request.user)
+        form.instance.input_type = "TEXTAREA"
+        return super().form_valid(form)
+
+
+class TextareaAdminInputUpdate(LoginRequiredMixin, UpdateView):
+    form_class = TextareaAdminInputForm
+    model = models.TextareaAdminInput
+    template_name = 'admin_input_form.html'
+    pk_url_kwarg = 'admin_input_id'
+
+
+class AdminInputDelete(LoginRequiredMixin, DeleteView):
+    model = models.AdminInput
+    template_name = 'admin_input_delete.html'
+    pk_url_kwarg = 'admin_input_id'
+
+    def get_success_url(self):
+        return reverse('admin_inputs')
 
 
 @ login_required(login_url='login')
 def admin_inputs(request):
+    # Get User
     user = models.UserProfile.objects.filter(user=request.user).first()
 
+    # If no user logged in then show error.html
     if user is None:
         return render(request, "error.html")
 
+    # List Item to store admin input details to be rendered
     inputs_to_render = list(
-        models.AdminInput.objects.all().values('id', 'created_by__user__first_name', 'label', 'input_type', 'is_required'))
+        models.AdminInput.objects.all().values('id', 'created_by__user__first_name', 'label', 'input_type',
+                                               'is_required'))
     template_headings = ["#", "Created By", "Label", "Type", "Required"]
     model_keys = ["id", "created_by__user__first_name",
                   "label", "input_type", "is_required"]
@@ -205,8 +309,6 @@ def admin_inputs(request):
         "headings": template_headings, "model_keys": model_keys,
         "entries": inputs_to_render, "row_link_to": "/admin_input/"
     })
-
-    return render(request, 'admin_inputs.html', {})
 
 
 @ login_required(login_url='login')
