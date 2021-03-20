@@ -123,7 +123,7 @@ class NewLinkForm(forms.ModelForm):
         model = Link
         fields = ('url',)
         widgets = {
-            'url': forms.TextInput(attrs={'placeholder': 'https://www.bt.com/sport/watch/live-now/bt-sport-2'})}
+            'url': forms.TextInput(attrs={'placeholder': 'https://womenreturners.com'})}
 
     def __init__(self, *args, **kwargs):
         super(NewLinkForm, self).__init__(*args, **kwargs)
@@ -135,7 +135,7 @@ class NewActionForm(forms.ModelForm):
         model = Action
         fields = ('title',)
         widgets = {
-            'title': forms.TextInput(attrs={'placeholder': 'Grab a beer'})}
+            'title': forms.TextInput(attrs={'placeholder': 'List your skills...'})}
 
     def __init__(self, *args, **kwargs):
         super(NewActionForm, self).__init__(*args, **kwargs)
@@ -155,36 +155,3 @@ class NewKeywordForm(forms.ModelForm):
         super(NewKeywordForm, self).__init__(*args, **kwargs)
         self.fields['key'].required = False
         self.fields['score'].required = False
-
-
-class ParagraphForm(forms.ModelForm):
-    static_text = forms.Textarea()
-
-    class Meta:
-        model = Paragraph
-        fields = ('static_text', )
-
-
-class ActionForm(forms.ModelForm):
-    title = forms.CharField(required=False)
-
-    class Meta:
-        model = Action
-        fields = ('title', )
-
-
-class KeyWordForm(forms.ModelForm):
-    key = forms.CharField(required=True)
-    score = forms.IntegerField(required=True)
-
-    class Meta:
-        model = Keyword
-        fields = ('key', 'score')
-
-
-class LinksForm(forms.ModelForm):
-    url = forms.URLField(required=False)
-
-    class Meta:
-        model = Link
-        fields = ('url', )
