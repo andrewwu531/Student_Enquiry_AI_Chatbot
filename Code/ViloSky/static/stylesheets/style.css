@@ -506,3 +506,19 @@ p {
   -webkit-animation-name: button-fadein;
   animation-name: button-fadein;
 }
+
+.paratable {
+    float: center;
+    border-spacing: 5;
+    border-collapse: collapse;
+    border: #cc00cc;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    padding:100 15px;
+  }
+

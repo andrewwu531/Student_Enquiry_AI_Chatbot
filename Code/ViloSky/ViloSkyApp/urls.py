@@ -11,7 +11,10 @@ urlpatterns = [
     path('mydetails/', views.mydetails, name='mydetails'),
     re_path('action/(?P<action_id>\w+)/$', views.action, name='action'),
     path('actions/', views.actions, name='actions'),
-    re_path('report/(?P<report_id>\w+)/$', views.report, name='report'),
+    re_path('report/(?P<report_id>\w+)/$',
+            views.report_view, name='report_view'),
+    path('report/create', views.report_create, name='report_create'),
+    path('report/view', views.report_view_public, name='report_view_public'),
     path('reports/', views.reports, name='reports'),
     path('roles/', views.roles, name='roles'),
 
@@ -48,4 +51,9 @@ urlpatterns = [
          PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset-password/complete/', PasswordResetCompleteView.as_view(),
          name='password_reset_complete'),
+path('create_paragraphs/', views.create_paragraphs, name='create_paragraphs'),
+    path('create_pdf/(?P<report_id>\w+)/$', views.create_pdf, name='create_pdf'),
+    path('create_pdf_public', views.create_pdf_public, name='create_pdf_public'),
 ]
+
+

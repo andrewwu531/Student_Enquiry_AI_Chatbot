@@ -1,0 +1,4 @@
+#!/bin/sh
+
+release: bash ./release-tasks.sh
+web: gunicorn ViloSky.wsgi
