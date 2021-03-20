@@ -1,3 +1,2 @@
-release: python manage.py migrate
-release: python population_script.py
+release: ./release-tasks.sh
 web: gunicorn ViloSky.wsgi
