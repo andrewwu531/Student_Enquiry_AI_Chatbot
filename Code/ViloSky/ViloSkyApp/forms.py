@@ -3,7 +3,7 @@ import datetime
 from django import forms
 from django.contrib.auth import get_user_model
 from .models import UserProfile, AdminInput, DropdownAdminInput, CheckboxAdminInput, TextareaAdminInput, TextAdminInput, RadioButtonsAdminInput, Qualification, Paragraph, Link, Keyword, Action
-from crispy_forms.helper import FormHelper, Layout
+
 
 class UserForm(forms.ModelForm):
     email = forms.CharField(widget=forms.EmailInput(
@@ -114,7 +114,8 @@ class NewParaForm(forms.ModelForm):
         model = Paragraph
         fields = ('static_text',)
         widgets = {
-            'static_text' :  forms.Textarea(attrs={'placeholder': 'Having been out of work for over a year...'})}
+            'static_text':  forms.Textarea(attrs={'placeholder': 'Having been out of work for over a year...'})}
+
 
 class NewLinkForm(forms.ModelForm):
     class Meta:
@@ -122,9 +123,11 @@ class NewLinkForm(forms.ModelForm):
         fields = ('url',)
         widgets = {
             'url': forms.TextInput(attrs={'placeholder': 'https://womenreturners.com'})}
+
     def __init__(self, *args, **kwargs):
         super(NewLinkForm, self).__init__(*args, **kwargs)
         self.fields['url'].required = False
+
 
 class NewActionForm(forms.ModelForm):
     class Meta:
@@ -132,18 +135,21 @@ class NewActionForm(forms.ModelForm):
         fields = ('title',)
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'List your skills...'})}
+
     def __init__(self, *args, **kwargs):
         super(NewActionForm, self).__init__(*args, **kwargs)
         self.fields['title'].required = False
 
+
 class NewKeywordForm(forms.ModelForm):
     class Meta:
         model = Keyword
-        fields = ('key','score')
+        fields = ('key', 'score')
         widgets = {
             'key': forms.TextInput(attrs={'placeholder': 'Risk Management'}),
             'score': forms.TextInput(attrs={'placeholder': '10'})
         }
+
     def __init__(self, *args, **kwargs):
         super(NewKeywordForm, self).__init__(*args, **kwargs)
         self.fields['key'].required = False

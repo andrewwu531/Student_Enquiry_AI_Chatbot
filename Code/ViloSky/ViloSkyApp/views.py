@@ -20,6 +20,7 @@ from ViloSkyApp.forms import QualificationForm
 from .forms import UserProfileForm, NewActionForm, NewLinkForm, NewKeywordForm
 from django.forms import modelformset_factory, formset_factory
 
+
 def index(request):
     return redirect(reverse('login'))
 
@@ -207,18 +208,18 @@ def paragraph(request, paragraph_id):
     created_by = models.UserProfile.objects.filter(user=request.user).first()
     page = 'paragraph/' + paragraph_id + '/'
     # Pass required info and update template
-    para = Paragraph.objects.filter(id = paragraph_id)[0]
-    links = Link.objects.filter(paragraph = paragraph_id)
-    actions = Action.objects.filter(paragraph = paragraph_id)
-    keywords = Keyword.objects.filter(paragraph = paragraph_id)
+    para = models.Paragraph.objects.filter(id=paragraph_id)[0]
+    links = models.Link.objects.filter(paragraph=paragraph_id)
+    actions = models.Action.objects.filter(paragraph=paragraph_id)
+    keywords = models.Keyword.objects.filter(paragraph=paragraph_id)
 
-    paragraph = Paragraph.objects.get(id=paragraph_id)
+    paragraph = models.Paragraph.objects.get(id=paragraph_id)
 
-    #all these forms are to edit paragraphs
-    p_form = ParagraphForm(request.POST, instance = paragraph)
-    link_form = LinksForm(request.POST)
-    action_form = ActionForm(request.POST)
-    keywords_form = KeyWordForm(request.POST)
+    # all these forms are to edit paragraphs
+    p_form = NewParaForm(request.POST, instance=paragraph)
+    link_form = NewLinkForm(request.POST)
+    action_form = NewActionForm(request.POST)
+    keywords_form = NewKeywordForm(request.POST)
 
     if request.method == 'POST':
         if 'editText' in request.POST:
@@ -230,19 +231,19 @@ def paragraph(request, paragraph_id):
         elif 'editLinks' in request.POST:
             if link_form.is_valid():
                 l = link_form.save(commit=False)
-                l.paragraph = Paragraph.objects.get(id = paragraph_id)
+                l.paragraph = models.Paragraph.objects.get(id=paragraph_id)
                 l.save()
                 return redirect(reverse('paragraphs'))
         elif 'editActions' in request.POST:
             if action_form.is_valid():
                 a = action_form.save(commit=False)
-                a.paragraph = Paragraph.objects.get(id = paragraph_id)
+                a.paragraph = models.Paragraph.objects.get(id=paragraph_id)
                 a.save()
                 return redirect(reverse('paragraphs'))
         elif 'editKeys' in request.POST:
             if keywords_form.is_valid():
                 k = keywords_form.save(commit=False)
-                k.paragraph = Paragraph.objects.get(id = paragraph_id)
+                k.paragraph = models.Paragraph.objects.get(id=paragraph_id)
                 k.save()
                 return redirect('paragraphs')
         elif 'delete_actions' in request.POST:
@@ -258,12 +259,12 @@ def paragraph(request, paragraph_id):
                 pk__in=request.POST.getlist('delete_list')).delete()
             return redirect(reverse('paragraphs'))
         else:
-            Paragraph.objects.filter(id = paragraph_id).delete()
+            models.Paragraph.objects.filter(id=paragraph_id).delete()
             return redirect(reverse('paragraphs'))
 
-    return render(request, 'paragraph.html', {'paragraph_id': paragraph_id, 'created_by':created_by, 'para':para, 'links':links,
-    'keywords':keywords, 'actions':actions, 'p_form':p_form, 'l_form': link_form, 'a_form': action_form,
-    'k_form': keywords_form})
+    return render(request, 'paragraph.html', {'paragraph_id': paragraph_id, 'created_by': created_by, 'para': para, 'links': links,
+                                              'keywords': keywords, 'actions': actions, 'p_form': p_form, 'l_form': link_form, 'a_form': action_form,
+                                              'k_form': keywords_form})
 
 
 @ login_required(login_url='login')
@@ -501,6 +502,7 @@ def get_context_from_paragraphs(paras):
         links_dict[par] = big_l
     return links_dict
 
+
 @login_required(login_url='login')
 def create_paragraphs(request):
     LinksFormSet = formset_factory(NewLinkForm, extra=3)
@@ -513,7 +515,8 @@ def create_paragraphs(request):
         keywordformset = KeywordFormSet(request.POST)
         if newParaForm.is_valid():
             para = newParaForm.save(commit=False)
-            para.created_by = models.UserProfile.objects.filter(user=request.user).first()
+            para.created_by = models.UserProfile.objects.filter(
+                user=request.user).first()
             para.save()
             if linkformset.is_valid():
                 for a_link in linkformset:
@@ -539,5 +542,6 @@ def create_paragraphs(request):
     linkformset = LinksFormSet()
     actionformset = ActionFormSet()
     keywordformset = KeywordFormSet()
-    context = {"newParaForm":newParaForm, 'linkformset':linkformset, 'actionformset':actionformset,'keywordformset':keywordformset}
+    context = {"newParaForm": newParaForm, 'linkformset': linkformset,
+               'actionformset': actionformset, 'keywordformset': keywordformset}
     return render(request, 'create_paragraphs.html', context)
