@@ -1,6 +1,8 @@
 {% extends 'baseuser.html' %}
 {% load static %}
 
+
+
 {% block body%}
 <h2><div class=" whiteText centerText">
     {{user.first_name}}'s Dashboard
@@ -10,16 +12,26 @@
 
 {% if actions %}
 <h4><div class="whiteText centerText">
-    Current Action Plan
+    My Action Plan
 </div></h4>
 
-<div id = "action plan">
-    {% for a in actions %}
-   <p> {{ a.title }}</p>
-    {% endfor %}
-</div>
-{% endif %}
 
+<div>
+    <ol>
+        {% for a in actions %}
+        {% if a.is_completed %}
+        <li style = "color: green">{{ a.title }}</li>
+        {% else %}
+        <li>{{ a.title }}</li>
+        {% endif %}
+        {% endfor %}
+    </ol>
+</div>
+
+<a href="{% url 'actions' %}" class="btn btn-primary btn-block btn--small center">Update Action Plan</a>
+
+{% endif %}
+<br><br>
 {% if report %}
 <h4><div class="whiteText centerText">
     Most Recent Report
@@ -43,8 +55,8 @@
                     {% endfor %}
                 {% endfor %}
             </ul>
-        
         {% endfor %}
+        <a href="{% url 'reports' %}" class="btn btn-primary btn-block btn-small center">View Older Reports</a>
     
 </div>
 {% else %}
@@ -55,9 +67,6 @@
 </div>
 </h3>
 {% endif %}
-<div>
-    <button type="button" class="btn btn-primary btn-block btn-small center">11/10/2020</button>
-    <button type="button" class="btn btn-primary btn-block btn-small center">10/08/2020</button>
-    <button type="button" class="btn btn-primary btn-block btn-small center">07/09/2019</button>
-</div>
+
+
 {%endblock%}
