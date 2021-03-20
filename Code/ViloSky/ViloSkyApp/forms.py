@@ -7,11 +7,12 @@ from .models import UserProfile, AdminInput, DropdownAdminInput, CheckboxAdminIn
 
 class UserForm(forms.ModelForm):
     email = forms.CharField(widget=forms.EmailInput(
-        attrs={'class': 'form-control txtbox'}))
+        attrs={'class': 'form-control form-control-lg', 'id': 'inputEmail3', 'placeholder': 'Enter email'}))
     password = forms.CharField(widget=forms.PasswordInput(
-        attrs={'class': 'form-control txtbox'}))
+        attrs={'class': 'form-control form-control-lg', 'id': 'inputPassword4', 'placeholder': 'Enter password'}))
     confirm_password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control txtbox'}))
+        widget=forms.PasswordInput(
+            attrs={'class': 'form-control form-control-lg', 'id': 'inputPassword5', 'placeholder': 'Confirm password'}))
 
     class Meta:
         model = get_user_model()

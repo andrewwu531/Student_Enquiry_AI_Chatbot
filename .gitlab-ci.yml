@@ -26,7 +26,7 @@ cache:
 # services such as redis or postgres
 before_script:
   - cd  ./Code/ViloSky
-  - python -V  # Print out python version for debugging
+  - python -V # Print out python version for debugging
   # Uncomment next line if your Django app needs a JS runtime:
   # - apt-get update -q && apt-get install nodejs -yqq
   - pip install -r requirements.txt
@@ -53,7 +53,6 @@ before_script:
 test:
   stage: CI
   script:
-    - python manage.py makemigrations
     - python manage.py migrate
     - python manage.py test
 
