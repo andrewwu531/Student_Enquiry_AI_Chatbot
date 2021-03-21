@@ -1,42 +1,43 @@
 {% extends 'baseuser.html' %}
 {% load static %}
 
-
-
 {% block body%}
 <h2><div class=" whiteText centerText">
     {{user.first_name}}'s Dashboard
 </div></h2>
-
 <br>
-
 {% if actions %}
 <h4><div class="whiteText centerText">
-    My Action Plan
+   Action Plan
 </div></h4>
-
+<div class = "centerText">
+<h7>Started {{ report.datetime_created }}</h7>
+</div>
+<br>
 
 <div>
     <ol>
         {% for a in actions %}
         {% if a.is_completed %}
-        <li style = "color: green">{{ a.title }}</li>
+        <li style="line-height: 30px;">{{ a.title }} <b>&#10004;</b> </li>
         {% else %}
-        <li>{{ a.title }}</li>
+        <li style="line-height: 30px;">{{ a.title }}</li>
         {% endif %}
         {% endfor %}
     </ol>
 </div>
-
-<a href="{% url 'actions' %}" class="btn btn-primary btn-block btn--small center">Update Action Plan</a>
-
-{% endif %}
+<a href="{% url 'actions' %}" class="btn btn-primary btn-block btn-small center">View Action Plans</a>
 <br><br>
+{% endif %}
+
 {% if report %}
 <h4><div class="whiteText centerText">
-    Most Recent Report
+    Most Recent Report 
 </div></h4>
-
+<div class = "centerText">
+<h7>Created {{ report.datetime_created }}</h7>
+</div>
+<br>
 <div id = "report">
         {% for key,values in data.items %}
         
@@ -57,16 +58,17 @@
             </ul>
         {% endfor %}
         <a href="{% url 'reports' %}" class="btn btn-primary btn-block btn-small center">View Older Reports</a>
+        <br><br>
     
 </div>
 {% else %}
 <h3>
 <div class="whiteText centerText">
     You don't have any reports or action plans to view right now, click below to create a report.
-    <a href="{% url 'reports' %}" class="btn btn-primary btn-block btn-small center">New Report</a>
+    <br><br>
+    <a href="{% url 'reports' %}" class="btn btn-outline-dark" style="float: right;">New Report</a>
+    <br><br>
 </div>
 </h3>
 {% endif %}
-
-
 {%endblock%}

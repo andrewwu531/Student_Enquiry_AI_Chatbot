@@ -84,6 +84,7 @@ def user_logout(request):
 def dashboard(request):
     user = request.user.user_profile
     report = user.reports_assigned.all().order_by('-datetime_created').first()
+    plan_id = report.id
     paras = []
     links_dict = {}
     
@@ -111,8 +112,9 @@ def dashboard(request):
             links_dict[par] = big_l
 
     actions = UserAction.objects.filter(report = report)
+    
 
-    return render(request, 'dashboard.html', {'report':report, 'actions':actions, 'paras':paras, 'data': links_dict })
+    return render(request, 'dashboard.html', {'report':report, 'actions':actions, 'paras':paras, 'data': links_dict, })
 
 
 @login_required(login_url='login')
