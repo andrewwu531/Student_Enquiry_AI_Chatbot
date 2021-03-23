@@ -181,11 +181,6 @@ def reports(request):
     })
 
 
-@ login_required(login_url='login')
-def roles(request):
-    return render(request, 'roles.html', {})
-
-
 class AdminInputDetail(LoginRequiredMixin, DetailView):
     model = models.AdminInput
     template_name = 'admin_input_detail.html'
@@ -434,30 +429,30 @@ def paragraphs(request):
     })
 
 
-@ login_required(login_url='login')
-def data(request):
-    visitors = []
-    registered_users = []
-    inputs = []
-    outputs = []
-    days = []
-    for i in range(31):
-        days.append(i)
-        cur_visitors = randint(0, 12000)
-        visitors.append(cur_visitors)
-        registered_users.append(int(cur_visitors*uniform(0, 0.4)))
-        inputs.append(randint(100, 2900))
-        outputs.append(randint(200, 8000))
-    vis_fig = go.Figure(data=[go.Scatter(x=days, y=visitors, name="visitors"),
-                              go.Scatter(x=days, y=registered_users, name="registered users")]
-                        )
-    vis_div = plot(vis_fig, output_type='div')
-    inp_fig = go.Figure(data=go.Scatter(x=days, y=inputs, name="inputs"))
-    inp_div = plot(inp_fig, output_type='div')
-    out_fig = go.Figure(data=go.Scatter(x=days, y=outputs, name="outputs"))
-    out_div = plot(out_fig, output_type='div')
-    content_dict = {"vis_div": vis_div, "inp_div": inp_div, "out_div": out_div}
-    return render(request, 'data.html', content_dict)
+# @ login_required(login_url='login')
+# def data(request):
+#     visitors = []
+#     registered_users = []
+#     inputs = []
+#     outputs = []
+#     days = []
+#     for i in range(31):
+#         days.append(i)
+#         cur_visitors = randint(0, 12000)
+#         visitors.append(cur_visitors)
+#         registered_users.append(int(cur_visitors*uniform(0, 0.4)))
+#         inputs.append(randint(100, 2900))
+#         outputs.append(randint(200, 8000))
+#     vis_fig = go.Figure(data=[go.Scatter(x=days, y=visitors, name="visitors"),
+#                               go.Scatter(x=days, y=registered_users, name="registered users")]
+#                         )
+#     vis_div = plot(vis_fig, output_type='div')
+#     inp_fig = go.Figure(data=go.Scatter(x=days, y=inputs, name="inputs"))
+#     inp_div = plot(inp_fig, output_type='div')
+#     out_fig = go.Figure(data=go.Scatter(x=days, y=outputs, name="outputs"))
+#     out_div = plot(out_fig, output_type='div')
+#     content_dict = {"vis_div": vis_div, "inp_div": inp_div, "out_div": out_div}
+#     return render(request, 'data.html', content_dict)
 
 
 def report_create(request):
