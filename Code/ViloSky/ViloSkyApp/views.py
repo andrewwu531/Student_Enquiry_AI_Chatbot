@@ -210,6 +210,11 @@ class DropdownAdminInput(LoginRequiredMixin, CreateView):
 
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Create Dropdown Input"
+        return context
+
 
 class DropdownAdminInputUpdate(LoginRequiredMixin, UpdateView):
     form_class = DropdownAdminInputForm
@@ -218,11 +223,17 @@ class DropdownAdminInputUpdate(LoginRequiredMixin, UpdateView):
     pk_url_kwarg = 'admin_input_id'
 
     def form_valid(self, form):
-        for ch in [' ', '[', ']', '\\', '\"']:
+        for ch in [' ', '[', ']', '\\', '\"', '\'']:
             if ch in form.instance.choices:
                 form.instance.choices = form.instance.choices.replace(ch, '')
+
         form.instance.choices = json.dumps(form.instance.choices.split(','))
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Edit Dropdown Input"
+        return context
 
 
 class CheckboxAdminInput(LoginRequiredMixin, CreateView):
@@ -235,12 +246,22 @@ class CheckboxAdminInput(LoginRequiredMixin, CreateView):
         form.instance.input_type = "CHECKBOX"
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Create Checkbox Input"
+        return context
+
 
 class CheckboxAdminInputUpdate(LoginRequiredMixin, UpdateView):
     form_class = CheckboxAdminInputForm
     model = models.CheckboxAdminInput
     template_name = 'admin_input_form.html'
     pk_url_kwarg = 'admin_input_id'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Edit Checkbox Input"
+        return context
 
 
 class TextAdminInput(LoginRequiredMixin, CreateView):
@@ -253,12 +274,22 @@ class TextAdminInput(LoginRequiredMixin, CreateView):
         form.instance.input_type = "TEXT"
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Create Text Input"
+        return context
+
 
 class TextAdminInputUpdate(LoginRequiredMixin, UpdateView):
     form_class = TextAdminInputForm
     model = models.TextAdminInput
     template_name = 'admin_input_form.html'
     pk_url_kwarg = 'admin_input_id'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Edit Text Input"
+        return context
 
 
 class TextAreaAdminInput(LoginRequiredMixin, CreateView):
@@ -271,12 +302,22 @@ class TextAreaAdminInput(LoginRequiredMixin, CreateView):
         form.instance.input_type = "TEXTAREA"
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Create Text Area Input"
+        return context
+
 
 class TextareaAdminInputUpdate(LoginRequiredMixin, UpdateView):
     form_class = TextareaAdminInputForm
     model = models.TextareaAdminInput
     template_name = 'admin_input_form.html'
     pk_url_kwarg = 'admin_input_id'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Edit Text Area Input"
+        return context
 
 
 class AdminInputDelete(LoginRequiredMixin, DeleteView):
@@ -299,8 +340,8 @@ def admin_inputs(request):
 
     # List Item to store admin input details to be rendered
     inputs_to_render = list(
-        models.AdminInput.objects.all().values('id', 'created_by__user__first_name', 'label', 'input_type',
-                                               'is_required'))
+        models.AdminInput.objects.all().order_by("-id").values('id', 'created_by__user__first_name', 'label', 'input_type',
+                                                               'is_required'))
     template_headings = ["#", "Created By", "Label", "Type", "Required"]
     model_keys = ["id", "created_by__user__first_name",
                   "label", "input_type", "is_required"]
@@ -452,7 +493,7 @@ def report_create(request):
                 for p in partials:
                     if p.admin_input.input_type == "DROPDOWN":
                         partials_dict[p.admin_input.label] = (p.value, p.value)
-                    elif p.admin_input.input_type == "RADIOBUTTONS":
+                    elif p.admin_input.input_type == "MULTISELECT":
                         partials_dict[p.admin_input.label] = p.value.strip(
                             "[]").replace("\'", "").split(", ")
                         print(p.value)
@@ -499,7 +540,7 @@ def get_paragraphs(inputs_dictionary):
                 if keyword == answers[counter]:
                     paragraphs_list.append(keyword.paragraph)
             counter += 1
-        elif question.input_type == 'RADIOBUTTONS':
+        elif question.input_type == 'MULTISELECT':
             for keyword in keywords:
                 if keyword.key in answers[counter]:
                     paragraphs_list.append(keyword.paragraph)

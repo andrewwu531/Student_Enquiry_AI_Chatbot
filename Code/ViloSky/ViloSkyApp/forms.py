@@ -1,10 +1,11 @@
 '''Forms for the ViloSky app'''
 import datetime
+import json
 from django import forms
 from django.contrib.auth import get_user_model
 from ViloSkyApp.models import (UserProfile, Qualification, AdminInput, DropdownAdminInput,
                                TextAdminInput, TextareaAdminInput, CheckboxAdminInput,
-                               RadioButtonsAdminInput, Paragraph, Link, Keyword, Action)
+                               MultiselectAdminInput, Paragraph, Link, Keyword, Action)
 
 
 class UserForm(forms.ModelForm):
@@ -28,48 +29,52 @@ class InputForm(forms.Form):
 
             # dropdowns
             if q.input_type == 'DROPDOWN':
+                widget = forms.Select(attrs={"class": "form-control"})
                 d_q = DropdownAdminInput.objects.get(label=q.label)
                 # Need to set the choices as a tuple of (choice, choice)
                 # That way filling in the form with partial_inputs is possible
-                choices = [(c, c) for c in d_q.choices]
+                choices = [(c, c) for c in json.loads(d_q.choices)]
                 # Set the default value of dropdowns to N/A
                 choices.insert(0, ('', "N/A"))
-                if q.is_required == 'True':
+                if q.is_required:
                     self.fields[d_q.label] = forms.ChoiceField(
-                        label=d_q.label, choices=choices)
+                        label=d_q.label, choices=choices, widget=widget)
                 else:
                     self.fields[d_q.label] = forms.ChoiceField(
-                        label=d_q.label, choices=choices, required=False)
+                        label=d_q.label, choices=choices, widget=widget, required=False)
 
-            # RadioButtons
-            elif q.input_type == 'RADIOBUTTONS':
-                r_q = RadioButtonsAdminInput.objects.get(label=q.label)
+            # Multiselect
+            elif q.input_type == 'MULTISELECT':
+                widget = forms.SelectMultiple(attrs={"class": "form-control"})
+                r_q = MultiselectAdminInput.objects.get(label=q.label)
                 # Need to set the choices as a tuple of (choice, choice)
                 # That way filling in the form with partial_inputs is possible
-                choices = [(c, c) for c in r_q.choices]
-                if q.is_required == 'True':
-                    self.fields[r_q.label] = forms.MultipleChoiceField(widget=forms.CheckboxSelectMultiple,
+                choices = [(c, c) for c in json.loads(r_q.choices)]
+                if q.is_required:
+                    self.fields[r_q.label] = forms.MultipleChoiceField(widget=widget,
                                                                        label=r_q.label, choices=choices)
                 else:
                     self.fields[r_q.label] = forms.MultipleChoiceField(
-                        widget=forms.CheckboxSelectMultiple, label=r_q.label, choices=choices, required=False)
+                        widget=widget, label=r_q.label, choices=choices, required=False)
             # Checkboxes
             elif q.input_type == 'CHECKBOX':
+                widget = forms.CheckboxInput()
                 check_q = CheckboxAdminInput.objects.get(label=q.label)
-                if q.is_required == 'True':
-                    self.fields['%s_field' %
-                                i] = forms.BooleanField(label=check_q.label)
+                if q.is_required:
+                    self.fields['%s_field' % i] = forms.BooleanField(
+                        label=check_q.label, widget=widget)
                 else:
                     self.fields['%s_field' % i] = forms.BooleanField(
-                        label=check_q.label, required=False)
+                        label=check_q.label, widget=widget, required=False)
             elif q.input_type == 'TEXT':
+                widget = forms.TextInput(attrs={"class": "form-control"})
                 text_q = TextAdminInput.objects.get(label=q.label)
                 if q.is_required:
                     self.fields['%s_field' % i] = forms.CharField(
-                        max_length=text_q.max_length, label=q.label)
+                        max_length=text_q.max_length, label=q.label, widget=widget)
                 else:
                     self.fields['%s_field' % i] = forms.CharField(
-                        max_length=text_q.max_length, label=q.label, required=False)
+                        max_length=text_q.max_length, label=q.label, widget=widget, required=False)
             else:
                 textarea_q = TextareaAdminInput.objects.get(label=q.label)
                 if q.is_required:
@@ -116,48 +121,78 @@ class QualificationForm(forms.ModelForm):
 
 
 class DropdownAdminInputForm(forms.ModelForm):
-    choices = forms.CharField(widget=forms.Textarea)
+    ''' Describes the form used to create a Dropdown AdminInput'''
+    choices = forms.CharField(widget=forms.Textarea(
+        attrs={'class': 'form-control form-control-lg',
+               'rows': '3', 'placeholder': "Comma-separated values"}))
 
     class Meta:
+        ''' Describes which fields to display and widgets regarding styling'''
         model = DropdownAdminInput
         fields = [
-            'label',
             'is_required',
+            'label',
             'choices',
         ]
+        widgets = {
+            'label': forms.TextInput(attrs={'class': 'form-control form-control-lg',
+                                            'placeholder': 'Enter input label'}),
+        }
 
 
 class CheckboxAdminInputForm(forms.ModelForm):
+    ''' Describes the form used to create a Checkbox AdminInput'''
 
     class Meta:
+        ''' Describes which fields to display and widgets regarding styling'''
         model = CheckboxAdminInput
         fields = [
-            'label',
             'is_required',
             'default_value',
+            'label',
         ]
+        widgets = {
+            'label': forms.TextInput(attrs={'class': 'form-control form-control-lg',
+                                            'placeholder': 'Enter input label'}),
+        }
 
 
 class TextAdminInputForm(forms.ModelForm):
+    ''' Describes the form used to create a Text AdminInput'''
 
     class Meta:
+        ''' Describes which fields to display and widgets regarding styling'''
         model = TextAdminInput
         fields = [
-            'label',
             'is_required',
+            'label',
             'max_length',
         ]
+        widgets = {
+            'label': forms.TextInput(attrs={'class': 'form-control form-control-lg',
+                                            'placeholder': 'Enter input label'}),
+            'max_length': forms.NumberInput(attrs={'class': 'form-control form-control-lg',
+                                                   'placeholder': 'Enter max length'}),
+        }
 
 
 class TextareaAdminInputForm(forms.ModelForm):
+    ''' Describes the form used to create a TextArea AdminInput'''
 
     class Meta:
+        ''' Describes which fields to display and widgets regarding styling'''
         model = TextareaAdminInput
         fields = [
-            'label',
             'is_required',
             'max_length',
+            'label',
         ]
+        widgets = {
+            'label': forms.TextInput(attrs={'class': 'form-control form-control-lg',
+                                            'placeholder': 'Enter input label'}),
+            'max_length': forms.NumberInput(attrs={'class': 'form-control form-control-lg',
+                                                   'placeholder': 'Enter max length'}),
+        }
 
 
 class NewParaForm(forms.ModelForm):

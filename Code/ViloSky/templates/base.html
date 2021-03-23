@@ -35,13 +35,10 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
             </div>
 
             <ul class="list-unstyled components">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'report_create' %}">New Report</a>
+              </li>
               {% if not request.user.is_authenticated %}
-                <!-- <li class="nav-item">
-                  <a class="nav-link" aria-current="page" href="{% url 'index' %}">Home</a>
-                </li> -->
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'report_create' %}">New Report</a>
-                </li>
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'report_view_public' %}">View Report</a>
                 </li>
@@ -77,9 +74,9 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'paragraphs' %}">Paragraphs</a>
                   </li>
-                  <li class="nav-item">
+                  <!-- <li class="nav-item">
                     <a class="nav-link" href="{% url 'data' %}">Data</a>
-                  </li>
+                  </li> -->
                 {% endif %}
                 {% endif %}
             </ul>

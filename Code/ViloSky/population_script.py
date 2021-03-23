@@ -1,6 +1,7 @@
 import os
 import datetime
 import pytz
+import json
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE','ViloSky.settings')
 
@@ -8,7 +9,7 @@ import django
 django.setup()
 
 from ViloSkyApp.models import CustomUser, UserProfile, Qualification, Keyword, Link, Paragraph, Report, Action, AdminInput, \
-    DropdownAdminInput, CheckboxAdminInput, TextAdminInput, TextareaAdminInput, RadioButtonsAdminInput, Session, PartialInput, UserAction
+    DropdownAdminInput, CheckboxAdminInput, TextAdminInput, TextareaAdminInput, MultiselectAdminInput, Session, PartialInput, UserAction
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 timezone.now()
@@ -238,7 +239,7 @@ def populate():
             'label': 'Gender (optional)',
             'input_type': AdminInput.AdminInputTypes.DROPDOWN,
             'is_required': False,
-            'choices': ['Male', 'Female', 'Non-Binary', 'Transgender Male', 'Other', 'Transgender Female'],
+            'choices': json.dumps(['Male', 'Female', 'Non-Binary', 'Transgender Male', 'Other', 'Transgender Female']),
             'partial_inputs':[
                 {'created_by': 'greid@gmail.com', 'value': 'Female'},
             ]
@@ -248,7 +249,7 @@ def populate():
             'label': 'Sexual Orientation (optional)',
             'input_type': AdminInput.AdminInputTypes.DROPDOWN,
             'is_required': False,
-            'choices': ['Heterosexual', 'Homosexual', 'Bisexual', 'Pansexual', 'Asexual', 'Queer'],
+            'choices': json.dumps(['Heterosexual', 'Homosexual', 'Bisexual', 'Pansexual', 'Asexual', 'Queer']),
             'partial_inputs':[
                 {'created_by': 'greid@gmail.com', 'value': ''},
             ]
@@ -258,7 +259,7 @@ def populate():
             'label': 'Ethnicity (optional)',
             'input_type': AdminInput.AdminInputTypes.DROPDOWN,
             'is_required': False,
-            'choices': ['White', 'Black', 'Asian', 'Mixed Race', 'South Asian'],
+            'choices': json.dumps(['White', 'Black', 'Asian', 'Mixed Race', 'South Asian']),
             'partial_inputs':[
                 {'created_by': 'greid@gmail.com', 'value': 'White'},
             ]
@@ -279,7 +280,7 @@ def populate():
             'label': 'What best describes current work situation (select one) ',
             'input_type': AdminInput.AdminInputTypes.DROPDOWN,
             'is_required': True,
-            'choices': ['Employed', 'Self-Employed', 'Unpaid Work (e.g. Volunteering)', 'Retired', 'Career Break'],
+            'choices': json.dumps(['Employed', 'Self-Employed', 'Unpaid Work (e.g. Volunteering)', 'Retired', 'Career Break']),
             'partial_inputs':[
                 {'created_by': 'greid@gmail.com', 'value': 'Career Break'},
             ]
@@ -287,10 +288,10 @@ def populate():
         {
             'created_by': 'suzieMul23@gmail.com',
             'label': 'What best describes current work barriers (select all that apply):',
-            'input_type': AdminInput.AdminInputTypes.RADIOBUTTONS,
+            'input_type': AdminInput.AdminInputTypes.MULTISELECT,
             'is_required': False,
-            'choices': ['Childcare', 'Carer Responsibilities', 'Technical Skills',
-                        'Leadership Skills', 'Flexibility', 'Workplace Culture', 'Confidence'],
+            'choices': json.dumps(['Childcare', 'Carer Responsibilities', 'Technical Skills',
+                                   'Leadership Skills', 'Flexibility', 'Workplace Culture', 'Confidence']),
             'partial_inputs':[
                 {'created_by': 'greid@gmail.com', 'value': ''},
             ]
@@ -300,19 +301,20 @@ def populate():
             'label': 'Time since last paid work:',
             'input_type': AdminInput.AdminInputTypes.DROPDOWN,
             'is_required': True,
-            'choices': ['0 (Currently Working)', '1-6 Months since last work', '7-12 Months since last work', '1-2 Years since last work',
-                        '3-5 Years since last work', '5-10 Years since last work', '10+ Years since last work'],
+            'choices': json.dumps(['0 (Currently Working)', '1-6 Months since last work', '7-12 Months since last work', '1-2 Years since last work',
+                                   '3-5 Years since last work', '5-10 Years since last work', '10+ Years since last work']),
             'partial_inputs':[
-                {'created_by': 'greid@gmail.com', 'value': '10+ Years since last work'},
+                {'created_by': 'greid@gmail.com',
+                    'value': '10+ Years since last work'},
             ]
         },
         {
             'created_by': 'suzieMul23@gmail.com',
             'label': 'Industry interested in (select all that apply):',
-            'input_type': AdminInput.AdminInputTypes.RADIOBUTTONS,
+            'input_type': AdminInput.AdminInputTypes.MULTISELECT,
             'is_required': False,
-            'choices': ['Retail', 'Fashion', 'Media', 'Banking&Finance', 'Construction',
-                        'Manufacturing', 'Law', 'Medical', 'Education', 'IT'],
+            'choices': json.dumps(['Retail', 'Fashion', 'Media', 'Banking&Finance', 'Construction',
+                                   'Manufacturing', 'Law', 'Medical', 'Education', 'IT']),
             'partial_inputs':[
                 {'created_by': 'greid@gmail.com', 'value': 'Banking&Finance'},
             ]
@@ -322,8 +324,8 @@ def populate():
             'label': 'Area of interest:',
             'input_type': AdminInput.AdminInputTypes.DROPDOWN,
             'is_required': True,
-            'choices': ['HR', 'Risk Management', 'Accountancy', 'Law', 'Marketing',
-                        'Coaching', 'IT', 'Nursing', 'Medicine'],
+            'choices': json.dumps(['HR', 'Risk Management', 'Accountancy', 'Law', 'Marketing',
+                                   'Coaching', 'IT', 'Nursing', 'Medicine']),
             'partial_inputs':[
                 {'created_by': 'greid@gmail.com', 'value': 'Risk Management'},
             ]
@@ -332,7 +334,7 @@ def populate():
             'created_by': 'suzieMul23@gmail.com',
             'label': 'Do you have relevant formal qualifications in the area you are interested in:',
             'input_type': AdminInput.AdminInputTypes.CHECKBOX,
-            'is_required': True,
+            'is_required': False,
             'default_value': True,
             'partial_inputs': [
                 {'created_by': 'greid@gmail.com', 'value': True},
@@ -343,7 +345,7 @@ def populate():
             'label': 'How many year’s experience do you have in the area you are interested in:',
             'input_type': AdminInput.AdminInputTypes.DROPDOWN,
             'is_required': True,
-            'choices': ['0', '1-6 Months', '7-12 Months', '1-2 Years', '3-5 Years', '5-10 Years', '10+ Years'],
+            'choices': json.dumps(['0', '1-6 Months', '7-12 Months', '1-2 Years', '3-5 Years', '5-10 Years', '10+ Years']),
             'partial_inputs':[
                 {'created_by': 'greid@gmail.com', 'value': '3-5 Years'},
             ]
@@ -361,12 +363,12 @@ def populate():
         {
             'created_by': 'suzieMul23@gmail.com',
             'label': 'What would you like to achieve from your next role? (select all that apply)',
-            'input_type': AdminInput.AdminInputTypes.RADIOBUTTONS,
+            'input_type': AdminInput.AdminInputTypes.MULTISELECT,
             'is_required': False,
-            'choices': ['Re-establish career', 'Learn New Skills', 'Give Something Back', 'Confidence',
-                        'Realise Full Potential', 'Promotion', 'Work/Life Balance', 'Ease', 'Good Salary',
-                        'Working From Home', 'Low Stress', 'Flexibility', 'Greater Autonomy', 'More Responsibility',
-                        'Less Responsibility'],
+            'choices': json.dumps(['Re-establish career', 'Learn New Skills', 'Give Something Back', 'Confidence',
+                                   'Realise Full Potential', 'Promotion', 'Work/Life Balance', 'Ease', 'Good Salary',
+                                   'Working From Home', 'Low Stress', 'Flexibility', 'Greater Autonomy', 'More Responsibility',
+                                   'Less Responsibility']),
             'partial_inputs':[
                 {
                     'created_by': 'greid@gmail.com',
@@ -626,8 +628,8 @@ def populate():
                         label=inputs['label'],
                         input_type=inputs['input_type'],
                         created_by=admin, choices=inputs['choices'])[0]
-                elif inp_type == AdminInput.AdminInputTypes.RADIOBUTTONS:
-                    user_input = RadioButtonsAdminInput.objects.get_or_create(
+                elif inp_type == AdminInput.AdminInputTypes.MULTISELECT:
+                    user_input = MultiselectAdminInput.objects.get_or_create(
                         admin_input=curr_input,
                         is_required=inputs['is_required'],
                         label=inputs['label'],

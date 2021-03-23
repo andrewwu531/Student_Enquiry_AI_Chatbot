@@ -6,9 +6,18 @@
     <div class="largeText whiteText centerText">
         Create Report
     </div>
-    <form id="inputForm" method="POST" action="{% url 'report_create' %}" enctype="multipart/form-data">
+    <form id="inputForm" class="p-4 mx-2" method="POST" action="{% url 'report_create' %}" enctype="multipart/form-data">
        {% csrf_token %}
-       {{ inputForm.as_p }}
+       {% for field in inputForm %}
+            <div class="form-group">
+                {{ field.errors }}
+                {{ field.label_tag }} 
+                {{ field }}
+                {% if field.help_text %}
+                <p class="help">{{ field.help_text|safe }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
        <hr/>
        <input type="submit" name="submit" class="btn btn-primary btn-block"/>
 </form>

@@ -112,9 +112,11 @@ class Action(models.Model):
 
 
 class CreateReport(models.Manager):
-    def save_report(self,user, paragraphs, datetime_created):
-        report = self.create(user=user, paragraphs=paragraphs, datetime_created=datetime_created)
+    def save_report(self, user, paragraphs, datetime_created):
+        report = self.create(user=user, paragraphs=paragraphs,
+                             datetime_created=datetime_created)
         return report
+
 
 class Report(models.Model):
     """ A model to hold reports consisting of multiple paragraphs.
@@ -165,7 +167,7 @@ class AdminInput(models.Model):
         TEXT = 'TEXT'
         TEXTAREA = 'TEXTAREA'
         CHECKBOX = 'CHECKBOX'
-        RADIOBUTTONS = 'RADIOBUTTONS'
+        MULTISELECT = 'MULTISELECT'
 
     created_by = models.ForeignKey(
         UserProfile, on_delete=models.CASCADE, related_name='admin_inputs_created')
@@ -202,8 +204,8 @@ class CheckboxAdminInput(AdminInput):
         return reverse('admin_input', kwargs={'admin_input_id': self.admin_input.pk})
 
 
-class RadioButtonsAdminInput(AdminInput):
-    """ A model to information about radiobuttons admin inputs."""
+class MultiselectAdminInput(AdminInput):
+    """ A model to information about multiselect admin inputs."""
     admin_input = models.OneToOneField(
         AdminInput, parent_link=True, on_delete=models.CASCADE)
     # Must be an array of serialised values.

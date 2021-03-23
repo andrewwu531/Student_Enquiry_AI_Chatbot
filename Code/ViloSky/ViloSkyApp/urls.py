@@ -16,7 +16,6 @@ urlpatterns = [
     path('report/create', views.report_create, name='report_create'),
     path('report/view', views.report_view_public, name='report_view_public'),
     path('reports/', views.reports, name='reports'),
-    path('roles/', views.roles, name='roles'),
 
     # Admin Inputs
     re_path('admin_input/(?P<admin_input_id>\d+)/$',
@@ -32,15 +31,18 @@ urlpatterns = [
     re_path('admin_input/delete/(?P<admin_input_id>\d+)/$',
             views.AdminInputDelete.as_view(), name='admin_input_delete'),
     path('admin_inputs/', views.admin_inputs, name='admin_inputs'),
-    path('dropdown_admin_input/create/', views.DropdownAdminInput.as_view(), name='dropdown_admin_input_create'),
-    path('checkbox_admin_input/create/', views.CheckboxAdminInput.as_view(), name='checkbox_admin_input_create'),
-    path('text_admin_input/create/', views.TextAdminInput.as_view(), name='text_admin_input_create'),
-    path('textarea_admin_input/create/', views.TextAreaAdminInput.as_view(), name='textarea_admin_input_create'),
+    path('dropdown_admin_input/create/', views.DropdownAdminInput.as_view(),
+         name='dropdown_admin_input_create'),
+    path('checkbox_admin_input/create/', views.CheckboxAdminInput.as_view(),
+         name='checkbox_admin_input_create'),
+    path('text_admin_input/create/', views.TextAdminInput.as_view(),
+         name='text_admin_input_create'),
+    path('textarea_admin_input/create/', views.TextAreaAdminInput.as_view(),
+         name='textarea_admin_input_create'),
 
     re_path('paragraph/(?P<paragraph_id>\w+)/$',
             views.paragraph, name='paragraph'),
     path('paragraphs/', views.paragraphs, name='paragraphs'),
-    path('data/', views.data, name='data'),
     path('logout/', views.user_logout, name='logout'),
 
     # Reset Password
@@ -51,9 +53,8 @@ urlpatterns = [
          PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     path('reset-password/complete/', PasswordResetCompleteView.as_view(),
          name='password_reset_complete'),
-path('create_paragraphs/', views.create_paragraphs, name='create_paragraphs'),
-    path('create_pdf/(?P<report_id>\w+)/$', views.create_pdf, name='create_pdf'),
+    path('create_paragraphs/', views.create_paragraphs, name='create_paragraphs'),
+    path('create_pdf/(?P<report_id>\w+)/$',
+         views.create_pdf, name='create_pdf'),
     path('create_pdf_public', views.create_pdf_public, name='create_pdf_public'),
 ]
-
-
