@@ -3,6 +3,6 @@ $(".entry-row").click(function(e){
         const to = e.currentTarget.getAttribute('to');
         if(to){
             window.location.href = to;
-        }    
+        }
     }
 });

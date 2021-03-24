@@ -2,6 +2,8 @@
 from django.db import models
 from cuser.models import AbstractCUser
 from django.contrib.auth.models import User
+from django.urls import reverse
+
 
 class CustomUser(AbstractCUser):
     """ A model to hold the user entity with a unique email instead of username.
@@ -57,6 +59,10 @@ class UserProfile(models.Model):
     time_worked_in_industry = models.CharField(
         blank=True, choices=TimeWorkedTypes.choices, max_length=255)
 
+    # Displaying UserProfile instances now shows the user's name
+    def __str__(self):
+        return self.user.first_name + " " + self.user.last_name
+
 
 class Qualification(models.Model):
     """ A model to hold all qualifications related to a user.
@@ -105,6 +111,11 @@ class Action(models.Model):
     title = models.CharField(max_length=255)
 
 
+class CreateReport(models.Manager):
+    def save_report(self,user, paragraphs, datetime_created):
+        report = self.create(user=user, paragraphs=paragraphs, datetime_created=datetime_created)
+        return report
+
 class Report(models.Model):
     """ A model to hold reports consisting of multiple paragraphs.
     Each report is assigned to an individual user.
@@ -114,6 +125,8 @@ class Report(models.Model):
     user = models.ForeignKey(
         UserProfile, on_delete=models.CASCADE, related_name='reports_assigned')
     datetime_created = models.DateTimeField()
+
+    objects = CreateReport()
 
 
 class UserAction(models.Model):
@@ -152,6 +165,7 @@ class AdminInput(models.Model):
         TEXT = 'TEXT'
         TEXTAREA = 'TEXTAREA'
         CHECKBOX = 'CHECKBOX'
+        RADIOBUTTONS = 'RADIOBUTTONS'
 
     created_by = models.ForeignKey(
         UserProfile, on_delete=models.CASCADE, related_name='admin_inputs_created')
@@ -159,6 +173,12 @@ class AdminInput(models.Model):
     input_type = models.CharField(
         max_length=255, choices=AdminInputTypes.choices)
     is_required = models.BooleanField(default=False)
+
+    def get_absolute_url(self):
+        return reverse('admin_input', kwargs={'admin_input_id': self.pk})
+
+    def __str__(self):
+        return self.label
 
 
 class DropdownAdminInput(AdminInput):
@@ -168,12 +188,26 @@ class DropdownAdminInput(AdminInput):
     # Must be a single array of values in JSON.
     choices = models.JSONField()
 
+    def get_absolute_url(self):
+        return reverse('admin_input', kwargs={'admin_input_id': self.admin_input.pk})
+
 
 class CheckboxAdminInput(AdminInput):
     """ A model to information about checkbox admin inputs."""
     admin_input = models.OneToOneField(
         AdminInput, parent_link=True, on_delete=models.CASCADE)
     default_value = models.BooleanField(default=False)
+
+    def get_absolute_url(self):
+        return reverse('admin_input', kwargs={'admin_input_id': self.admin_input.pk})
+
+
+class RadioButtonsAdminInput(AdminInput):
+    """ A model to information about radiobuttons admin inputs."""
+    admin_input = models.OneToOneField(
+        AdminInput, parent_link=True, on_delete=models.CASCADE)
+    # Must be an array of serialised values.
+    choices = models.JSONField()
 
 
 class TextareaAdminInput(AdminInput):
@@ -182,12 +216,18 @@ class TextareaAdminInput(AdminInput):
         AdminInput, parent_link=True, on_delete=models.CASCADE)
     max_length = models.PositiveIntegerField(null=True, blank=True)
 
+    def get_absolute_url(self):
+        return reverse('admin_input', kwargs={'admin_input_id': self.admin_input.pk})
+
 
 class TextAdminInput(AdminInput):
     """ A model to information about text admin inputs."""
     admin_input = models.OneToOneField(
         AdminInput, parent_link=True, on_delete=models.CASCADE)
     max_length = models.PositiveIntegerField(null=True, blank=True)
+
+    def get_absolute_url(self):
+        return reverse('admin_input', kwargs={'admin_input_id': self.admin_input.pk})
 
 
 class PartialInput(models.Model):
