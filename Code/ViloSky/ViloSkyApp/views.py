@@ -84,7 +84,6 @@ def user_logout(request):
 def dashboard(request):
     user = request.user.user_profile
     report = user.reports_assigned.all().order_by('-datetime_created').first()
-    plan_id = report.id
     paras = []
     links_dict = {}
     
