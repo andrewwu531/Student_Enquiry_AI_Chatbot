@@ -2,25 +2,73 @@
 {% load static %}
 
 {% block body%}
-<div class="largeText whiteText centerText">
-    Latest report
+<h2><div class=" whiteText centerText">
+    {{user.first_name}}'s Dashboard
+</div></h2>
+<br>
+{% if actions %}
+<h4><div class="whiteText centerText">
+   Action Plan
+</div></h4>
+<div class = "centerText">
+<h7>Started {{ report.datetime_created }}</h7>
 </div>
-<p>
-    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna. Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci. Aenean nec lorem.
-    In porttitor. Donec laoreet nonummy augue. Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Mauris eget neque at sem venenatis eleifend. Ut nonummy. Fusce aliquet pede non pede. Suspendisse dapibus lorem pellentesque magna. Integer nulla. Donec blandit feugiat ligula. Donec hendrerit, felis et imperdiet euismod, purus ipsum pretium metus, in lacinia nulla nisl eget sapien.
-</p>
-<div class="largeText whiteText centerText">
-    My progress
-</div>
-<p>
-    10/15 - You are on track
-</p>
-<div class="largeText whiteText centerText">
-    Previous reports
-</div>
+<br>
+
 <div>
-    <button type="button" class="btn btn-primary btn-block btn-small center">11/10/2020</button>
-    <button type="button" class="btn btn-primary btn-block btn-small center">10/08/2020</button>
-    <button type="button" class="btn btn-primary btn-block btn-small center">07/09/2019</button>
+    <ol>
+        {% for a in actions %}
+        {% if a.is_completed %}
+        <li style="line-height: 30px;">{{ a.title }} <b>&#10004;</b> </li>
+        {% else %}
+        <li style="line-height: 30px;">{{ a.title }}</li>
+        {% endif %}
+        {% endfor %}
+    </ol>
 </div>
+<a href="{% url 'actions' %}" class="btn btn-primary btn-block btn-small center">View Action Plans</a>
+<br><br>
+{% endif %}
+
+{% if report %}
+<h4><div class="whiteText centerText">
+    Most Recent Report 
+</div></h4>
+<div class = "centerText">
+<h7>Created {{ report.datetime_created }}</h7>
+</div>
+<br>
+<div id = "report">
+        {% for key,values in data.items %}
+        
+            {{ key.static_text }}
+            <ul>
+                {% for list in values %}
+                    {% for item in list %}
+                        <li>
+                                {% if item.title == null %}
+                                <a href='{{ item.url }}' target="_blank">{{ item.url }}</a>
+                                {% endif %}
+                                {% if item.url == null %}
+                                    {{item.title}}
+                                {% endif %}
+                        </li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        {% endfor %}
+        <hr/>
+        <a href="{% url 'reports' %}" class="btn btn-primary btn-block btn-small center p-1">View Older Reports</a>
+    
+</div>
+{% else %}
+<h3>
+<div class="whiteText centerText">
+    <hr/>
+    You don't have any reports or action plans to view right now, click below to create a report.
+    <hr/>
+    <a href="{% url 'report_create' %}" class="btn btn-primary btn-block btn-small center p-1" >New Report</a>
+</div>
+</h3>
+{% endif %}
 {%endblock%}
