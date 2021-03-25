@@ -3,9 +3,12 @@
 
 {% block bodyblock%}
 <div class="divbackground widediv">
-    <form method="post">{% csrf_token %}
-    <p>Are you sure you want to delete "{{ object }}"?</p>
-    <input type="submit" value="Confirm">
+    <a class="btn" href="{% url 'admin_input' object.id %}"> <i class='fas fa-angle-left align-middle' style='font-size:16px'></i> Back</a>
+    <form method="post" class="center text-center">
+        {% csrf_token %}
+        <h4>Are you sure you want to delete the input "{{ object }}"?</h4>
+        <hr/>
+        <input type="submit" value="Confirm" class="btn btn-primary btn-block p-1"/>
     </form>
 </div>
 {%endblock%}

@@ -240,6 +240,18 @@ class AdminInputDetail(LoginRequiredMixin, DetailView):
     # By changing this it will now look for admin_input_id instead, as is already written in urls.py
     pk_url_kwarg = 'admin_input_id'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # If dropdown or multiselect, load choices properly for display.
+        if context['object'].input_type == models.AdminInput.AdminInputTypes.DROPDOWN:
+            context['choices'] = ", ".join(json.loads(
+                context['object'].dropdownadmininput.choices))
+        elif context['object'].input_type == models.AdminInput.AdminInputTypes.MULTISELECT:
+            context['choices'] = ", ".join(json.loads(
+                context['object'].multiselectadmininput.choices))
+        return context
+
 
 class DropdownAdminInput(LoginRequiredMixin, CreateView):
     form_class = DropdownAdminInputForm
@@ -434,6 +446,8 @@ def admin_inputs(request):
     template_headings = ["#", "Created By", "Label", "Type", "Required"]
     model_keys = ["id", "created_by__user__first_name",
                   "label", "input_type", "is_required"]
+    for entry in inputs_to_render:
+        entry['input_type'] = entry['input_type'].capitalize()
 
     return render(request, 'admin_inputs.html', {
         "headings": template_headings, "model_keys": model_keys,

@@ -3,28 +3,77 @@
 
 {% block bodyblock%}
 <div class="divbackground widediv">
-    <h1>{{ object.label }}</h1>
-    <p>Created By: {{ object.created_by }}</p>
-    <p>Required: {{ object.is_required }}</p>
-    <p>Question Type: {{ object.input_type }}</p>
-    <div>
+    <span class='d-flex justify-content-between'>
+        <a class="btn" href="{% url 'admin_inputs' %}"> <i class='fas fa-angle-left align-middle' style='font-size:16px'></i> Back</a>
+        <a class="btn" href="{% url 'admin_input_delete' object.id %}">Delete</a>
+    </span>
+
+    <div class="mediumText text-center mb-3">Admin input {{ object.id }}</div>
+
+    <div class="w-75 center text-center">
+        <table class="table table-borderless table-hover">
+            <tbody>
+                <tr>
+                    <th class="table-cell-no-wrap">Created by</th>
+                    <td>{{ object.created_by }}</td>
+                </tr>
+                <tr>
+                    <th class="table-cell-no-wrap">Required</th>
+                    <td>{{ object.is_required }}</td>
+                </tr>
+                <tr>
+                    <th class="table-cell-no-wrap">Input Type</th>
+                    <td>{{ object.input_type|title }}</td>
+                </tr>
+                <tr>
+                    <th class="table-cell-no-wrap">Label</th>
+                    <td>{{ object.label }}</td>
+                </tr>
+                {% if object.input_type == "DROPDOWN" or object.input_type == "MULTISELECT" %}
+                    <tr>
+                        <th class="table-cell-no-wrap">Choices</th>
+                        <td>{{ choices }}</td>
+                    </tr>
+                {% endif %}
+                {% if object.input_type == "CHECKBOX" %}
+                <tr>
+                    <th class="table-cell-no-wrap">Default value</th>
+                    <td>{{ object.checkboxadmininput.default_value }}</td>
+                </tr>
+                {% endif %}
+                {% if object.input_type == "TEXT" %}
+                <tr>
+                    <th class="table-cell-no-wrap">Default value</th>
+                    <td>{{ object.textadmininput.max_length }}</td>
+                </tr>
+                {% endif %}
+                {% if object.input_type == "TEXTAREA" %}
+                <tr>
+                    <th class="table-cell-no-wrap">Default value</th>
+                    <td>{{ object.textareaadmininput.max_length }}</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class='w-75 center mt-4'>
+        <hr/>
         {% if object.input_type == "DROPDOWN" %}
-            <a class="btn btn-secondary" href="{% url 'dropdown_admin_input_update' object.id %}">Edit</a>
+            <a class="btn btn-primary btn-block p-1" href="{% url 'dropdown_admin_input_update' object.id %}">Edit</a>
         {% endif %}
         {% if object.input_type == "CHECKBOX" %}
-            <a class="btn btn-secondary" href="{% url 'checkbox_admin_input_update' object.id %}">Edit</a>
+            <a class="btn btn-primary btn-block p-1" href="{% url 'checkbox_admin_input_update' object.id %}">Edit</a>
         {% endif %}
         {% if object.input_type == "TEXT" %}
-            <a class="btn btn-secondary" href="{% url 'text_admin_input_update' object.id %}">Edit</a>
+            <a class="btn btn-primary btn-block p-1" href="{% url 'text_admin_input_update' object.id %}">Edit</a>
         {% endif %}
         {% if object.input_type == "TEXTAREA" %}
             <a class="btn btn-secondary" href="{% url 'textarea_admin_input_update' object.id %}">Edit</a>
         {% endif %}
         {% if object.input_type == "MULTISELECT" %}
-            <a class="btn btn-secondary" href="{% url 'multiselect_admin_input_update' object.id %}">Edit</a>
+            <a class="btn btn-primary btn-block p-1" href="{% url 'multiselect_admin_input_update' object.id %}">Edit</a>
         {% endif %}
-
-        <a class="btn btn-danger" href="{% url 'admin_input_delete' object.id %}">Delete</a>
     </div>
 
 </div>

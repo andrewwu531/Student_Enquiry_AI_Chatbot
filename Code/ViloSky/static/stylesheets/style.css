@@ -467,3 +467,7 @@ p {
   width: auto;
   display: inline-block;
 }
+
+.table-cell-no-wrap {
+  white-space: nowrap;
+}

@@ -10,12 +10,15 @@ from ViloSkyApp.models import (UserProfile, Qualification, AdminInput, DropdownA
 
 class UserForm(forms.ModelForm):
     email = forms.CharField(widget=forms.EmailInput(
-        attrs={'class': 'form-control form-control-lg', 'id': 'inputEmail3', 'placeholder': 'Enter email'}))
+        attrs={'class': 'form-control form-control-lg',
+               'id': 'inputEmail3', 'placeholder': 'Enter email'}))
     password = forms.CharField(widget=forms.PasswordInput(
-        attrs={'class': 'form-control form-control-lg', 'id': 'inputPassword4', 'placeholder': 'Enter password'}))
+        attrs={'class': 'form-control form-control-lg',
+               'id': 'inputPassword4', 'placeholder': 'Enter password'}))
     confirm_password = forms.CharField(
         widget=forms.PasswordInput(
-            attrs={'class': 'form-control form-control-lg', 'id': 'inputPassword5', 'placeholder': 'Confirm password'}))
+            attrs={'class': 'form-control form-control-lg',
+                   'id': 'inputPassword5', 'placeholder': 'Confirm password'}))
 
     class Meta:
         model = get_user_model()
@@ -101,7 +104,7 @@ class InputForm(forms.Form):
 class UserProfileForm(forms.ModelForm):
     cur_year = datetime.datetime.today().year
     date_of_birth = forms.DateField(widget=forms.SelectDateWidget(
-        years=tuple([i for i in range(cur_year - 80, cur_year - 16)]),
+        years=tuple(range(cur_year - 80, cur_year - 16)),
         attrs={
             'class': 'form-control snps-inline-select my-1 mr-1',
         }))
