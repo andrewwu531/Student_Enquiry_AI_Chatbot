@@ -9,6 +9,7 @@
     <form id="inputForm" method="POST" action="{% url 'report_create' %}" enctype="multipart/form-data">
        {% csrf_token %}
        {{ inputForm.as_p }}
+       <hr/>
        <input type="submit" name="submit" class="btn btn-primary btn-block"/>
 </form>
 </div>

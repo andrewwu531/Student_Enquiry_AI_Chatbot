@@ -9,6 +9,8 @@
 
 {% block heading %}{% endblock %}
 <hr/>
+{% block buttons %}
+{% endblock %}
 <div id="generic_list">
     <div class="table-responsive">
         <table class="table table-striped table-hover table-bordered">
@@ -18,10 +20,10 @@
             {% else %}
             <thead class="thead-light">
                 <tr>
-                {% for heading in headings %}
-                <th scope="col">{{heading}}</th>
-                {% endfor %}
-              </tr>
+                    {% for heading in headings %}
+                        <th scope="col">{{heading}}</th>
+                    {% endfor %}
+                </tr>
             </thead>
             <tbody>
                 {% for entry in entries %}
