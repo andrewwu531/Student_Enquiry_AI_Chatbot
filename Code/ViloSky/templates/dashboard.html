@@ -57,17 +57,17 @@
                 {% endfor %}
             </ul>
         {% endfor %}
-        <a href="{% url 'reports' %}" class="btn btn-primary btn-block btn-small center">View Older Reports</a>
-        <br><br>
+        <hr/>
+        <a href="{% url 'reports' %}" class="btn btn-primary btn-block btn-small center p-1">View Older Reports</a>
     
 </div>
 {% else %}
 <h3>
 <div class="whiteText centerText">
+    <hr/>
     You don't have any reports or action plans to view right now, click below to create a report.
-    <br><br>
-    <a href="{% url 'reports' %}" class="btn btn-outline-dark" style="float: right;">New Report</a>
-    <br><br>
+    <hr/>
+    <a href="{% url 'report_create' %}" class="btn btn-primary btn-block btn-small center p-1" >New Report</a>
 </div>
 </h3>
 {% endif %}
