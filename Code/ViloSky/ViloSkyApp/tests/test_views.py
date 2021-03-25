@@ -22,6 +22,85 @@ def create_test_qualification():
     ql.save()
     return ql
 
+def create_report_used_in_action():
+    report = models.Report.objects.get_or_create(user=create_test_user_profile(), datetime_created=
+                                                datetime.datetime.now())[0]
+    report.save() 
+    return report
+
+def create_test_user_action():
+    user_action = models.UserAction.objects.get_or_create(report=create_report_used_in_action(),
+                                                           title = "This is a test action")[0]
+    user_action.save()
+    return user_action
+
+class ActionPlanTests(TestCase):
+
+    def test_no_listed_plans_on_plain_user(self):
+        client = Client()
+        user_profile = create_test_user_profile()
+        client.login(username=user_profile.user.email,
+                     password=TEST_USER_PROFILE_PASSWORD)
+        response = client.get(reverse('actions'))
+        self.assertContains(response, "No action plans found")
+    
+    def test_ordered_action_plans(self):
+        client = Client()
+        user_action = create_test_user_action()
+        report = user_action.report
+        user_profile = report.user
+        report_past = models.Report.objects.create(user=user_profile, datetime_created = datetime.datetime.now() 
+                                                            - datetime.timedelta(days=1))
+        client.login(username=user_profile.user.email,
+                     password=TEST_USER_PROFILE_PASSWORD)
+        response = client.get(reverse('actions'))
+        self.assertEqual(response.context['entries'][0].get("id"), report.id)
+
+    def test_no_actions_report(self):
+        client = Client()
+        report = create_report_used_in_action()
+        user_profile = report.user
+        client.login(username=user_profile.user.email,
+                     password=TEST_USER_PROFILE_PASSWORD)
+        response = client.get('/action/1/') 
+        self.assertContains(response, "No actions for this report")
+
+    def test_display_actions(self):
+        client = Client()
+        action = create_test_user_action()
+        report = action.report
+        user_profile = report.user
+        client.login(username=user_profile.user.email,
+                     password=TEST_USER_PROFILE_PASSWORD)
+        response = client.get('/action/1/') 
+        self.assertContains(response, "This is a test action") 
+
+    def test_update_action_plan(self):
+        client = Client()
+        action = create_test_user_action()
+        report = action.report
+        user_profile = report.user
+        action2 = models.UserAction.objects.create(report=report, 
+                                                            title="a", is_completed=True)
+        client.login(username=user_profile.user.email,
+                     password=TEST_USER_PROFILE_PASSWORD)
+        response = client.post('/action/1/', {'completed': [action.id], 'not_completed': [action2.id]})
+        action = models.UserAction.objects.get(id=action.id)
+        action_from_completed_to_uncompleted = models.UserAction.objects.get(id=action2.id) 
+        self.assertEqual(action.is_completed, True)
+        self.assertEqual(action_from_completed_to_uncompleted.is_completed, False)
+
+    def test_failed_post(self):
+        client = Client()
+        action = create_test_user_action()
+        report = action.report
+        user_profile = report.user
+        client.login(username=user_profile.user.email,
+                     password=TEST_USER_PROFILE_PASSWORD)
+        response = client.post('/action/1/', {'not_completed': ''})
+        self.assertEqual(response.context['success'], False)
+
+        
 class Profile_page_testing(TestCase):
 
     def test_qualification_displayed(self):

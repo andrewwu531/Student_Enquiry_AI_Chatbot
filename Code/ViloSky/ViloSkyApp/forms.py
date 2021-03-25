@@ -95,6 +95,7 @@ class UserProfileForm(forms.ModelForm):
             'time_worked_in_industry'
         )
 
+
 class QualificationForm(forms.ModelForm):
     level = forms.CharField(max_length=160, widget=forms.TextInput(attrs={
         'placeholder': 'Level e.g. High School ',
