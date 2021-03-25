@@ -9,18 +9,24 @@
     <form class="center" method='post' action="{% url 'login' %}">
         {% csrf_token %}
         <div class="form-group">
-			<p>Username:</p>
-			<input name="email" type="email" class="form-control txtbox" required>
+			<label for="inputEmail1">Email address</label>
+			<input name="email" type="email" class="form-control form-control-lg" id="inputEmail1" placeholder="Enter email" required>
 		</div>
 		<div class="form-group">
-			<p>Password:</p>
-			<input name="password" type="password" class="form-control txtbox" required>
+			<label for="inputPassword1">Password</label>
+			<input name="password" type="password" class="form-control form-control-lg" id="inputPassword1" placeholder="Enter password" required>
 		</div>
+		<hr/>
 		<div class="form-group">
 			<button type="submit" class="btn btn-primary btn-block">Log in</button>
         </div>
-        <div class="form-group">
-			<a href="{% url 'password_reset' %}">Forgot password/username</a>
+		<div class="d-flex justify-content-between">
+			<div class="form-group">
+				Forgot your password? Reset it <a href="{% url 'password_reset' %}">here</a>
+			</div>
+			<div class="form-group">
+				<a href="{% url 'register' %}">Create an account</a>
+			</div>
 		</div>
         
     </form>

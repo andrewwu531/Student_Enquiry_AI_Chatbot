@@ -1,10 +1,11 @@
-''' Views for the ViloSky app'''
+""" Views for the ViloSky app"""
+import json
 from random import uniform, randint
 from datetime import datetime
 from difflib import SequenceMatcher
 from plotly.offline import plot
 import plotly.graph_objs as go
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate
@@ -14,10 +15,15 @@ from django.contrib.auth.decorators import login_required
 from django.core.serializers import serialize
 from django.utils.formats import localize
 from ViloSkyApp import models
-from ViloSkyApp.forms import UserForm, InputForm
-from ViloSkyApp.models import Qualification, Paragraph, Link, Action, Keyword
-from ViloSkyApp.forms import QualificationForm, ParagraphForm, LinksForm, ActionForm, KeyWordForm
-from .forms import UserProfileForm
+from ViloSkyApp.forms import (UserForm, QualificationForm, UserProfileForm, DropdownAdminInputForm,
+                              CheckboxAdminInputForm, TextAdminInputForm, TextareaAdminInputForm,
+                              InputForm, NewParaForm, NewActionForm, NewLinkForm, NewKeywordForm)
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
+from django.forms import modelformset_factory, formset_factory
+from fpdf import FPDF
+from django.http import FileResponse
+import io
 
 
 def index(request):
@@ -63,6 +69,11 @@ def register(request):
                         request, "The passwords provided do not match.")
                 else:
                     registered = True
+
+                if registered:
+                    user_profile = models.UserProfile.objects.create(
+                        user=user, date_of_birth=None, company="", employment_sector="", employment_status="", time_worked_in_industry="")
+                    user_profile.save()
         else:
             user_form = UserForm()
         context_dict = {
@@ -92,7 +103,7 @@ def mydetails(request):
 
     if request.method == 'POST':
         if 'addquals' in request.POST:
-            #q_form = QualificationForm(request.POST, instance = request.user.user_profile)
+            # q_form = QualificationForm(request.POST, instance = request.user.user_profile)
             if q_form.is_valid():
                 quals = q_form.save(commit=False)
                 quals.user = request.user.user_profile
@@ -101,7 +112,7 @@ def mydetails(request):
             else:
                 q_form = QualificationForm(instance=request.user.user_profile)
         elif 'delete_qualifications' in request.POST:
-            Qualification.objects.filter(
+            models.Qualification.objects.filter(
                 pk__in=request.POST.getlist('delete_list')).delete()
             return redirect(reverse('mydetails'))
         else:
@@ -113,7 +124,7 @@ def mydetails(request):
                 return redirect(reverse('mydetails'))
             else:
                 p_form = UserProfileForm(instance=request.user.user_profile)
-    qualifications = Qualification.objects.filter(
+    qualifications = models.Qualification.objects.filter(
         user=request.user.user_profile)
     context_dict = {'p_form': p_form, 'q_form': q_form,
                     'qualifications': qualifications}
@@ -210,21 +221,121 @@ def roles(request):
     return render(request, 'roles.html', {})
 
 
-@ login_required(login_url='login')
-def admin_input(request, admin_input_id):
-    # Pass required info and update template
-    return render(request, 'admin_input.html', {'admin_input_id': admin_input_id})
+class AdminInputDetail(LoginRequiredMixin, DetailView):
+    model = models.AdminInput
+    template_name = 'admin_input_detail.html'
+    # By default django looks for "pk" in the url
+    # By changing this it will now look for admin_input_id instead, as is already written in urls.py
+    pk_url_kwarg = 'admin_input_id'
+
+
+class DropdownAdminInput(LoginRequiredMixin, CreateView):
+    form_class = DropdownAdminInputForm
+    template_name = 'admin_input_form.html'
+
+    def form_valid(self, form):
+        form.instance.created_by = get_object_or_404(
+            models.UserProfile, user=self.request.user)
+        form.instance.input_type = "DROPDOWN"
+
+        for ch in [' ', '[', ']', '\\', '\"']:
+            if ch in form.instance.choices:
+                form.instance.choices = form.instance.choices.replace(ch, '')
+        form.instance.choices = json.dumps(form.instance.choices.split(','))
+
+        return super().form_valid(form)
+
+
+class DropdownAdminInputUpdate(LoginRequiredMixin, UpdateView):
+    form_class = DropdownAdminInputForm
+    model = models.DropdownAdminInput
+    template_name = 'admin_input_form.html'
+    pk_url_kwarg = 'admin_input_id'
+
+    def form_valid(self, form):
+        for ch in [' ', '[', ']', '\\', '\"']:
+            if ch in form.instance.choices:
+                form.instance.choices = form.instance.choices.replace(ch, '')
+        form.instance.choices = json.dumps(form.instance.choices.split(','))
+        return super().form_valid(form)
+
+
+class CheckboxAdminInput(LoginRequiredMixin, CreateView):
+    form_class = CheckboxAdminInputForm
+    template_name = 'admin_input_form.html'
+
+    def form_valid(self, form):
+        form.instance.created_by = get_object_or_404(
+            models.UserProfile, user=self.request.user)
+        form.instance.input_type = "CHECKBOX"
+        return super().form_valid(form)
+
+
+class CheckboxAdminInputUpdate(LoginRequiredMixin, UpdateView):
+    form_class = CheckboxAdminInputForm
+    model = models.CheckboxAdminInput
+    template_name = 'admin_input_form.html'
+    pk_url_kwarg = 'admin_input_id'
+
+
+class TextAdminInput(LoginRequiredMixin, CreateView):
+    form_class = TextAdminInputForm
+    template_name = 'admin_input_form.html'
+
+    def form_valid(self, form):
+        form.instance.created_by = get_object_or_404(
+            models.UserProfile, user=self.request.user)
+        form.instance.input_type = "TEXT"
+        return super().form_valid(form)
+
+
+class TextAdminInputUpdate(LoginRequiredMixin, UpdateView):
+    form_class = TextAdminInputForm
+    model = models.TextAdminInput
+    template_name = 'admin_input_form.html'
+    pk_url_kwarg = 'admin_input_id'
+
+
+class TextAreaAdminInput(LoginRequiredMixin, CreateView):
+    form_class = TextareaAdminInputForm
+    template_name = 'admin_input_form.html'
+
+    def form_valid(self, form):
+        form.instance.created_by = get_object_or_404(
+            models.UserProfile, user=self.request.user)
+        form.instance.input_type = "TEXTAREA"
+        return super().form_valid(form)
+
+
+class TextareaAdminInputUpdate(LoginRequiredMixin, UpdateView):
+    form_class = TextareaAdminInputForm
+    model = models.TextareaAdminInput
+    template_name = 'admin_input_form.html'
+    pk_url_kwarg = 'admin_input_id'
+
+
+class AdminInputDelete(LoginRequiredMixin, DeleteView):
+    model = models.AdminInput
+    template_name = 'admin_input_delete.html'
+    pk_url_kwarg = 'admin_input_id'
+
+    def get_success_url(self):
+        return reverse('admin_inputs')
 
 
 @ login_required(login_url='login')
 def admin_inputs(request):
+    # Get User
     user = models.UserProfile.objects.filter(user=request.user).first()
 
+    # If no user logged in then show error.html
     if user is None:
         return render(request, "error.html")
 
+    # List Item to store admin input details to be rendered
     inputs_to_render = list(
-        models.AdminInput.objects.all().values('id', 'created_by__user__first_name', 'label', 'input_type', 'is_required'))
+        models.AdminInput.objects.all().values('id', 'created_by__user__first_name', 'label', 'input_type',
+                                               'is_required'))
     template_headings = ["#", "Created By", "Label", "Type", "Required"]
     model_keys = ["id", "created_by__user__first_name",
                   "label", "input_type", "is_required"]
@@ -234,26 +345,24 @@ def admin_inputs(request):
         "entries": inputs_to_render, "row_link_to": "/admin_input/"
     })
 
-    return render(request, 'admin_inputs.html', {})
-
 
 @ login_required(login_url='login')
 def paragraph(request, paragraph_id):
     created_by = models.UserProfile.objects.filter(user=request.user).first()
     page = 'paragraph/' + paragraph_id + '/'
     # Pass required info and update template
-    para = Paragraph.objects.filter(id = paragraph_id)[0]
-    links = Link.objects.filter(paragraph = paragraph_id)
-    actions = Action.objects.filter(paragraph = paragraph_id)
-    keywords = Keyword.objects.filter(paragraph = paragraph_id)
+    para = models.Paragraph.objects.filter(id=paragraph_id)[0]
+    links = models.Link.objects.filter(paragraph=paragraph_id)
+    actions = models.Action.objects.filter(paragraph=paragraph_id)
+    keywords = models.Keyword.objects.filter(paragraph=paragraph_id)
 
-    paragraph = Paragraph.objects.get(id=paragraph_id)
+    paragraph = models.Paragraph.objects.get(id=paragraph_id)
 
-    #all these forms are to edit paragraphs
-    p_form = ParagraphForm(request.POST, instance = paragraph)
-    link_form = LinksForm(request.POST)
-    action_form = ActionForm(request.POST)
-    keywords_form = KeyWordForm(request.POST)
+    # all these forms are to edit paragraphs
+    p_form = NewParaForm(request.POST, instance=paragraph)
+    link_form = NewLinkForm(request.POST)
+    action_form = NewActionForm(request.POST)
+    keywords_form = NewKeywordForm(request.POST)
 
     if request.method == 'POST':
         if 'editText' in request.POST:
@@ -265,40 +374,40 @@ def paragraph(request, paragraph_id):
         elif 'editLinks' in request.POST:
             if link_form.is_valid():
                 l = link_form.save(commit=False)
-                l.paragraph = Paragraph.objects.get(id = paragraph_id)
+                l.paragraph = models.Paragraph.objects.get(id=paragraph_id)
                 l.save()
                 return redirect(reverse('paragraphs'))
         elif 'editActions' in request.POST:
             if action_form.is_valid():
                 a = action_form.save(commit=False)
-                a.paragraph = Paragraph.objects.get(id = paragraph_id)
+                a.paragraph = models.Paragraph.objects.get(id=paragraph_id)
                 a.save()
                 return redirect(reverse('paragraphs'))
         elif 'editKeys' in request.POST:
             if keywords_form.is_valid():
                 k = keywords_form.save(commit=False)
-                k.paragraph = Paragraph.objects.get(id = paragraph_id)
+                k.paragraph = models.Paragraph.objects.get(id=paragraph_id)
                 k.save()
                 return redirect('paragraphs')
         elif 'delete_actions' in request.POST:
-            Action.objects.filter(
+            models.Action.objects.filter(
                 pk__in=request.POST.getlist('delete_list')).delete()
             return redirect(reverse('paragraphs'))
         elif 'delete_links' in request.POST:
-            Link.objects.filter(
+            models.Link.objects.filter(
                 pk__in=request.POST.getlist('delete_list')).delete()
             return redirect(reverse('paragraphs'))
         elif 'delete_keywords' in request.POST:
-            Keyword.objects.filter(
+            models.Keyword.objects.filter(
                 pk__in=request.POST.getlist('delete_list')).delete()
             return redirect(reverse('paragraphs'))
         else:
-            Paragraph.objects.filter(id = paragraph_id).delete()
+            models.Paragraph.objects.filter(id=paragraph_id).delete()
             return redirect(reverse('paragraphs'))
 
-    return render(request, 'paragraph.html', {'paragraph_id': paragraph_id, 'created_by':created_by, 'para':para, 'links':links,
-    'keywords':keywords, 'actions':actions, 'p_form':p_form, 'l_form': link_form, 'a_form': action_form,
-    'k_form': keywords_form})
+    return render(request, 'paragraph.html', {'paragraph_id': paragraph_id, 'created_by': created_by, 'para': para, 'links': links,
+                                              'keywords': keywords, 'actions': actions, 'p_form': p_form, 'l_form': link_form, 'a_form': action_form,
+                                              'k_form': keywords_form})
 
 
 @ login_required(login_url='login')
@@ -393,34 +502,9 @@ def report_create(request):
 def report_view(request, report_id):
     # Pass required info and update template
     report = models.Report.objects.filter(id=int(report_id)).first()
-
     if report is not None:
-        paras = report.paragraphs.all()
-        link_list = models.Link.objects.filter(paragraph__in=paras)
-        actions_list = models.Action.objects.filter(paragraph__in=paras)
-
-        links_dict = {}
-
-        # get the associated links and actions for each paragraph
-        for par in paras:
-            temp = []
-            t = []
-            big_l = []
-            for link in link_list:
-                if par == link.paragraph:
-                    temp.append(link)
-            for act in actions_list:
-                if par == act.paragraph:
-                    t.append(act)
-            if temp:
-                big_l.append(temp)
-            if t:
-                big_l.append(t)
-            # list of the lists for links and actions added to dictionary
-            links_dict[par] = big_l
-
-        return render(request, 'report.html', {'data': links_dict})
-
+        links_dict = compile_report(report)
+        return render(request, 'report.html', {'data': links_dict, 'report_id': report_id})
     return render(request, "error.html")
 
 
@@ -429,6 +513,8 @@ def similarity(a, b):
 
 
 def get_paragraphs(inputs_dictionary):
+    if not inputs_dictionary:
+        return None
     # Get all keywords, questions and list of answers
     keywords = models.Keyword.objects.all()
     question_list = models.AdminInput.objects.all()
@@ -472,20 +558,79 @@ def get_paragraphs(inputs_dictionary):
     return paragraphs_list
 
 
+def compile_report(report):
+    paras = report.paragraphs.all()
+    link_list = models.Link.objects.filter(paragraph__in=paras)
+    actions_list = models.Action.objects.filter(paragraph__in=paras)
+
+    links_dict = {}
+
+    # get the associated links and actions for each paragraph
+    for par in paras:
+        temp = []
+        t = []
+        big_l = []
+        for link in link_list:
+            if par == link.paragraph:
+                temp.append(link)
+        for act in actions_list:
+            if par == act.paragraph:
+                t.append(act)
+        if temp:
+            big_l.append(temp)
+        if t:
+            big_l.append(t)
+        # list of the lists for links and actions added to dictionary
+        links_dict[par] = big_l
+    return links_dict
+
+
+def create_pdf(request, report_id):
+    # Pass required info and update template
+    report = models.Report.objects.filter(id=int(report_id)).first()
+
+    if report is not None:
+        links_dict = compile_report(report)
+        # now start constructing the pdf
+        pdf_file = pdf_creator(links_dict)
+        binaryIO = io.BytesIO(pdf_file)
+        binaryIO.seek(0)
+        return FileResponse(binaryIO, content_type='application/pdf', as_attachment=True, filename='report.pdf')
+
+    return render(request, "error.html")
+
+
 def report_view_public(request):
+    # Get the dictionary of inputs. Gathered in InputForm, saved to django session.
+    inputs = request.session.get('saved')
+    # Get a list of paragraphs based on the inputs
+    paras = get_paragraphs(inputs)
+    if paras is None:
+        return render(request, 'report_public.html', {'error': True})
+    # Get all the relevant context for the paragraphs
+    links_dict = get_context_from_paragraphs(paras)
+    context = {'data': links_dict}
+    return render(request, 'report_public.html', context)
+
+
+def create_pdf_public(request):
     # Get the dictionary of inputs. Gathered in InputForm, saved to django session.
     inputs = request.session.get('saved')
     # Get a list of paragraphs based on the inputs
     paras = get_paragraphs(inputs)
     # Get all the relevant context for the paragraphs
     links_dict = get_context_from_paragraphs(paras)
-
-    context = {'data': links_dict}
-    return render(request, 'report_public.html', context)
+    pdf_file = pdf_creator(links_dict)
+    binaryIO = io.BytesIO(pdf_file)
+    binaryIO.seek(0)
+    return FileResponse(binaryIO, content_type='application/pdf', as_attachment=True, filename='report.pdf')
 
 
 def create_report(request, inputs, is_authenticated=False):
     # Get a list of paragraphs based on the inputs
+    if(request.GET.get("pdfbutton")):
+        create_pdf()
+
     paras = get_paragraphs(inputs)
     report_id = None
 
@@ -507,6 +652,34 @@ def create_report(request, inputs, is_authenticated=False):
         request.session["temp_saved"] = serialize('json', paras)
 
     return report_id
+
+
+def pdf_creator(dataset):
+    pdf = FPDF()
+    pdf.alias_nb_pages()
+    pdf.add_page()
+    pdf.add_font('FreeSans', '', './static/fonts/FreeSans.ttf', uni=True)
+    pdf.add_font('FreeSans', 'B', './static/fonts/FreeSansBold.ttf', uni=True)
+    pdf.add_font('FreeSans', 'I',
+                 './static/fonts/FreeSansOblique.ttf', uni=True)
+    pdf.image('./static/images/logo_small.png', 10, 8, 33)
+    pdf.set_font('FreeSans', 'B', 16)
+    pdf.cell(80)
+    pdf.cell(30, 10, 'Report', 1, 0, 'C')
+    pdf.ln(20)
+    pdf.set_font('FreeSans', '', 12)
+    for key, values in dataset.items():
+        pdf.multi_cell(0, 5, key.static_text)
+        pdf.ln('0.1')
+        for ls in values:
+            for item in ls:
+                if(hasattr(item, "url")):
+                    pdf.multi_cell(0, 5, "• "+item.url)
+                if(hasattr(item, "title")):
+                    pdf.multi_cell(0, 5, "• "+item.title)
+        pdf.ln('0.3')
+    pdf_file = pdf.output(dest='S').encode('latin-1')
+    return pdf_file
 
 
 def get_context_from_paragraphs(paras):
@@ -535,3 +708,47 @@ def get_context_from_paragraphs(paras):
         # list of the lists for links and actions added to dictionary
         links_dict[par] = big_l
     return links_dict
+
+
+@login_required(login_url='login')
+def create_paragraphs(request):
+    LinksFormSet = formset_factory(NewLinkForm, extra=3)
+    ActionFormSet = formset_factory(NewActionForm, extra=3)
+    KeywordFormSet = formset_factory(NewKeywordForm, extra=5)
+    if request.method == "POST":
+        newParaForm = NewParaForm(request.POST)
+        linkformset = LinksFormSet(request.POST)
+        actionformset = ActionFormSet(request.POST)
+        keywordformset = KeywordFormSet(request.POST)
+        if newParaForm.is_valid():
+            para = newParaForm.save(commit=False)
+            para.created_by = models.UserProfile.objects.filter(
+                user=request.user).first()
+            para.save()
+            if linkformset.is_valid():
+                for a_link in linkformset:
+                    link = a_link.save(commit=False)
+                    if link.url != '':
+                        link.paragraph = models.Paragraph.objects.all().order_by('-id').first()
+                        link.save()
+            if actionformset.is_valid():
+                for an_action in actionformset:
+                    action = an_action.save(commit=False)
+                    if action.title != '':
+                        action.paragraph = models.Paragraph.objects.all().order_by('-id').first()
+                        action.save()
+            if keywordformset.is_valid():
+                for a_keyword in keywordformset:
+                    keyword = a_keyword.save(commit=False)
+                    if keyword.key != '':
+                        keyword.paragraph = models.Paragraph.objects.all().order_by('-id').first()
+                        keyword.save()
+            return redirect(reverse('paragraphs'))
+        return redirect(reverse('paragraphs'))
+    newParaForm = NewParaForm()
+    linkformset = LinksFormSet()
+    actionformset = ActionFormSet()
+    keywordformset = KeywordFormSet()
+    context = {"newParaForm": newParaForm, 'linkformset': linkformset,
+               'actionformset': actionformset, 'keywordformset': keywordformset}
+    return render(request, 'create_paragraphs.html', context)

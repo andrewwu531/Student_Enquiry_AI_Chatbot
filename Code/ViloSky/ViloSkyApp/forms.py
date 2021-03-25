@@ -2,16 +2,19 @@
 import datetime
 from django import forms
 from django.contrib.auth import get_user_model
-from .models import UserProfile, AdminInput, DropdownAdminInput, CheckboxAdminInput, TextareaAdminInput, TextAdminInput, RadioButtonsAdminInput, Qualification, Keyword, Link, Paragraph, Action
+from ViloSkyApp.models import (UserProfile, Qualification, AdminInput, DropdownAdminInput,
+                               TextAdminInput, TextareaAdminInput, CheckboxAdminInput,
+                               RadioButtonsAdminInput, Paragraph, Link, Keyword, Action)
 
 
 class UserForm(forms.ModelForm):
     email = forms.CharField(widget=forms.EmailInput(
-        attrs={'class': 'form-control txtbox'}))
+        attrs={'class': 'form-control form-control-lg', 'id': 'inputEmail3', 'placeholder': 'Enter email'}))
     password = forms.CharField(widget=forms.PasswordInput(
-        attrs={'class': 'form-control txtbox'}))
+        attrs={'class': 'form-control form-control-lg', 'id': 'inputPassword4', 'placeholder': 'Enter password'}))
     confirm_password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control txtbox'}))
+        widget=forms.PasswordInput(
+            attrs={'class': 'form-control form-control-lg', 'id': 'inputPassword5', 'placeholder': 'Confirm password'}))
 
     class Meta:
         model = get_user_model()
@@ -81,7 +84,7 @@ class UserProfileForm(forms.ModelForm):
     cur_year = datetime.datetime.today().year
     date_of_birth = forms.DateField(widget=forms.SelectDateWidget(
         years=tuple([i for i in range(cur_year - 80, cur_year - 16)])))
-
+    
     class Meta:
         model = UserProfile
         fields = (
@@ -105,32 +108,100 @@ class QualificationForm(forms.ModelForm):
 
     class Meta:
         model = Qualification
-        fields = ('level', 'subjects')
-#QualificationFormSet = modelformset_factory(QualificationForm, fields = ('user','level', 'subjects'), extra = 1)
+        fields = (
+            'level',
+            'subjects'
+        )
+# QualificationFormSet = modelformset_factory(QualificationForm, fields = ('user','level', 'subjects'), extra = 1)
 
 
-class ParagraphForm(forms.ModelForm):
-    static_text = forms.Textarea()
+class DropdownAdminInputForm(forms.ModelForm):
+    choices = forms.CharField(widget=forms.Textarea)
+
+    class Meta:
+        model = DropdownAdminInput
+        fields = [
+            'label',
+            'is_required',
+            'choices',
+        ]
+
+
+class CheckboxAdminInputForm(forms.ModelForm):
+
+    class Meta:
+        model = CheckboxAdminInput
+        fields = [
+            'label',
+            'is_required',
+            'default_value',
+        ]
+
+
+class TextAdminInputForm(forms.ModelForm):
+
+    class Meta:
+        model = TextAdminInput
+        fields = [
+            'label',
+            'is_required',
+            'max_length',
+        ]
+
+
+class TextareaAdminInputForm(forms.ModelForm):
+
+    class Meta:
+        model = TextareaAdminInput
+        fields = [
+            'label',
+            'is_required',
+            'max_length',
+        ]
+
+
+class NewParaForm(forms.ModelForm):
     class Meta:
         model = Paragraph
-        fields = ('static_text', )
+        fields = ('static_text',)
+        widgets = {
+            'static_text':  forms.Textarea(attrs={'placeholder': 'Having been out of work for over a year...'})}
 
 
-class ActionForm(forms.ModelForm):
-    title = forms.CharField(required = False)
+class NewLinkForm(forms.ModelForm):
+    class Meta:
+        model = Link
+        fields = ('url',)
+        widgets = {
+            'url': forms.TextInput(attrs={'placeholder': 'https://womenreturners.com'})}
+
+    def __init__(self, *args, **kwargs):
+        super(NewLinkForm, self).__init__(*args, **kwargs)
+        self.fields['url'].required = False
+
+
+class NewActionForm(forms.ModelForm):
     class Meta:
         model = Action
-        fields = ('title', )
+        fields = ('title',)
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'List your skills...'})}
 
-class KeyWordForm(forms.ModelForm):
-    key = forms.CharField(required = True)
-    score = forms.IntegerField(required = True)
+    def __init__(self, *args, **kwargs):
+        super(NewActionForm, self).__init__(*args, **kwargs)
+        self.fields['title'].required = False
+
+
+class NewKeywordForm(forms.ModelForm):
     class Meta:
         model = Keyword
         fields = ('key', 'score')
+        widgets = {
+            'key': forms.TextInput(attrs={'placeholder': 'Risk Management'}),
+            'score': forms.TextInput(attrs={'placeholder': '10'})
+        }
 
-class LinksForm(forms.ModelForm):
-    url = forms.URLField(required = False)
-    class Meta:
-        model = Link
-        fields = ('url', )
+    def __init__(self, *args, **kwargs):
+        super(NewKeywordForm, self).__init__(*args, **kwargs)
+        self.fields['key'].required = False
+        self.fields['score'].required = False
