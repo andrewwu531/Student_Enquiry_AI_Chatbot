@@ -84,7 +84,7 @@ class UserProfileForm(forms.ModelForm):
     cur_year = datetime.datetime.today().year
     date_of_birth = forms.DateField(widget=forms.SelectDateWidget(
         years=tuple([i for i in range(cur_year - 80, cur_year - 16)])))
-
+    
     class Meta:
         model = UserProfile
         fields = (
@@ -94,7 +94,6 @@ class UserProfileForm(forms.ModelForm):
             'employment_status',
             'time_worked_in_industry'
         )
-
 
 class QualificationForm(forms.ModelForm):
     level = forms.CharField(max_length=160, widget=forms.TextInput(attrs={

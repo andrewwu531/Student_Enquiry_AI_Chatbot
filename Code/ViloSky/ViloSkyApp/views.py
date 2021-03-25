@@ -134,7 +134,28 @@ def mydetails(request):
 @login_required(login_url='login')
 def action(request, action_id):
     # Pass required info and update template
-    return render(request, 'action_plan.html', {'action_id': action_id})
+    actions = models.UserAction.objects.all().filter(report=action_id)
+    if request.method == 'POST':
+        print(request.POST)
+        if 'task_list' in request.POST:
+            completed_action = models.UserAction.objects.all().filter(pk__in=request.POST.getlist('task_list'))
+            action_to_be_completed=actions.difference(completed_action)
+            for i in completed_action:
+                i.is_completed = True
+                i.save()
+            for j in action_to_be_completed:
+                j.is_completed = False
+                j.save()
+            return redirect(reverse('actions'))
+        else:
+            for i in actions:
+                i.is_completed=False
+                i.save()
+    context_dict = {
+        'actions' : actions,
+        'action_id' : action_id,
+    }
+    return render(request, 'action_plan.html', context_dict)
 
 
 @login_required(login_url='login')
