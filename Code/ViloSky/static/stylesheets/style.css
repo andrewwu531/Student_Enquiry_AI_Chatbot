@@ -368,16 +368,6 @@ p {
   text-align: center;
 }
 
-.linktext {
-  font-size: 30px;
-}
-
-.worklink {
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: black;
-}
 /*Button formats*/
 .btn-small {
   max-width: 50%;
@@ -442,60 +432,11 @@ p {
   }
 }
 
-/*Textbox*/
-.txtbox {
-  border-radius: 80px;
-  border: none;
-  background-color: rgb(155, 155, 155);
-}
-
 /*Checkbox*/
 .actioninput {
   width: 50px;
   height: 50px;
   border-radius: 80px !important;
-}
-
-.btn-edit {
-  font-size: 15px;
-  position: absolute;
-  border-radius: 20px;
-  border: none;
-  display: inline;
-  float: left;
-  -webkit-animation-duration: 1s;
-  animation-duration: 1;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  -webkit-animation-name: button-fadeout;
-  animation-name: button-fadeout;
-}
-.btn-add {
-  font-size: 19px;
-  border-radius: 20px;
-  color: white;
-  border: none;
-  -webkit-animation-duration: 1s;
-  animation-duration: 1;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  -webkit-animation-name: button-fadeout;
-  animation-name: button-fadeout;
-}
-
-.btn-profile {
-  font-size: 25px;
-  border-radius: 20px;
-  color: white;
-  border: #cc00cc;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  -webkit-animation-duration: 1s;
-  animation-duration: 1;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  -webkit-animation-name: button-fadeout;
-  animation-name: button-fadeout;
 }
 
 .btn-primary:hover {
@@ -508,17 +449,21 @@ p {
 }
 
 .paratable {
-    float: center;
-    border-spacing: 5;
-    border-collapse: collapse;
-    border: #cc00cc;
-    background: white;
-    border-radius: 6px;
-    overflow: hidden;
-    max-width: 800px;
-    width: 100%;
-    margin: 0 auto;
-    position: relative;
-    padding:100 15px;
-  }
+  float: center;
+  border-spacing: 5;
+  border-collapse: collapse;
+  border: #cc00cc;
+  background: white;
+  border-radius: 6px;
+  overflow: hidden;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  padding: 100 15px;
+}
 
+.snps-inline-select {
+  width: auto;
+  display: inline-block;
+}

@@ -4,20 +4,21 @@
 {% block bodyblock%}
 <div class="divbackground widediv">
     <div id = "back">
-        <form action="{% url 'paragraphs' %}">
-            <input type="submit" value="Back to list view" />
-        </form>
+        <span class="d-flex">
+            <a class="btn" href="{% url 'paragraphs' %}"> <i class='fas fa-angle-left align-middle' style='font-size:16px'></i> Back</a>
+        </span>
     </div>
     <div id = "cancelB" style = "display: none;">
         <button class="btn btn-outline-dark" onclick=cancel()>Cancel</button>
     </div>
 
-    <div class="largeText whiteText centerText">
-    <h1>Paragraph {{paragraph_id}}</h1>
+    <div class="mediumText whiteText centerText">
+        Paragraph {{paragraph_id}}
     </div>
+
     <div class = "centerText">
-    <p>Created By: {{ created_by.user }}</p>
-</div>
+        <p>Created By: {{ created_by.user }}</p>
+    </div>
 
     <div id = "view" class = "centerText center">
         <button class = "btn btn-link" onclick=editText()>Text</button>

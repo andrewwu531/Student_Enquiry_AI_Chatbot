@@ -6,11 +6,21 @@
     <div class="largeText whiteText centerText">
         Create Report
     </div>
+
     <form id="inputForm" class="p-4 mx-2" method="POST" action="{% url 'report_create' %}" enctype="multipart/form-data">
-       {% csrf_token %}
-       {% for field in inputForm %}
+        {% csrf_token %}
+        {% if inputForm.errors %}
+            <div class="alert alert-danger">
+                {{ inputForm.errors }}
+            </div>
+        {% endif %}
+        {% if inputForm.non_field_errors %}
+            <div class="alert alert-danger">
+                {{ inputForm.errors }}
+            </div>
+        {% endif %}
+        {% for field in inputForm %}
             <div class="form-group">
-                {{ field.errors }}
                 {{ field.label_tag }} 
                 {{ field }}
                 {% if field.help_text %}

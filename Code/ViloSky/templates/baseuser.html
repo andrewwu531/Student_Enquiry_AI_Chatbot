@@ -7,59 +7,41 @@
 {% block bodyblock%}
 <div class="row">
     <div class="col-lg-4">
-        <div class="divbackground">
+        <div class="divbackground py-2">
             <div class="largeText whiteText centerText">
-                My Profile
+                Profile
             </div>
             <img src="{% static 'images/user.png' %}" alt="Vilosky" class="centerImg">
-            <div class="row bottomborder center centerText">
-                <div class="col">
-                    Name 
-                </div>
-                <div class = col>
+            <h3 class="centerText mb-2">
                     {{user.first_name}} {{user.last_name}}
-                </div>
-            </div>
-            <div class="row bottomborder center centerText">
-                <div class="col">
-                    D.O.B
-                </div>
-                <div class = "col">
-                    {{user.user_profile.date_of_birth}}
-                </div>
-            </div>
-            <div class="row bottomborder center centerText">
-                <div class="col">
-                    Company
-                </div>
-                <div class="col">
-                    {{user.user_profile.company}}
-                </div>
-            </div>
-            <div class="row bottomborder center centerText">
-                <div class="col">
-                    Employment Sector
-                </div>
-                <div class="col">
-                    {{user.user_profile.employment_sector}}
-                </div>
-            </div>
-            <div class="row bottomborder center centerText">
-                <div class="col">
-                    Employment Status
-                </div>
-                <div class="col">
-                    {{user.user_profile.employment_status}}
-                </div>
-            </div>
-            <div class="row bottomborder center centerText">
-                <div class="col">
-                    Time In Industry
-                </div>
-                <div class="col">
-                    {{user.user_profile.time_worked_in_industry}}
-                </div>
-            </div>
+            </h3>
+            <div class="text-center">
+                <table class="table table-borderless table-centralised">
+                  <tbody>
+                    <tr>
+                      <th>Date of birth:</th>
+                      <td>{{user.user_profile.date_of_birth}}</td>
+                    </tr>
+                    <tr>
+                      <th>Company:</th>
+                      <td>{{user.user_profile.company}}</td>
+                    </tr>
+                    <tr>
+                        <th>Employment Sector:</th>
+                        <td>{{user.user_profile.employment_sector}}</td>
+                      </tr>
+                      <tr>
+                        <th>Employment Status:</th>
+                        <td>{{user.user_profile.employment_status}}</td>
+                      </tr>
+                      <tr>
+                        <th>Time In Industry:</th>
+                        <td>{{user.user_profile.time_worked_in_industry}}</td>
+                      </tr>
+
+                  </tbody>
+                </table>
+              </div>
         </div>
     </div>
     <div class="col-lg-8">

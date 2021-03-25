@@ -17,7 +17,8 @@ from django.utils.formats import localize
 from ViloSkyApp import models
 from ViloSkyApp.forms import (UserForm, QualificationForm, UserProfileForm, DropdownAdminInputForm,
                               CheckboxAdminInputForm, TextAdminInputForm, TextareaAdminInputForm,
-                              InputForm, NewParaForm, NewActionForm, NewLinkForm, NewKeywordForm)
+                              InputForm, NewParaForm, NewActionForm, NewLinkForm, NewKeywordForm,
+                              MultiselectAdminInputForm)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 from django.forms import modelformset_factory, formset_factory
@@ -259,6 +260,48 @@ class CheckboxAdminInputUpdate(LoginRequiredMixin, UpdateView):
         return context
 
 
+class MultiselectAdminInput(LoginRequiredMixin, CreateView):
+    form_class = MultiselectAdminInputForm
+    template_name = 'admin_input_form.html'
+
+    def form_valid(self, form):
+        form.instance.created_by = get_object_or_404(
+            models.UserProfile, user=self.request.user)
+        form.instance.input_type = "MULTISELECT"
+
+        for ch in [' ', '[', ']', '\\', '\"']:
+            if ch in form.instance.choices:
+                form.instance.choices = form.instance.choices.replace(ch, '')
+        form.instance.choices = json.dumps(form.instance.choices.split(','))
+
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Create Multiselect Input"
+        return context
+
+
+class MultiselectAdminInputUpdate(LoginRequiredMixin, UpdateView):
+    form_class = MultiselectAdminInputForm
+    model = models.MultiselectAdminInput
+    template_name = 'admin_input_form.html'
+    pk_url_kwarg = 'admin_input_id'
+
+    def form_valid(self, form):
+        for ch in [' ', '[', ']', '\\', '\"', '\'']:
+            if ch in form.instance.choices:
+                form.instance.choices = form.instance.choices.replace(ch, '')
+
+        form.instance.choices = json.dumps(form.instance.choices.split(','))
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Edit Multiselect Input"
+        return context
+
+
 class TextAdminInput(LoginRequiredMixin, CreateView):
     form_class = TextAdminInputForm
     template_name = 'admin_input_form.html'
@@ -472,6 +515,9 @@ def report_create(request):
                 return redirect(reverse('report_view', kwargs={'report_id': report_id}))
             else:
                 return redirect(reverse('report_view_public'))
+        else:
+            context = {'inputForm': input_form}
+            return render(request, 'report_create.html', context)
 
     # if we arrive here from a GET method, i.e. via inputting a url.
     else:
@@ -491,7 +537,6 @@ def report_create(request):
                     elif p.admin_input.input_type == "MULTISELECT":
                         partials_dict[p.admin_input.label] = p.value.strip(
                             "[]").replace("\'", "").split(", ")
-                        print(p.value)
                     else:
                         partials_dict[p.admin_input.label] = p.value
                 input_form = InputForm(initial=partials_dict)

@@ -211,6 +211,9 @@ class MultiselectAdminInput(AdminInput):
     # Must be an array of serialised values.
     choices = models.JSONField()
 
+    def get_absolute_url(self):
+        return reverse('admin_input', kwargs={'admin_input_id': self.admin_input.pk})
+
 
 class TextareaAdminInput(AdminInput):
     """ A model to information about textbox admin inputs."""

@@ -277,7 +277,7 @@ def populate():
         },
         {
             'created_by': 'suzieMul23@gmail.com',
-            'label': 'What best describes current work situation (select one) ',
+            'label': 'What best describes current work situation (select one)',
             'input_type': AdminInput.AdminInputTypes.DROPDOWN,
             'is_required': True,
             'choices': json.dumps(['Employed', 'Self-Employed', 'Unpaid Work (e.g. Volunteering)', 'Retired', 'Career Break']),

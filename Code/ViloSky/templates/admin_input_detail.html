@@ -20,6 +20,9 @@
         {% if object.input_type == "TEXTAREA" %}
             <a class="btn btn-secondary" href="{% url 'textarea_admin_input_update' object.id %}">Edit</a>
         {% endif %}
+        {% if object.input_type == "MULTISELECT" %}
+            <a class="btn btn-secondary" href="{% url 'multiselect_admin_input_update' object.id %}">Edit</a>
+        {% endif %}
 
         <a class="btn btn-danger" href="{% url 'admin_input_delete' object.id %}">Delete</a>
     </div>

@@ -3,20 +3,20 @@
 {% block bodyblock %}
 
 <div class="divbackground widediv">
-    <div class="largeText whiteText centerText">
-        Create New Outputs
+    <div class="mediumText whiteText centerText">
+        Create Paragraph
     </div>
-    <form class="" action="" method="POST">
+    <form class="center" action="" method="POST">
         {% csrf_token %}
-        <div class="field">
-            <h4>Paragraph Text</h4>
+        <div class="field form-group">
+            {{ newParaForm.static_text.label_tag }}            
             {{ newParaForm.static_text }}            
         </div>
-        <div class="field">
+        <div class="field form-group">
             <h4>Links</h4>
             {{ linkformset.as_p}}          
         </div>
-        <div class="field">
+        <div class="field form-group">
             <h4>Actions</h4>
             {{ actionformset.as_p }}
         </div>
@@ -26,12 +26,16 @@
             <p>Please enter keys and corresponding score for the paragraph.</p>
             <p>Enter up to 5 keys. If you wish to add more this can be done on the edit paragraph page.</p>
             {% for form in keywordformset %}
-            <ul style="list-style-type:none;">
-                <li>Key: {{form.key}}        Score:{{form.score}}</li>
-            </ul>
+                <div class='form-group'>
+                    {{form.key.label_tag}}
+                    {{form.key}}
+                    {{form.score.label_tag}}
+                    {{form.score}}
+                </div>
             {% endfor %}
         </div>
-        <input type="submit" name="submit" class="btn btn-primary btn-block"/>
+        <hr/>
+        <input type="submit" name="submit" class="btn btn-primary btn-block p-2"/>
     </form>
 </div>
 {% endblock %}
