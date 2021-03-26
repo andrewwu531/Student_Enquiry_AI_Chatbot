@@ -5,7 +5,6 @@ import datetime
 import pytz
 from ViloSkyApp import models
 from ..forms import *
-
 TEST_USER_PROFILE_PASSWORD = "MySecurePassword"
 
 def create_test_user_profile():
@@ -179,3 +178,68 @@ class test_register_view(TestCase):
         user_details = {"email":"apple@apple.com", "password":"applepie"}
         response = self.client.post(reverse('register'), data=user_details)
         self.assertTrue(User.objects.filter(email= 'apple@apple.com').exists())
+
+
+class test_dashboard(TestCase):
+    @classmethod
+    def setUp(self):
+
+        User = get_user_model()
+        self.client = Client()
+
+        u1 = User.objects.get_or_create(email="test@me.com")[0]
+        u1.set_password("abcd1234")
+        u1.save()
+        user1 = UserProfile.objects.get_or_create(user=u1)[0]
+        user1.save()
+
+        u2 = User.objects.get_or_create(email="testB@me.com")[0]
+        u2.set_password("abcd1234")
+        u2.save()
+        user2 = UserProfile.objects.get_or_create(user=u2)[0]
+        user2.save()
+
+        # Create a report instance and add paragraphs to it
+        self.rep1 = models.Report(user=user1,
+                        datetime_created=datetime.datetime(2021, 11, 2, 20, 8, 7, 0, tzinfo=pytz.UTC))
+        self.rep1.save()
+        self.rep2 = models.Report(user=user1,
+                        datetime_created=datetime.datetime(2021, 11, 3, 20, 8, 7, 0, tzinfo=pytz.UTC))
+        self.rep2.save()
+        self.rep3 = models.Report(user=user1,
+                        datetime_created=datetime.datetime(2021, 11, 1, 20, 8, 7, 0, tzinfo=pytz.UTC))
+        self.rep3.save()
+
+        self.response = self.client.get('/dashboard/')
+
+    def test_register_correct_template(self):
+        self.assertEqual(self.response.status_code, 302)
+        str_url = str(self.response)
+        self.assertTrue(str_url.__contains__("dashboard"))
+
+    def test_correct_rep_shown(self):
+        User = get_user_model()
+        user = User.objects.get(email="test@me.com").user_profile
+        self.client.login(email="test@me.com", password="abcd1234")
+        
+        recent = user.reports_assigned.all().order_by('-datetime_created').first()
+        self.assertEqual(recent, self.rep2)
+
+    def test_no_rep_shown(self):
+        User = get_user_model()
+        user = User.objects.get(email="testB@me.com").user_profile
+        self.client.login(email="test@me.com", password="abcd1234")
+        
+        recent = user.reports_assigned.all().order_by('-datetime_created').first()
+        self.assertIsNone(recent)
+        
+    def test_wrong_rep_shown(self):
+        User = get_user_model()
+        user = User.objects.get(email="test@me.com").user_profile
+        self.client.login(email="test@me.com", password="abcd1234")
+        
+        recent = user.reports_assigned.all().order_by('-datetime_created').first()
+        self.assertNotEqual(recent, self.rep1)
+        self.assertNotEqual(recent, self.rep3)
+
+    
