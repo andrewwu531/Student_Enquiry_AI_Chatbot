@@ -2,77 +2,86 @@
 {% load static %}
 
 {% block body%}
-<div class="largeText whiteText centerText">
-    All actions for report with ID: {{action_id}}
+<div class="mediumText  centerText">
+    Action Plan {{action_id}}
 </div>
-<div class="margin">
-Week 1
-<form>
-    <div class="row">
-        <div class="form-check form-check-inline">
-            <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this first</label>
+{% if actions|length == 0 %}
+
+        <hr/>
+        <h3 class="text-center">
+            No actions for this report
+        </h3>
+        {% else %}
+        <div id="action_display">
+        <form class="w-75 mx-auto">
+            <hr/>
+            {% for action in actions %}
+            {% if action.is_completed %}
+                <div class="m-2 form-check ">
+                    <input class="form-check-input actioninput" type="checkbox" checked=checked disabled = disabled>
+                    <label class="form-check-label">{{action.title}}</label>
+                </div>
+            {% else %}
+                <div class="m-2 form-check ">
+                    <input class="form-check-input actioninput" type="checkbox" disabled= disabled>
+                    <label class="form-check-label">{{action.title}}</label>
+                </div>
+            {% endif %}
+            {% endfor %}
+
+        </form>
+        </div>
+
+    <div class="centerText">
+        <button id = "show" class="btn-profile" onclick="showDiv()">Update</button>
+    </div>
+{% endif %}
+
+<div id = "update" style="display: none;">
+    <hr/>
+    <form class="w-75 mx-auto" method = "POST">
+        {% csrf_token %}
+        {% for action in actions %}
+        {% if action.is_completed %}
+                <div class="m-2 form-check ">
+                    <input class="form-check-input" id="action_{{action.id}}" name="completed" type="checkbox" checked=checked value="{{action.id}}">
+                    <label class="form-check-label" for="action_{{action.id}}">{{action.title}}</label>
+                </div>
+        {% else %}
+                <div class="m-2 form-check ">
+                    <input class="form-check-input" id="action_{{action.id}}" name="not_completed" type="checkbox" value="{{action.id}}">
+                    <label class="form-check-label" for="action_{{action.id}}">{{action.title}}</label>
+                </div>
+        {% endif %}
+        {% endfor %}
+    <div class="d-flex mt-4 justify-content-between">
+        <div >
+            <button type="submit" id = "save" style = "display: none;" class="btn btn-info ">Save</button>
+        </div>
+        <div >
+            <button class = "btn btn-danger" id ="cancelP" style = "display: none;" onclick="cancel(event)">Cancel</button>
         </div>
     </div>
-    <div class="row">
-        <div class="form-check form-check-inline">
-            <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this second</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-check form-check-inline">
-            <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this third</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-check form-check-inline">
-            <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this fourth</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-check form-check-inline">
-            <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this fifth</label>
-        </div>
-    </div>
-    
-</form>
-Week 2+
-<form>
-    <div class="row">
-        <div class="form-check form-check-inline">
-            <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this first</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-check form-check-inline">
-            <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this second</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-check form-check-inline">
-            <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this third</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-check form-check-inline">
-            <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this fourth</label>
-        </div>
-    </div>
-    <div class="row">
-        <div class="form-check form-check-inline">
-            <input class="form-check-input actioninput" type="checkbox" id="action1" value="option1">
-            <label class="form-check-label" for="action1">Do this fifth</label>
-        </div>
-    </div>
-    
-</form>
+    </form>
+</div>
+
+
+<script>
+function showDiv(){
+    document.getElementById('update').style.display = "block";
+    document.getElementById('action_display').style.display = "none";
+    document.getElementById('cancelP').style.display = "block";
+    document.getElementById('show').style.display = "none";
+    document.getElementById('save').style.display = "block";
+}
+function cancel(e){
+    e.preventDefault();
+    document.getElementById('update').style.display = "none";
+    document.getElementById('action_display').style.display = "block";
+    document.getElementById('cancelP').style.display = "none";
+    document.getElementById('show').style.display = "inline-block";
+    document.getElementById('save').style.display = "none";
+}
+</script>
 </div>
 {%endblock%}

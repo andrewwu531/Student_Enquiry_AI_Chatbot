@@ -1,5 +1,7 @@
 from django.test import TestCase
-from ViloSkyApp.forms import NewParaForm, NewKeywordForm, NewActionForm, NewKeywordForm, InputForm
+from ViloSkyApp.forms import NewParaForm, NewKeywordForm, NewActionForm, NewKeywordForm, InputForm, UserProfileForm
+import datetime
+from django.utils import timezone
 
 class CreateParaFormTests(TestCase):
     def test_accepts_just_para(self):
@@ -30,3 +32,9 @@ class CreateKeywordFormTests(TestCase):
         newKeywordForm = NewKeywordForm({"score":"1"})
         self.assertEqual(newKeywordForm.errors, {
             'score': ['Enter a valid key']})
+
+class UserProfileFormTest(TestCase):
+    def test_date_of_birth_field_label(self):
+        form = UserProfileForm()
+        self.assertTrue(form.fields['date_of_birth'].label == None or form.fields['date_of_birth'].label == 'date_of_birth')
+

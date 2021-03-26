@@ -93,7 +93,37 @@ def user_logout(request):
 
 @login_required(login_url='login')
 def dashboard(request):
-    return render(request, 'dashboard.html', {})
+    user = request.user.user_profile
+    report = user.reports_assigned.all().order_by('-datetime_created').first()
+    paras = []
+    links_dict = {}
+
+    if report is not None:
+        paras = report.paragraphs.all()
+        link_list = models.Link.objects.filter(paragraph__in=paras)
+        actions_list = models.Action.objects.filter(paragraph__in=paras)
+
+        # get the associated links and actions for each paragraph
+        for par in paras:
+            temp = []
+            t = []
+            big_l = []
+            for act in actions_list:
+                if par == act.paragraph:
+                    t.append(act)
+            for link in link_list:
+                if par == link.paragraph:
+                    temp.append(link)
+            if t:
+                big_l.append(t)
+            if temp:
+                big_l.append(temp)
+            # list of the lists for links and actions added to dictionary
+            links_dict[par] = big_l
+
+    actions = models.UserAction.objects.filter(report=report)
+
+    return render(request, 'dashboard.html', {'report': report, 'actions': actions, 'paras': paras, 'data': links_dict, })
 
 
 @login_required(login_url='login')
@@ -103,7 +133,6 @@ def mydetails(request):
 
     if request.method == 'POST':
         if 'addquals' in request.POST:
-            # q_form = QualificationForm(request.POST, instance = request.user.user_profile)
             if q_form.is_valid():
                 quals = q_form.save(commit=False)
                 quals.user = request.user.user_profile
@@ -132,9 +161,44 @@ def mydetails(request):
 
 
 @login_required(login_url='login')
-def action(request, action_id):
+def action(request, report_id):
     # Pass required info and update template
-    return render(request, 'action_plan.html', {'action_id': action_id})
+    actions_list = models.UserAction.objects.all().filter(report=report_id)
+
+    if request.method == "GET":
+        context_dict = {
+            'actions': actions_list,
+            'action_id': report_id,
+        }
+        return render(request, 'action_plan.html', context_dict)
+
+    elif request.method == 'POST':
+        is_success = False
+        try:
+            if 'completed' in request.POST:
+                completed_actions_ids = request.POST.getlist(
+                    'completed')
+                completed_actions = actions_list.filter(
+                    pk__in=completed_actions_ids)
+                incomplete_actions = actions_list.exclude(
+                    id__in=completed_actions_ids)
+                completed_actions.update(is_completed=True)
+                incomplete_actions.update(is_completed=False)
+                is_success = True
+
+            context_dict = {
+                'actions': actions_list,
+                'action_id': report_id,
+                'success': is_success,
+            }
+            return render(request, 'action_plan.html', context_dict)
+        except Exception as _:
+            context_dict = {
+                'actions': actions_list,
+                'action_id': report_id,
+                'success': False,
+            }
+            return render(request, 'action_plan.html', context_dict)
 
 
 @login_required(login_url='login')
