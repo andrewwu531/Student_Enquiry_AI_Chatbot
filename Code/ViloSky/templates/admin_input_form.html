@@ -3,10 +3,26 @@
 
 {% block bodyblock%}
     <div class="divbackground widediv">
-        <form method="post">{% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Save">
-        </form>
+        <span class="d-flex">
+            <a class="btn" href="{% url 'admin_inputs' %}"> <i class='fas fa-angle-left align-middle' style='font-size:16px'></i> Back</a>
+        </span>
+        <div class="mediumText text-center">{{ title }}</div>
+        <div class='w-75 center'>
+            <form method="post">{% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        {{ field.errors }}
+                        {{ field.label_tag }} 
+                        {{ field }}
+                        {% if field.help_text %}
+                        <p class="help">{{ field.help_text|safe }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <hr/>
+                <input type="submit" name="submit" class="btn btn-primary btn-block p-1" value="Submit"/>
+            </form>
+        </div>
     </div>
 
     <script type="text/javascript" src="{% static 'js/jquery.js' %} "></script>

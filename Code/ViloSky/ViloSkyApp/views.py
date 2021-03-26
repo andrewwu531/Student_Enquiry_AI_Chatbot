@@ -17,7 +17,8 @@ from django.utils.formats import localize
 from ViloSkyApp import models
 from ViloSkyApp.forms import (UserForm, QualificationForm, UserProfileForm, DropdownAdminInputForm,
                               CheckboxAdminInputForm, TextAdminInputForm, TextareaAdminInputForm,
-                              InputForm, NewParaForm, NewActionForm, NewLinkForm, NewKeywordForm)
+                              InputForm, NewParaForm, NewActionForm, NewLinkForm, NewKeywordForm,
+                              MultiselectAdminInputForm)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 from django.forms import modelformset_factory, formset_factory
@@ -245,17 +246,24 @@ def reports(request):
     })
 
 
-@ login_required(login_url='login')
-def roles(request):
-    return render(request, 'roles.html', {})
-
-
 class AdminInputDetail(LoginRequiredMixin, DetailView):
     model = models.AdminInput
     template_name = 'admin_input_detail.html'
     # By default django looks for "pk" in the url
     # By changing this it will now look for admin_input_id instead, as is already written in urls.py
     pk_url_kwarg = 'admin_input_id'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # If dropdown or multiselect, load choices properly for display.
+        if context['object'].input_type == models.AdminInput.AdminInputTypes.DROPDOWN:
+            context['choices'] = ", ".join(json.loads(
+                context['object'].dropdownadmininput.choices))
+        elif context['object'].input_type == models.AdminInput.AdminInputTypes.MULTISELECT:
+            context['choices'] = ", ".join(json.loads(
+                context['object'].multiselectadmininput.choices))
+        return context
 
 
 class DropdownAdminInput(LoginRequiredMixin, CreateView):
@@ -274,6 +282,11 @@ class DropdownAdminInput(LoginRequiredMixin, CreateView):
 
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Create Dropdown Input"
+        return context
+
 
 class DropdownAdminInputUpdate(LoginRequiredMixin, UpdateView):
     form_class = DropdownAdminInputForm
@@ -282,11 +295,17 @@ class DropdownAdminInputUpdate(LoginRequiredMixin, UpdateView):
     pk_url_kwarg = 'admin_input_id'
 
     def form_valid(self, form):
-        for ch in [' ', '[', ']', '\\', '\"']:
+        for ch in [' ', '[', ']', '\\', '\"', '\'']:
             if ch in form.instance.choices:
                 form.instance.choices = form.instance.choices.replace(ch, '')
+
         form.instance.choices = json.dumps(form.instance.choices.split(','))
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Edit Dropdown Input"
+        return context
 
 
 class CheckboxAdminInput(LoginRequiredMixin, CreateView):
@@ -299,12 +318,64 @@ class CheckboxAdminInput(LoginRequiredMixin, CreateView):
         form.instance.input_type = "CHECKBOX"
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Create Checkbox Input"
+        return context
+
 
 class CheckboxAdminInputUpdate(LoginRequiredMixin, UpdateView):
     form_class = CheckboxAdminInputForm
     model = models.CheckboxAdminInput
     template_name = 'admin_input_form.html'
     pk_url_kwarg = 'admin_input_id'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Edit Checkbox Input"
+        return context
+
+
+class MultiselectAdminInput(LoginRequiredMixin, CreateView):
+    form_class = MultiselectAdminInputForm
+    template_name = 'admin_input_form.html'
+
+    def form_valid(self, form):
+        form.instance.created_by = get_object_or_404(
+            models.UserProfile, user=self.request.user)
+        form.instance.input_type = "MULTISELECT"
+
+        for ch in [' ', '[', ']', '\\', '\"']:
+            if ch in form.instance.choices:
+                form.instance.choices = form.instance.choices.replace(ch, '')
+        form.instance.choices = json.dumps(form.instance.choices.split(','))
+
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Create Multiselect Input"
+        return context
+
+
+class MultiselectAdminInputUpdate(LoginRequiredMixin, UpdateView):
+    form_class = MultiselectAdminInputForm
+    model = models.MultiselectAdminInput
+    template_name = 'admin_input_form.html'
+    pk_url_kwarg = 'admin_input_id'
+
+    def form_valid(self, form):
+        for ch in [' ', '[', ']', '\\', '\"', '\'']:
+            if ch in form.instance.choices:
+                form.instance.choices = form.instance.choices.replace(ch, '')
+
+        form.instance.choices = json.dumps(form.instance.choices.split(','))
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Edit Multiselect Input"
+        return context
 
 
 class TextAdminInput(LoginRequiredMixin, CreateView):
@@ -317,12 +388,22 @@ class TextAdminInput(LoginRequiredMixin, CreateView):
         form.instance.input_type = "TEXT"
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Create Text Input"
+        return context
+
 
 class TextAdminInputUpdate(LoginRequiredMixin, UpdateView):
     form_class = TextAdminInputForm
     model = models.TextAdminInput
     template_name = 'admin_input_form.html'
     pk_url_kwarg = 'admin_input_id'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Edit Text Input"
+        return context
 
 
 class TextAreaAdminInput(LoginRequiredMixin, CreateView):
@@ -335,12 +416,22 @@ class TextAreaAdminInput(LoginRequiredMixin, CreateView):
         form.instance.input_type = "TEXTAREA"
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Create Text Area Input"
+        return context
+
 
 class TextareaAdminInputUpdate(LoginRequiredMixin, UpdateView):
     form_class = TextareaAdminInputForm
     model = models.TextareaAdminInput
     template_name = 'admin_input_form.html'
     pk_url_kwarg = 'admin_input_id'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Edit Text Area Input"
+        return context
 
 
 class AdminInputDelete(LoginRequiredMixin, DeleteView):
@@ -363,11 +454,13 @@ def admin_inputs(request):
 
     # List Item to store admin input details to be rendered
     inputs_to_render = list(
-        models.AdminInput.objects.all().values('id', 'created_by__user__first_name', 'label', 'input_type',
-                                               'is_required'))
+        models.AdminInput.objects.all().order_by("-id").values('id', 'created_by__user__first_name', 'label', 'input_type',
+                                                               'is_required'))
     template_headings = ["#", "Created By", "Label", "Type", "Required"]
     model_keys = ["id", "created_by__user__first_name",
                   "label", "input_type", "is_required"]
+    for entry in inputs_to_render:
+        entry['input_type'] = entry['input_type'].capitalize()
 
     return render(request, 'admin_inputs.html', {
         "headings": template_headings, "model_keys": model_keys,
@@ -447,7 +540,8 @@ def paragraphs(request):
         return render(request, "error.html")
 
     pars_to_render = list(
-        models.Paragraph.objects.all().values('id', 'created_by__user__first_name', 'static_text'))
+        models.Paragraph.objects.all()
+        .order_by('-id').values('id', 'created_by__user__first_name', 'static_text'))
     template_headings = ["#", "Created By", "Text"]
     model_keys = ["id", "created_by__user__first_name", "static_text"]
 
@@ -457,30 +551,30 @@ def paragraphs(request):
     })
 
 
-@ login_required(login_url='login')
-def data(request):
-    visitors = []
-    registered_users = []
-    inputs = []
-    outputs = []
-    days = []
-    for i in range(31):
-        days.append(i)
-        cur_visitors = randint(0, 12000)
-        visitors.append(cur_visitors)
-        registered_users.append(int(cur_visitors*uniform(0, 0.4)))
-        inputs.append(randint(100, 2900))
-        outputs.append(randint(200, 8000))
-    vis_fig = go.Figure(data=[go.Scatter(x=days, y=visitors, name="visitors"),
-                              go.Scatter(x=days, y=registered_users, name="registered users")]
-                        )
-    vis_div = plot(vis_fig, output_type='div')
-    inp_fig = go.Figure(data=go.Scatter(x=days, y=inputs, name="inputs"))
-    inp_div = plot(inp_fig, output_type='div')
-    out_fig = go.Figure(data=go.Scatter(x=days, y=outputs, name="outputs"))
-    out_div = plot(out_fig, output_type='div')
-    content_dict = {"vis_div": vis_div, "inp_div": inp_div, "out_div": out_div}
-    return render(request, 'data.html', content_dict)
+# @ login_required(login_url='login')
+# def data(request):
+#     visitors = []
+#     registered_users = []
+#     inputs = []
+#     outputs = []
+#     days = []
+#     for i in range(31):
+#         days.append(i)
+#         cur_visitors = randint(0, 12000)
+#         visitors.append(cur_visitors)
+#         registered_users.append(int(cur_visitors*uniform(0, 0.4)))
+#         inputs.append(randint(100, 2900))
+#         outputs.append(randint(200, 8000))
+#     vis_fig = go.Figure(data=[go.Scatter(x=days, y=visitors, name="visitors"),
+#                               go.Scatter(x=days, y=registered_users, name="registered users")]
+#                         )
+#     vis_div = plot(vis_fig, output_type='div')
+#     inp_fig = go.Figure(data=go.Scatter(x=days, y=inputs, name="inputs"))
+#     inp_div = plot(inp_fig, output_type='div')
+#     out_fig = go.Figure(data=go.Scatter(x=days, y=outputs, name="outputs"))
+#     out_div = plot(out_fig, output_type='div')
+#     content_dict = {"vis_div": vis_div, "inp_div": inp_div, "out_div": out_div}
+#     return render(request, 'data.html', content_dict)
 
 
 def report_create(request):
@@ -500,6 +594,9 @@ def report_create(request):
                 return redirect(reverse('report_view', kwargs={'report_id': report_id}))
             else:
                 return redirect(reverse('report_view_public'))
+        else:
+            context = {'inputForm': input_form}
+            return render(request, 'report_create.html', context)
 
     # if we arrive here from a GET method, i.e. via inputting a url.
     else:
@@ -516,10 +613,9 @@ def report_create(request):
                 for p in partials:
                     if p.admin_input.input_type == "DROPDOWN":
                         partials_dict[p.admin_input.label] = (p.value, p.value)
-                    elif p.admin_input.input_type == "RADIOBUTTONS":
+                    elif p.admin_input.input_type == "MULTISELECT":
                         partials_dict[p.admin_input.label] = p.value.strip(
                             "[]").replace("\'", "").split(", ")
-                        print(p.value)
                     else:
                         partials_dict[p.admin_input.label] = p.value
                 input_form = InputForm(initial=partials_dict)
@@ -533,7 +629,8 @@ def report_view(request, report_id):
     report = models.Report.objects.filter(id=int(report_id)).first()
     if report is not None:
         links_dict = compile_report(report)
-        return render(request, 'report.html', {'data': links_dict, 'report_id': report_id})
+        return render(request, 'report.html', {'data': links_dict, 'report_id': report_id,
+                                               'datetime': report.datetime_created})
     return render(request, "error.html")
 
 
@@ -563,7 +660,7 @@ def get_paragraphs(inputs_dictionary):
                 if keyword == answers[counter]:
                     paragraphs_list.append(keyword.paragraph)
             counter += 1
-        elif question.input_type == 'RADIOBUTTONS':
+        elif question.input_type == 'MULTISELECT':
             for keyword in keywords:
                 if keyword.key in answers[counter]:
                     paragraphs_list.append(keyword.paragraph)

@@ -11,8 +11,8 @@
         <h3 class="text-center">
             No actions for this report
         </h3>
-        {% else %}
-        <div id="action_display">
+{% else %}
+    <div id="action_display">
         <form class="w-75 mx-auto">
             <hr/>
             {% for action in actions %}
@@ -30,37 +30,34 @@
             {% endfor %}
 
         </form>
-        </div>
+    </div>
 
     <div class="centerText">
-        <button id = "show" class="btn-profile" onclick="showDiv()">Update</button>
+        <hr/>
+        <button id = "show" class="btn btn-primary btn-block p-1" onclick="showDiv()">Update</button>
     </div>
 {% endif %}
 
 <div id = "update" style="display: none;">
-    <hr/>
     <form class="w-75 mx-auto" method = "POST">
         {% csrf_token %}
         {% for action in actions %}
-        {% if action.is_completed %}
-                <div class="m-2 form-check ">
-                    <input class="form-check-input" id="action_{{action.id}}" name="completed" type="checkbox" checked=checked value="{{action.id}}">
-                    <label class="form-check-label" for="action_{{action.id}}">{{action.title}}</label>
-                </div>
-        {% else %}
-                <div class="m-2 form-check ">
-                    <input class="form-check-input" id="action_{{action.id}}" name="not_completed" type="checkbox" value="{{action.id}}">
-                    <label class="form-check-label" for="action_{{action.id}}">{{action.title}}</label>
-                </div>
-        {% endif %}
+            {% if action.is_completed %}
+                    <div class="m-2 form-check ">
+                        <input class="form-check-input" id="action_{{action.id}}" name="completed" type="checkbox" checked value="{{action.id}}">
+                        <label class="form-check-label" for="action_{{action.id}}">{{action.title}}</label>
+                    </div>
+            {% else %}
+                    <div class="m-2 form-check ">
+                        <input class="form-check-input" id="action_{{action.id}}" name="completed" type="checkbox" value="{{action.id}}">
+                        <label class="form-check-label" for="action_{{action.id}}">{{action.title}}</label>
+                    </div>
+            {% endif %}
         {% endfor %}
+    <hr/>
     <div class="d-flex mt-4 justify-content-between">
-        <div >
-            <button type="submit" id = "save" style = "display: none;" class="btn btn-info ">Save</button>
-        </div>
-        <div >
-            <button class = "btn btn-danger" id ="cancelP" style = "display: none;" onclick="cancel(event)">Cancel</button>
-        </div>
+        <a class="btn" id ="cancelP" style = "display: none;" onclick="cancel(event)"> <i class='fas fa-angle-left align-middle' style='font-size:16px'></i> Cancel</a>
+        <button class="btn" type="submit" id = "save" style = "display: none;" >Save</button>
     </div>
     </form>
 </div>

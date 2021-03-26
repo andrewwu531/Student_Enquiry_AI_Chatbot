@@ -96,12 +96,6 @@ a[data-toggle="collapse"] {
   transform: translateY(-50%);
 }
 
-ul ul a {
-  font-size: 0.9em !important;
-  padding-left: 30px !important;
-  background: #6d7fcc;
-}
-
 ul.CTAs {
   padding: 20px;
 }
@@ -367,20 +361,6 @@ p {
   text-align: center;
 }
 
-.linktext {
-  font-size: 30px;
-}
-
-.worklink {
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: black;
-}
-/*Button formats*/
-.btn-small {
-  max-width: 50%;
-}
 /*Primary positive button*/
 .btn-primary {
   font-size: 20px;
@@ -441,71 +421,6 @@ p {
   }
 }
 
-/*Textbox*/
-.txtbox {
-  border-radius: 80px;
-  border: none;
-  background-color: rgb(155, 155, 155);
-}
-
-/*Checkbox*/
-/* .actioninput {
-  width: 3vh;
-  height: 3vh;
-  border-radius: 5vh !important;
-} */
-/* input[type="checkbox"] {
-  -ms-transform: scale(2);  IE 
-  -moz-transform: scale(2);  FF 
-  -webkit-transform: scale(2);  Safari and Chrome 
-  -o-transform: scale(2);  Opera 
-  padding: 10px;
-} */
-
-.btn-edit {
-  font-size: 15px;
-  position: absolute;
-  border-radius: 20px;
-  border: none;
-  display: inline;
-  float: left;
-  -webkit-animation-duration: 1s;
-  animation-duration: 1;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  -webkit-animation-name: button-fadeout;
-  animation-name: button-fadeout;
-}
-.btn-add {
-  font-size: 19px;
-  border-radius: 20px;
-  color: white;
-  border: none;
-  -webkit-animation-duration: 1s;
-  animation-duration: 1;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  -webkit-animation-name: button-fadeout;
-  animation-name: button-fadeout;
-}
-
-.btn-profile {
-  font-size: 3vh;
-  border-radius: 1.5vh;
-  color: white;
-  border: #cc00cc;
-  padding-top: 0.75vh;
-  padding-bottom: 0.75vh;
-  padding-left: 1.5vh;
-  padding-right: 1.5vh;
-  -webkit-animation-duration: 1s;
-  animation-duration: 1;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  -webkit-animation-name: button-fadeout;
-  animation-name: button-fadeout;
-}
-
 .btn-primary:hover {
   -webkit-animation-duration: 1s;
   animation-duration: 1;
@@ -516,17 +431,29 @@ p {
 }
 
 .paratable {
-    float: center;
-    border-spacing: 5;
-    border-collapse: collapse;
-    border: #cc00cc;
-    background: white;
-    border-radius: 6px;
-    overflow: hidden;
-    max-width: 800px;
-    width: 100%;
-    margin: 0 auto;
-    position: relative;
-    padding:100 15px;
-  }
+  float: center;
+  border-spacing: 5;
+  border-collapse: collapse;
+  border: #cc00cc;
+  background: white;
+  border-radius: 6px;
+  overflow: hidden;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  padding: 100 15px;
+}
 
+.snps-inline-select {
+  width: auto;
+  display: inline-block;
+}
+
+.table-cell-no-wrap {
+  white-space: nowrap;
+}
+
+.hoverable-row {
+  cursor: pointer;
+}

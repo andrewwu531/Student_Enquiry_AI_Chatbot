@@ -12,8 +12,9 @@
 {% endblock %}
 
 {% block buttons %}
-    <a class="btn btn-secondary" href="{% url 'dropdown_admin_input_create' %}">Create Dropdown Field</a>
-    <a class="btn btn-secondary" href="{% url 'checkbox_admin_input_create' %}">Create Checkbox Field</a>
-    <a class="btn btn-secondary" href="{% url 'text_admin_input_create' %}">Create Text Field</a>
-    <a class="btn btn-secondary" href="{% url 'textarea_admin_input_create' %}">Create TextArea Field</a>
+    <a class="btn btn-secondary mb-2" href="{% url 'dropdown_admin_input_create' %}">Create Dropdown Field</a>
+    <a class="btn btn-secondary mb-2" href="{% url 'checkbox_admin_input_create' %}">Create Checkbox Field</a>
+    <a class="btn btn-secondary mb-2" href="{% url 'multiselect_admin_input_create' %}">Create Multiselect Field</a>
+    <a class="btn btn-secondary mb-2" href="{% url 'text_admin_input_create' %}">Create Text Field</a>
+    <a class="btn btn-secondary mb-2" href="{% url 'textarea_admin_input_create' %}">Create TextArea Field</a>
 {% endblock %}

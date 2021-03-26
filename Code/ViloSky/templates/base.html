@@ -35,13 +35,10 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
             </div>
 
             <ul class="list-unstyled components">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'report_create' %}">New Report</a>
+              </li>
               {% if not request.user.is_authenticated %}
-                <!-- <li class="nav-item">
-                  <a class="nav-link" aria-current="page" href="{% url 'index' %}">Home</a>
-                </li> -->
-                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'report_create' %}">New Report</a>
-                </li>
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'report_view_public' %}">View Report</a>
                 </li>
@@ -64,9 +61,6 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'actions' %}">My Actions</a>
                 </li>
-                <!-- <li class="nav-item">
-                  <a class="nav-link" href="{% url 'roles' %}">Roles</a>
-                </li> -->
                 <li class="nav-item">
                   <a class="nav-link" href="{% url 'logout' %}">Logout</a>
                 </li>
@@ -76,9 +70,6 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'paragraphs' %}">Paragraphs</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'data' %}">Data</a>
                   </li>
                 {% endif %}
                 {% endif %}
@@ -97,20 +88,22 @@ https://www.sowebsited.com/advanced/togglesidebar.html?fbclid=IwAR0Y5YAZ-2s0c2Rh
             <div class="sitecontent" id="sitecontent">
               {% block bodyblock %}
               {% endblock %}
-              <div class="divbackground footerdiv">
-                <div class="row">
-                  <div class="col-md-2">Tel.:</div>
-                  <div class="col-md-5">07895 086 134</div>
-                  <div class="col-md-5">07817 545 525</div>
+              <div class="divbackground footerdiv row pb-3">
+
+                <div class="d-flex flex-column col-2">
+                  Contacts: <br/>
+                  <div>07895 086 134</div>
+                  <div>07817 545 525</div>
                 </div>
-                <div class="row">
+                <div class="d-flex justify-content-right ml-4 mt-2 col-8">
                   Vilo Sky C.I.C. is a company incorporated in Scotland with company number SC586949.          
                   ICO Reference - ZA738970
                 </div>
-                <div class="row">
+                <div class="col-12 d-flex justify-content-center mt-2">
                   Copyright © 2018 onwards Vilo Sky C.I.C.                
                   All rights reserved.
                 </div>
+  
               </div>
             </div>
         </div>

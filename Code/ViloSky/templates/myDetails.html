@@ -2,118 +2,124 @@
 {% load static %}
 
 {% block body%}
-    <div id = "quals">
-        <button class ="btn btn-outline-dark" id ="edit" onclick=editQuals()>Edit</button>
-        <button class ="btn btn-outline-dark" style = "display: none;" id="cancel" onclick=cancel()>Cancel</button>
-        <br>
-    <div class="largeText whiteText centerText">
-        My Qualifications
+<div id = "quals">
+    <span class="d-flex justify-content-between">
+        <a id="edit" onclick=editQuals() class="btn">Edit</a>
+        <a id="show" class="btn" onclick="showDiv()">Update Profile</a>
+        <a style = "display: none;" id="cancel" onclick=cancel() class="btn"> <i class='fas fa-angle-left align-middle' style='font-size:16px'></i> Cancel</a>
+    </span>
+    <div class="mediumText whiteText centerText">
+        Qualifications
     </div>
 
     <div id = "staticQ">
-    {% for q in qualifications %}
-    <div class="row bottomborder center centerText">
-        <div class="col">
-            {{q.level}}
-        </div>
-        <div class="col">
-            {{q.subjects}}
-        </div>
-    </div>
-    {% endfor %}
-    </div>
-    
-    <div class = "center centerText" id = "dynamic" style ="display: none;">
-        <table class = "center">
-        <thead>
-            <th>Level</th>
-            <th>Subject</th>
-            <th>Delete</th>
-        </thead>
-        <tbody>
-        <form method = "POST">
-        {% csrf_token %} 
-        {% for q in qualifications %}
-            <tr>
-                <td>{{q.level}}</td>
-                <td> {{q.subjects}}</td>
-                <td><input type = "checkbox" name = "delete_list" value = "{{q.id}}"></td>
-            </tr>
-        {% endfor %}
-        </tbody>
-        
-    </table>
-    <br>
-    <button type="submit" class = "btn-add" name = "delete_qualifications">Delete Selected</button>
-    </form>
+        <table class="table table-centralised">
+            <thead>
+                <th>Level</th>
+                <th>Subject</th>
+            </thead>
+            <tbody>
+                {% for q in qualifications %}
+                        <tr>
+                            <td>{{q.level}}</td>
+                            <td>{{q.subjects}}</td>
+                        </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
-    <br>
-    <div class = "center centerText" id = "editquals">
+    <div id = "editquals">
+        <div class = "mediumText centerText" >
+            Add Qualifications
+        </div>
+
         <form class="center" method = "POST" action="{% url 'mydetails' %}">
             {% csrf_token %} 
-            <div class = "col">
+            <div class="form-group">
+                {{ q_form.level.label }} 
                 {{ q_form.level }} 
             </div>
-            <div class = "col">
-                {{ q_form.subjects}} 
+            <div class="form-group">
+                {{ q_form.subjects.label }} 
+                {{ q_form.subjects}}
             </div>
-            <div>
-                <button type="submit" name = "addquals" class = "btn btn-success" >Add</button>
-            </div>
-        </div>
-
+            <hr/>
+            <button type="submit" name="addquals" class="btn btn-primary btn-block p-1">Add</button>
         </form>
     </div>
-    <br>
+
+    <div class = "center centerText" id = "dynamic" style ="display: none;">
+        <form method = "POST">
+            <table class = "center">
+                <thead>
+                    <th>Level</th>
+                    <th>Subject</th>
+                    <th>Delete</th>
+                </thead>
+                <tbody>
+                    {% csrf_token %} 
+                    {% for q in qualifications %}
+                        <tr>
+                            <td>{{q.level}}</td>
+                            <td> {{q.subjects}}</td>
+                            <td><input type = "checkbox" name = "delete_list" value = "{{q.id}}"></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <hr/>
+            <button type="submit" class = "btn btn-primary btn-block p-1" name = "delete_qualifications">Delete Selected</button>
+        </form>
+    </div>
+</div>
     
-    <div class="largeText whiteText centerText">
-        <button id = "show" class="btn btn-outline-dark" onclick="showDiv()">Update My Profile</button>
+<div id = "update" style="display: none;">
+
+    <span class="d-flex justify-content-between">
+        <a id="cancelP" class="btn" onclick=cancel() style = "display: none;"> <i class='fas fa-angle-left align-middle' style='font-size:16px'></i> Cancel</a>
+    </span>
+
+    <div class="mediumText whiteText centerText">
+        Update Profile
     </div>
 
+    <div class="px-4">
+        <form class="center" method = "POST" action="{% url 'mydetails' %}">
+            {% csrf_token %} 
+
+            <div class="form-group">
+                {{ p_form.date_of_birth.label}} <br/>
+                {{ p_form.date_of_birth}}
+            </div>
+            
+            <div class="form-group">
+                {{ p_form.company.label}}
+                {{ p_form.company}}
+            </div>
+
+            <div class="form-group">
+                {{ p_form.employment_status.label}}
+                {{ p_form.employment_status}}
+            </div>
+
+            <div class="form-group">
+                {{ p_form.employment_sector.label}}
+                {{ p_form.employment_sector}}
+            </div>
+
+            <div class="form-group">
+                {{ p_form.time_worked_in_industry.label}}
+                {{ p_form.time_worked_in_industry}}
+            </div>
+
+            <hr/>
+            <button type="submit" class="btn btn-primary btn-block p-1">Save Details</button>
     
-
-
-    <div id = "update" style="display: none;">
-        <div class="largeText whiteText centerText">
-            Update My Profile
-            <button  class = "btn-edit" id ="cancelP" style = "display: none;" onclick=cancel()>Cancel</button>
-        </div>
-    <div class="row center centerText">
-    <form class="center" method = "POST" action="{% url 'mydetails' %}">
-        {% csrf_token %} 
-
-        <div class="form-group">
-            <p>Date of Birth: </p> {{ p_form.date_of_birth}}
-            
-        </div>
-        <div class="form-group">
-            <p>Company: </p> {{ p_form.company}}
-            
-        </div>
-        <div class="form-group">
-            <p>Employment Status: </p> {{ p_form.employment_status}}
-            
-        </div>
-        <div class="form-group">
-            <p>Empoyment Sector: </p> {{ p_form.employment_sector}}
-            
-        </div>
-        <div class="form-group">
-            <p>Time Worked In Sector: </p>{{ p_form.time_worked_in_industry}}
-        </div>
-
-       
-        <div class="form-group">
-            <div class = "col">
-                <button type="submit" class="btn btn-success ">Save Details</button><br><br>
-            </div>  
-        </div>
-   
-    </form>
-  
+        </form>
     </div>
-    
+</div>
+
 <script>        
 function showDiv() {
     document.getElementById('update').style.display = "block";
