@@ -243,7 +243,6 @@ class test_dashboard(TestCase):
         self.assertNotEqual(recent, self.rep1)
         self.assertNotEqual(recent, self.rep3)
 
-    
 class CURDAdminInputsTest(TestCase):
     def setUp(self):
         User = get_user_model()
@@ -347,11 +346,12 @@ class CURDAdminInputsTest(TestCase):
         # assert that object was not removed.
         self.assertEqual(TextAdminInput.objects.get(id=1).label, 'Name')
 
-
-
-
-
-
-
-
+class test_create_para_view(TestCase):
+    @classmethod
+    def setUp(self):
+         newParaForm = NewParaForm({"static_text":"test adding paragraph"})
+    def correct_response(self):
+        response = self.client.get(reverse('paragraphs'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'paragraphs.html')
 
