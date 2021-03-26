@@ -3,7 +3,7 @@
 
 {% block body%}
 <h2><div class=" whiteText centerText">
-    {{user.first_name}}'s Dashboard
+    Dashboard
 </div></h2>
 <br>
 {% if actions %}
@@ -26,14 +26,17 @@
         {% endfor %}
     </ol>
 </div>
-<a href="{% url 'actions' %}" class="btn btn-primary btn-block btn-small center">View Action Plans</a>
+<a href="{% url 'actions' %}" class="btn btn-primary btn-block p-1">View Action Plans</a>
 <br><br>
 {% endif %}
 
 {% if report %}
-<h4><div class="whiteText centerText">
+<h4>
+    <div class="whiteText centerText">
     Most Recent Report 
-</div></h4>
+    </div>
+</h4>
+
 <div class = "centerText">
 <h7>Created {{ report.datetime_created }}</h7>
 </div>
@@ -58,7 +61,7 @@
             </ul>
         {% endfor %}
         <hr/>
-        <a href="{% url 'reports' %}" class="btn btn-primary btn-block btn-small center p-1">View Older Reports</a>
+        <a href="{% url 'reports' %}" class="btn btn-primary btn-block p-1 p-1">View Older Reports</a>
     
 </div>
 {% else %}
@@ -67,7 +70,7 @@
     <hr/>
     You don't have any reports or action plans to view right now, click below to create a report.
     <hr/>
-    <a href="{% url 'report_create' %}" class="btn btn-primary btn-block btn-small center p-1" >New Report</a>
+    <a href="{% url 'report_create' %}" class="btn btn-primary btn-block p-1" >New Report</a>
 </div>
 </h3>
 {% endif %}

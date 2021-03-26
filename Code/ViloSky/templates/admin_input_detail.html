@@ -69,7 +69,7 @@
             <a class="btn btn-primary btn-block p-1" href="{% url 'text_admin_input_update' object.id %}">Edit</a>
         {% endif %}
         {% if object.input_type == "TEXTAREA" %}
-            <a class="btn btn-secondary" href="{% url 'textarea_admin_input_update' object.id %}">Edit</a>
+            <a class="btn btn-primary btn-block p-1" href="{% url 'textarea_admin_input_update' object.id %}">Edit</a>
         {% endif %}
         {% if object.input_type == "MULTISELECT" %}
             <a class="btn btn-primary btn-block p-1" href="{% url 'multiselect_admin_input_update' object.id %}">Edit</a>

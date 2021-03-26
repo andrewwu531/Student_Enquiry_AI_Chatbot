@@ -96,12 +96,6 @@ a[data-toggle="collapse"] {
   transform: translateY(-50%);
 }
 
-ul ul a {
-  font-size: 0.9em !important;
-  padding-left: 30px !important;
-  background: #6d7fcc;
-}
-
 ul.CTAs {
   padding: 20px;
 }
@@ -367,10 +361,6 @@ p {
   text-align: center;
 }
 
-/*Button formats*/
-.btn-small {
-  max-width: 50%;
-}
 /*Primary positive button*/
 .btn-primary {
   font-size: 20px;
@@ -462,4 +452,8 @@ p {
 
 .table-cell-no-wrap {
   white-space: nowrap;
+}
+
+.hoverable-row {
+  cursor: pointer;
 }

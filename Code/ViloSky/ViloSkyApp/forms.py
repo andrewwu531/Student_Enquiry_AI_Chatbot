@@ -128,7 +128,6 @@ class UserProfileForm(forms.ModelForm):
         }
 
 
-
 class QualificationForm(forms.ModelForm):
     level = forms.CharField(max_length=160, widget=forms.TextInput(attrs={
         'placeholder': 'e.g. High School',
@@ -289,7 +288,7 @@ class NewKeywordForm(forms.ModelForm):
         widgets = {
             'key': forms.TextInput(attrs={
                 'placeholder': 'eg: Risk Management',
-                'class': 'form-control'}),
+                'class': 'form-control mb-2'}),
             'score': forms.TextInput(attrs={'placeholder': 'eg: 10', 'class': 'form-control'})
         }
 

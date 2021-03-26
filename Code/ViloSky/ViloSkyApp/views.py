@@ -540,7 +540,8 @@ def paragraphs(request):
         return render(request, "error.html")
 
     pars_to_render = list(
-        models.Paragraph.objects.all().values('id', 'created_by__user__first_name', 'static_text'))
+        models.Paragraph.objects.all()
+        .order_by('-id').values('id', 'created_by__user__first_name', 'static_text'))
     template_headings = ["#", "Created By", "Text"]
     model_keys = ["id", "created_by__user__first_name", "static_text"]
 
@@ -628,7 +629,8 @@ def report_view(request, report_id):
     report = models.Report.objects.filter(id=int(report_id)).first()
     if report is not None:
         links_dict = compile_report(report)
-        return render(request, 'report.html', {'data': links_dict, 'report_id': report_id})
+        return render(request, 'report.html', {'data': links_dict, 'report_id': report_id,
+                                               'datetime': report.datetime_created})
     return render(request, "error.html")
 
 

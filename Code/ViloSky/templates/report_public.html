@@ -8,7 +8,7 @@
             You have not created a report yet
         </div>
         <hr/>
-        <button type="submit" class="btn btn-primary btn-block"  onclick="location.href='{% url 'report_create'%}'">Create report</button>
+        <button type="submit" class="btn btn-primary btn-block p-1"  onclick="location.href='{% url 'report_create'%}'">Create report</button>
     </div>
 {% else %}
     <div class="divbackground widediv">
@@ -37,7 +37,7 @@
                 {% endfor %}
             </ul>
             <hr/>
-            <button type="submit" class="btn btn-primary btn-block"  onclick="location.href='{% url 'create_pdf_public'%}'">Download as pdf</button>
+            <button type="submit" class="btn btn-primary btn-block p-1"  onclick="location.href='{% url 'create_pdf_public'%}'">Download as pdf</button>
         </div>
     </div>
 {% endif %}

@@ -3,29 +3,30 @@
 
 {% block body%}
 <div>
-    <h1>Report</h1>
-    <ul>
+    <h2 class="centerText">Report {{report_id|safe}}</h2>
+    <div class = "centerText">
+        <h7>Created {{ datetime }}</h7>
+    </div><br/>
         {% for key,values in data.items %}
-        <li>
-            {{ key.static_text }}
-            <ul>
-                {% for list in values %}
-                    {% for item in list %}
-                        <li>
-                                {% if item.title == null %}
-                                    {{ item.url }}
-                                {% endif %}
-                                {% if item.url == null %}
-                                    {{item.title}}
-                                {% endif %}
-                        </li>
-                    {% endfor %}
+    
+        {{ key.static_text }}
+        <ul>
+            {% for list in values %}
+                {% for item in list %}
+                    <li>
+                            {% if item.title == null %}
+                            <a href='{{ item.url }}' target="_blank">{{ item.url }}</a>
+                            {% endif %}
+                            {% if item.url == null %}
+                                {{item.title}}
+                            {% endif %}
+                    </li>
                 {% endfor %}
-            </ul>
-        </li>
+            {% endfor %}
+        </ul>
+    
         {% endfor %}
-    </ul>
     <hr/>
-    <button type="submit" class="btn btn-primary btn-block" onclick="location.href='{% url 'create_pdf' report_id %}'">Download as pdf</button>
+    <button type="submit" class="btn btn-primary btn-block p-1" onclick="location.href='{% url 'create_pdf' report_id %}'">Download as pdf</button>
 </div>
 {%endblock%}

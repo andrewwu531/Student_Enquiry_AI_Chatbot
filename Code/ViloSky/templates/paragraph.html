@@ -9,7 +9,7 @@
         </span>
     </div>
     <div id = "cancelB" style = "display: none;">
-        <button class="btn btn-outline-dark" onclick=cancel()>Cancel</button>
+        <a class="btn" onclick=cancel()> <i class='fas fa-angle-left align-middle' style='font-size:16px'></i> Cancel</a>
     </div>
 
     <div class="mediumText whiteText centerText">
@@ -21,105 +21,83 @@
     </div>
 
     <div id = "view" class = "centerText center">
-        <button class = "btn btn-link" onclick=editText()>Text</button>
-        <table class = "paratable centerText">
-            <tbody>
-                <tr>
-                    <td>
-                        {{ para.static_text }}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="w-75 center text-center">
+            <table class="table table-hover">
+                <tbody>
+                    <tr onclick=editLinks() class="hoverable-row" >
+                        <th class="table-cell-no-wrap">Links</th>
+                        {% if links %}
+                            <td>
+                                <ul>
+                                    {% for l in links %}
+                                    <li>{{ l.url }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        {% else %}
+                            <td class='text-center'>
+                                <strong>No links to display.</strong> 
+                            </td>
+                        {% endif %}
+                    </tr>
 
-        <br>
-        <button class = "btn btn-link" onclick=editLinks()>Links</button>
-        {% if links %}
-        <table class = "paratable centerText">
-            <tbody>
-                {% for l in links %}
-                <tr>
-                <td>{{ l.url }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <table class = "paratable centerText">
-            <tbody>
-                <tr>
-                    <td>
-                        No links to display.
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-       
-        {% endif %}
- 
-        <br>
-        <button class = "btn btn-link" onclick=editKeys()>Keywords</button>
-        {% if keywords %}
-        <table class = "paratable">
-        <thead>
-            <th>Word</th>
-            <th>Score</th>
-        </thead>
-        <tbody>
-            {% for k in keywords %}
-            <tr>
-            <td>{{ k.key }}</td>
-            <td>{{ k.score }}</td> 
-        </tr>
-        {% endfor %}
-        </tbody>
-        </table>
-        {% else %}
-        
-        <table class = "paratable centerText">
-            <tbody>
-                <tr>
-                    <td>
-                        No keywords to display.
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-       
-        {% endif %}
-       
-        <br>
-        <button class = "btn btn-link" onclick=editActions()>Actions</button>
-        {% if actions %}
-        <table class = "paratable center">
-            <tbody>
-                {% for a in actions %}
-                <tr>
-                    <td>
-                        - {{ a.title }}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                    <tr onclick=editKeys() class="hoverable-row" >
+                        <th class="table-cell-no-wrap">Keywords</th>
+                        {% if keywords %}
+                        <td>
+                            <table class='table-borderless'>
+                                <thead>
+                                    <th>Word</th>
+                                    <th>Score</th>
+                                </thead>                        
+                                <tbody>
+                                    {% for k in keywords %}
+                                        <tr>
+                                            <td>{{ k.key }}</td>
+                                            <td>{{ k.score }}</td> 
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </td>
+                        {% else %}
+                            <td class='text-center'>
+                                <strong>No keywords to display.</strong> 
+                            </td>
+                        {% endif %}
+                    </tr>
 
-        {% else %}
-        <table class = "paratable centerText">
-            <tbody>
-                <tr>
-                    <td>
-                        No actions to display.
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        {% endif %}
+                    <tr onclick=editActions() class="hoverable-row" >
+                        <th class="table-cell-no-wrap">Actions</th>
+                        {% if actions %}
+                        <td>
+                            <ul>
+                                {% for a in actions %}
+                                    <li>{{ a.title }}</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        {% else %}
+                            <td class='text-center'>
+                                <strong>No actions to display.</strong> 
+                            </td>
+                        {% endif %}
+                    </tr>
 
-        <br>
+                    <tr onclick=editText() class="hoverable-row">
+                        <th class="table-cell-no-wrap">Text</th>
+                        <td>{{ para.static_text }}</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
         <div class="center">
             <form  method = "POST">
             {% csrf_token %}
-            <button type="submit" onclick="return confirm('Are you sure you want to delete this paragraph?')" class="btn btn-warning">Delete Paragraph</button>
+            <hr/>
+            <button type="submit" onclick="return confirm('Are you sure you want to delete this paragraph?')" class="btn btn-primary btn-block p-1">Delete Paragraph</button>
             </form>
         </div>
     </div>
@@ -129,170 +107,150 @@
         <form method = "POST">
             {% csrf_token %}
             <h4 class = "centerText">Current Text:</h4>
-            <table class = "paratable centerText">
-                <tbody>
-                    <tr>
-                        <td>
-                            {{ para.static_text }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-    
-            <br>
-            <br>
-            <h4>New Text</h4>
-            {{ p_form.static_text }}</p>
-            <button type="submit" name="editText" class="btn btn-success">Update</button>
+            <div class='center p-2 w-75'>
+                <p>{{ para.static_text }}</p>
+                <hr/>
+                {{ p_form.static_text.label_tag}}
+                {{ p_form.static_text }}</p>
+                <hr/>
+                <button type="submit" name="editText" class="btn btn-primary btn-block p-1">Update</button>
+            </div>
         </form>
     </div>
 
     <div id="editLinks" style="display: none;">
-        <h4 class = "centerText">Paragraph Text:</h4>
-            <table class = "paratable centerText">
-                <tbody>
-                    <tr>
-                        <td>
-                            {{ para.static_text }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <br>
-        {% if links %}
-        <h4>Delete Links</h4>
-        <table class="paratable">
-            <thead>
-                <th>URL</th>
-                <th>Select</th>
-            </thead>
-            <tbody>
-                <form method = "POST">
-                    {% csrf_token %} 
-                    {% for l in links %}
-                        <tr>
-                            <td> {{l.url}}</td>
-                            <td><input type = "checkbox" name = "delete_list" value = "{{l.id}}"></td>
-                        </tr>
-                    {% endfor %}
-            </tbody>
-        </table>
-        <br>
-        <button type="submit" class="btn btn-warning" style = "float: right;" name = "delete_links">Delete Selected</button>
-        </form>
-        <br>
-        <br>
-        <br>
-        {% endif %}
-        
-        <div class="border border-dark">
-        <form method = "POST" class = "centerText">
-            {% csrf_token %}
-            <p> 
-            <h4>Add New Link</h4>
-            {{ l_form.url}}
-            <button type="submit" name="editLinks" class="btn btn-success">Add</button>
-            </p>
-        </form>
+        <h4 class = "centerText">Paragraph Text</h4>
+        <div class='center p-2 w-75'>
+            <p>{{ para.static_text }}</p>     
+
+            {% if links %}
+            <hr/>
+            <h4 class = "centerText">Delete Links</h4>
+            <form method = "POST" class='centerText'>
+                <table class='w-100 mb-3'>
+                    <thead>
+                        <th>URL</th>
+                        <th>Select</th>
+                    </thead>
+                    <tbody>
+                        {% csrf_token %} 
+                        {% for l in links %}
+                            <tr class='form-group'>
+                                <td>
+                                    <label for="link_check_{{l.id}}" class="form-check-label">{{l.url}}</label>
+                                </td>
+                                <td>
+                                    <input type = "checkbox" name = "delete_list" value="{{l.id}}" id="link_check_{{l.id}}">
+                                </td> 
+                            </tr>  
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <hr/>
+                <button type="submit" class="btn btn-primary btn-block p-1" name="delete_links">Delete Selected</button>
+            </form>
+            {% endif %}
+            
+            <h4 class = "centerText">Add New Link</h4>
+            <form method = "POST" >
+                {% csrf_token %}
+                {{ l_form.url.label_tag }}
+                {{ l_form.url }}
+                <hr/>
+                <button type="submit" name="editLinks" class="btn btn-primary btn-block p-1">Add link</button>
+            </form>
         </div>
     </div>
 
     <div id="editKeys" style="display: none;">
-        <h4 class = "centerText">Paragraph Text:</h4>
-            <table class = "paratable centerText">
-                <tbody>
-                    <tr>
-                        <td>
-                            {{ para.static_text }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <br>
-        {% if keywords %}
-        <h4>Delete Keywords</h4>
-        <table class="paratable">
-            <thead>
-                <th>Key</th>
-                <th>Score</th>
-                <th>Select</th>
-            </thead>
-            <tbody>
-                <form method = "POST">
-                    {% csrf_token %} 
-                    {% for k in keywords %}
-                        <tr>
-                            <td>{{k.key}}</td>
-                            <td> {{k.score}}</td>
-                            <td><input type = "checkbox" name = "delete_list" value = "{{k.id}}"></td>
-                        </tr>
-                    {% endfor %}
-            </tbody>
-        </table>
-        <br>
-        <button type="submit" class="btn btn-warning" style = "float: right;" name = "delete_keywords">Delete Selected</button>
-        </form>
-        
-        <br>
-        <br>
-        <br>
-        {% endif %}
-        <div class="border border-dark">
-        <form method = "POST" class = "centerText">
-            {% csrf_token %}
-            <p> <h4>Add New Keyword</h4> <p>
-            <p> Word: {{ k_form.key }}</p> 
-            <p> Score: {{ k_form.score }} </p>
-            <button type="submit" name="editKeys" class="btn btn-success">Add</button>
-        </form>
+        <h4 class = "centerText">Paragraph Text</h4>
+        <div class='center p-2 w-75'>
+            <p>{{ para.static_text }}</p>     
+
+            {% if keywords %}            
+            <hr/>
+            <h4 class = "centerText">Delete Links</h4>
+            <form method = "POST" class='centerText'>
+                <table class='w-100 mb-3'>
+                    <thead>
+                        <th>Key</th>
+                        <th>Score</th>
+                        <th>Select</th>
+                    </thead>
+                    <tbody>
+                        {% csrf_token %} 
+                        {% for k in keywords %}
+                            <tr class='form-group'>
+                                <td>
+                                    <label for="key_check_{{k.id}}" class="form-check-label">{{k.key}}</label>
+                                </td>
+                                <td>{{k.score}}</td>
+                                <td>
+                                    <input type = "checkbox" name = "delete_list" value="{{k.id}}" id="key_check_{{k.id}}">
+                                </td> 
+                            </tr>  
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <hr/>
+                <button type="submit" class="btn btn-primary btn-block p-1" name="delete_keywords">Delete Selected</button>
+            </form>
+            {% endif %}
+
+            <h4 class = "centerText">Add New Keyword</h4>
+            <form method = "POST">
+                {% csrf_token %}
+                {{ k_form.key.label_tag }}
+                {{ k_form.key }}
+                {{ k_form.score.label_tag }}
+                {{ k_form.score }}
+                <hr/>
+                <button type="submit" name="editKeys" class="btn btn-primary btn-block p-1">Add Keyword</button>
+            </form>
         </div>
     </div>
 
     <div id="editActions" style="display: none;">
-        <h4 class = "centerText">Paragraph Text:</h4>
-            <table class = "paratable centerText">
-                <tbody>
-                    <tr>
-                        <td>
-                            {{ para.static_text }}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <br>
-        {% if actions %}
-        <h4>Delete Actions</h4>
-        <table class="paratable">
-            <thead>
-                <th>Text</th>
-                <th>Select</th>
-            </thead>
-            <tbody>
-                <form method = "POST">
-                    {% csrf_token %} 
-                    {% for a in actions %}
-                        <tr>
-                            <td> {{a.title}}</td>
-                            <td><input type = "checkbox" name = "delete_list" value = "{{a.id}}"></td>
-                        </tr>
-                    {% endfor %}
-            </tbody>
-        </table>
-        <br>
-        <button type="submit" class="btn btn-warning" style = "float: right;" name = "delete_actions">Delete Selected</button>
-        </form>
-        <br>
-        <br>
-        <br>
-        {% endif %}
+        <h4 class = "centerText">Paragraph Text</h4>
+        <div class='center p-2 w-75'>
+            <p>{{ para.static_text }}</p>     
 
-        <div class="border border-dark">
-        <form method = "POST" class = "centerText">
-            {% csrf_token %}
-            <p> <h4>Add New Action</h4>
-            {{ a_form.as_p}}</p>
-            <button type="submit" class="btn btn-success" name="editActions">Add</button>
-        </form>
+            {% if actions %}
+
+            <hr/>
+            <h4 class = "centerText">Delete Actions</h4>
+            <form method = "POST" class='centerText'>
+                <table class='w-100 mb-3'>
+                    <thead>
+                        <th>Text</th>
+                        <th>Select</th>
+                    </thead>
+                    <tbody>
+                        {% csrf_token %} 
+                        {% for a in actions %}
+                            <tr class='form-group'>
+                                <td>
+                                    <label for="action_check_{{a.id}}" class="form-check-label">{{a.title}}</label>
+                                </td>
+                                <td>
+                                    <input type = "checkbox" name = "delete_list" value="{{a.id}}" id="action_check_{{a.id}}">
+                                </td> 
+                            </tr>  
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <hr/>
+                <button type="submit" class="btn btn-primary btn-block p-1" name="delete_actions">Delete Selected</button>
+            </form>
+            {% endif %}
+
+            <h4 class = "centerText">Add New Action</h4>
+            <form method = "POST">
+                {% csrf_token %}
+                {{ a_form.as_p}}
+                <hr/>
+                <button type="submit" class="btn btn-primary btn-block p-1" name="editActions">Add Action</button>
+            </form>
         </div>
     </div>
 </div>
