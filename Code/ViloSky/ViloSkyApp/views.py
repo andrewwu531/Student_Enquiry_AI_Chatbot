@@ -162,31 +162,44 @@ def mydetails(request):
 
 
 @login_required(login_url='login')
-def action(request, action_id):
+def action(request, report_id):
     # Pass required info and update template
-    actions = models.UserAction.objects.all().filter(report=action_id)
-    if request.method == 'POST':
-        print(request.POST)
-        if 'task_list' in request.POST:
-            completed_action = models.UserAction.objects.all().filter(
-                pk__in=request.POST.getlist('task_list'))
-            action_to_be_completed = actions.difference(completed_action)
-            for i in completed_action:
-                i.is_completed = True
-                i.save()
-            for j in action_to_be_completed:
-                j.is_completed = False
-                j.save()
-            return redirect(reverse('actions'))
-        else:
-            for i in actions:
-                i.is_completed = False
-                i.save()
-    context_dict = {
-        'actions': actions,
-        'action_id': action_id,
-    }
-    return render(request, 'action_plan.html', context_dict)
+    actions_list = models.UserAction.objects.all().filter(report=report_id)
+
+    if request.method == "GET":
+        context_dict = {
+            'actions': actions_list,
+            'action_id': report_id,
+        }
+        return render(request, 'action_plan.html', context_dict)
+
+    elif request.method == 'POST':
+        is_success = False
+        try:
+            if 'completed' in request.POST:
+                completed_actions_ids = request.POST.getlist(
+                    'completed')
+                completed_actions = actions_list.filter(
+                    pk__in=completed_actions_ids)
+                incomplete_actions = actions_list.exclude(
+                    id__in=completed_actions_ids)
+                completed_actions.update(is_completed=True)
+                incomplete_actions.update(is_completed=False)
+                is_success = True
+
+            context_dict = {
+                'actions': actions_list,
+                'action_id': report_id,
+                'success': is_success,
+            }
+            return render(request, 'action_plan.html', context_dict)
+        except Exception as _:
+            context_dict = {
+                'actions': actions_list,
+                'action_id': report_id,
+                'success': False,
+            }
+            return render(request, 'action_plan.html', context_dict)
 
 
 @login_required(login_url='login')

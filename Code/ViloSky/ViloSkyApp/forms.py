@@ -128,6 +128,7 @@ class UserProfileForm(forms.ModelForm):
         }
 
 
+
 class QualificationForm(forms.ModelForm):
     level = forms.CharField(max_length=160, widget=forms.TextInput(attrs={
         'placeholder': 'e.g. High School',

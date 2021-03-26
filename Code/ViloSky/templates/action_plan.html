@@ -2,65 +2,62 @@
 {% load static %}
 
 {% block body%}
-<div class="largeText whiteText centerText">
-    All actions for report with ID: {{action_id}}
+<div class="mediumText  centerText">
+    Action Plan {{action_id}}
 </div>
-<div class="margin" id = "action_display">
-<form>
-    {% for action in actions %}
-    {% if action.is_completed %}
-        <div class="row">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input actioninput" type="checkbox" checked=checked disabled = disabled>
-                <label class="form-check-label">{{action.title}}</label>
-            </div>
-        </div>
-    {% else %}
-        <div class="row">
-            <div class="form-check form-check-inline">
-                <input class="form-check-input actioninput" type="checkbox" disabled= disabled>
-                <label class="form-check-label">{{action.title}}</label>
-            </div>
-        </div>
-    {% endif %}
-    {% endfor %}
-</form>
-</div>
+{% if actions|length == 0 %}
 
-<div class="largeText whiteText centerText">
-    <button id = "show" class="btn-profile" onclick="showDiv()">Update Progress</button>
-</div>
+        <hr/>
+        <h3 class="text-center">
+            No actions for this report
+        </h3>
+{% else %}
+    <div id="action_display">
+        <form class="w-75 mx-auto">
+            <hr/>
+            {% for action in actions %}
+            {% if action.is_completed %}
+                <div class="m-2 form-check ">
+                    <input class="form-check-input actioninput" type="checkbox" checked=checked disabled = disabled>
+                    <label class="form-check-label">{{action.title}}</label>
+                </div>
+            {% else %}
+                <div class="m-2 form-check ">
+                    <input class="form-check-input actioninput" type="checkbox" disabled= disabled>
+                    <label class="form-check-label">{{action.title}}</label>
+                </div>
+            {% endif %}
+            {% endfor %}
+
+        </form>
+    </div>
+
+    <div class="centerText">
+        <hr/>
+        <button id = "show" class="btn btn-primary btn-block p-1" onclick="showDiv()">Update</button>
+    </div>
+{% endif %}
 
 <div id = "update" style="display: none;">
-    <div class="largeText whiteText centerText">
-        Update Progress
-    </div>
-    <form class="center" method = "POST">
+    <form class="w-75 mx-auto" method = "POST">
         {% csrf_token %}
         {% for action in actions %}
-        {% if action.is_completed %}
-            <div class="row">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input actioninput" id="task_list" name="task_list" type="checkbox" checked=checked value="{{action.id}}">
-                    <label class="form-check-label" >{{action.title}}</label>
-                </div>
-            </div>
-        {% else %}
-            <div class="row">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input actioninput" id="task_list" name="task_list" type="checkbox" value="{{action.id}}">
-                    <label class="form-check-label" >{{action.title}}</label>
-                </div>
-            </div>
-        {% endif %}
+            {% if action.is_completed %}
+                    <div class="m-2 form-check ">
+                        <input class="form-check-input" id="action_{{action.id}}" name="completed" type="checkbox" checked value="{{action.id}}">
+                        <label class="form-check-label" for="action_{{action.id}}">{{action.title}}</label>
+                    </div>
+            {% else %}
+                    <div class="m-2 form-check ">
+                        <input class="form-check-input" id="action_{{action.id}}" name="completed" type="checkbox" value="{{action.id}}">
+                        <label class="form-check-label" for="action_{{action.id}}">{{action.title}}</label>
+                    </div>
+            {% endif %}
         {% endfor %}
-    <div class="row">
-        <div class="col">
-            <button class = "btn btn-danger" id ="cancelP" style = "display: none;" onclick=cancel()>Cancel Update</button>
-        </div>
-        <div class="col">
-            <button type="submit" id = "save" style = "display: none;" class="btn btn-info ">Save Change</button><br><br>
-        </div>
+    <hr/>
+    <div class="d-flex mt-4 justify-content-between">
+        <a class="btn" id ="cancelP" style = "display: none;" onclick="cancel(event)"> <i class='fas fa-angle-left align-middle' style='font-size:16px'></i> Cancel</a>
+        <button class="btn" type="submit" id = "save" style = "display: none;" >Save</button>
     </div>
     </form>
 </div>
@@ -74,8 +71,13 @@ function showDiv(){
     document.getElementById('show').style.display = "none";
     document.getElementById('save').style.display = "block";
 }
-function cancel(){
-    window.location.reload();
+function cancel(e){
+    e.preventDefault();
+    document.getElementById('update').style.display = "none";
+    document.getElementById('action_display').style.display = "block";
+    document.getElementById('cancelP').style.display = "none";
+    document.getElementById('show').style.display = "inline-block";
+    document.getElementById('save').style.display = "none";
 }
 </script>
 </div>
