@@ -61,44 +61,388 @@ def populate():
 
     """ Declaring paragraphs prior to users as paragraphs is a member of the users dictionaries"""
 
+
     paragraphs = [
+        #gender related paragraphs
         {
             'users': ['greid@gmail.com', ],
             'admin': 'Suzie Mulligan',
-            'text': 'Having been out of work for 3-5 years now it is understandable that your confidence may be low, but you have all the skills and experience you need to re-establish your career.',
+            'text': 'The following guide may be some use to you, as a Transgender individual. It also include tips for employers, so you may wish to share this guide with your workplace to help promote an inclusive environment. ',
             'keywords': [
-                {'key': '3-5 Years since last work', 'score': 5},
+                {'key': 'Transgender Male', 'score': 10},
+                {'key': 'Transgender Female', 'score': 10},
             ],
-            'links': [],
+            'links': ['http://www.lgbthealth.org.uk/wp-content/uploads/2016/07/TWSP-Info-Guide-Final.pdf'],
+            'actions':[]
+        },
+
+
+        #paragraphs for time out of work
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'Having been out of work for a few months now your confidence may be low, but you have the skills and experience you need to re-establish your career.',
+            'keywords': [
+                {'key': '1-6 Months since last work', 'score': 5},
+            ],
+            'links': ['https://www.gov.uk/government/publications/help-and-support-for-returning-to-work'],
             'actions':[]
         },
         {
             'users': ['greid@gmail.com', ],
             'admin': 'Suzie Mulligan',
-            'text': 'As you are interested in a Risk Management role in Banking & Finance, we think the following networks would be very useful for you: ',
+            'text': 'Having been out of work for a almost a year now, your confidence may be low, but you have the skills and experience you need to re-establish your career. The following website may have some good tips in aiding your return to work. ',
             'keywords': [
-                {'key': 'Risk Manegement', 'score': 10},
-                {'key': 'Banking&Finance', 'score': 7},
+                {'key': '1-2 Years since last work', 'score': 5},
+            ],
+            'links': ['https://www.gov.uk/government/publications/help-and-support-for-returning-to-work'],
+            'actions':[]
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'Having been out of work for 3-5 years now it is understandable that your confidence may be low, but you have the skills and experience you need to re-establish your career. The following website may have some good tips in aiding your return to work',
+            'keywords': [
+                {'key': '3-5 Years since last work', 'score': 5},
+            ],
+            'links': ['https://www.gov.uk/government/publications/help-and-support-for-returning-to-work'],
+            'actions':[]
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'Having been out of work for 3-5 years now it is understandable that your confidence may be low, but you have the skills and experience you need to re-establish your career. The following website may have some good tips in aiding your return to work.',
+            'keywords': [
+                {'key': '5-10 Years since last work', 'score': 5},
+            ],
+            'links': ['https://www.gov.uk/government/publications/help-and-support-for-returning-to-work'],
+            'actions':[]
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'Having been out of work for 10+ years now it is understandable that your confidence may be low, but you have the skills and experience you need to re-establish your career. The following website may have some good tips in aiding your return to work',
+            'keywords': [
+                {'key': '10+ Years since last work', 'score': 5},
+            ],
+            'links': ['https://www.gov.uk/government/publications/help-and-support-for-returning-to-work'],
+            'actions':[]
+        },
+        #industry related paragraphs
+        #'Retail', 'Fashion', 'Media', 'Banking&Finance', 'Construction',
+        #'Manufacturing', 'Law', 'Medical', 'Education', 'IT'
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'As you are interested in a role in Retail, the following networks would be very useful for you: ',
+            'keywords': [
+                {'key': 'Retail', 'score': 10},
             ],
             'links': [
-                {'url': 'https://www.wibf.org.uk'},
-                {'url': 'https://womenreturners.com '},
+                {'url': ''},
             ],
             'actions': []
         },
         {
             'users': ['greid@gmail.com', ],
             'admin': 'Suzie Mulligan',
-            'text': 'The following template might also help plan your childcare and carer responsibilities when you are back at work: ',
+            'text': 'As you are interested in a role in Fashion, the following networks would be very useful for you: ',
+            'keywords': [
+                {'key': 'Fashion', 'score': 10},
+            ],
+            'links': [
+                {'url': ''},
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'As you are interested in a role in Media, the following networks would be very useful for you: ',
+            'keywords': [
+                {'key': 'Banking&Finance', 'score': 7},
+            ],
+            'links': [
+                {'url': 'https://www.wibf.org.uk'},
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'As you are interested in a role in Banking & Finance, the following networks would be very useful for you: ',
+            'keywords': [
+                {'key': 'Banking&Finance', 'score': 7},
+            ],
+            'links': [
+                {'url': 'https://www.wibf.org.uk'},
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'As you are interested in a role in the Construction industry, we think the following networks would be very useful for you: ',
+            'keywords': [
+                {'key': 'Construction', 'score': 10},
+            ],
+            'links': [
+                {'url': ''},},
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'As you are interested in a role in the Manufacturing industry, the following networks would be very useful for you: ',
+            'keywords': [
+                {'key': 'Manufacturing', 'score': 10},
+            ],
+            'links': [
+                {'url': ''},
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'As you are interested in a role concerning Law, the following networks would be very useful for you: ',
+            'keywords': [
+                {'key': 'Law', 'score': 10},
+            ],
+            'links': [
+                {'url': ''},
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'As you are interested in a role in the medical profession, the following networks would be very useful for you: ',
+            'keywords': [
+                {'key': 'Medical', 'score': 7},
+            ],
+            'links': [
+                {'url': 'https://jobs.scot.nhs.uk/'},
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'As you are interested in a role in the education sector, the following networks would be very useful for you: ',
+            'keywords': [
+                {'key': 'Education', 'score': 10},
+            ],
+            'links': [
+                {'url': ''},
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'As you are interested in a role in the IT sector, the following networks would be very useful for you: ',
+            'keywords': [
+                {'key': 'IT', 'score': 10},
+            ],
+            'links': [
+                {'url': ''},
+            ],
+            'actions': []
+        },
+        #paras regarding work barriers
+        #'Childcare', 'Carer Responsibilities', 'Technical Skills',
+        #'Leadership Skills', 'Flexibility', 'Workplace Culture', 'Confidence'
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'The following template might also help plan your childcare responsibilities when you are at work: ',
             'keywords': [
                 {'key': 'Childcare', 'score': 10},
-                {'key': 'Carer Responsibilites', 'score': 8},
             ],
             'links': [
                 {'url': 'Time planner.pdf/xls'},
             ],
             'actions': []
         },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'The following template might also help plan your carer responsibilities when you are at work: ',
+            'keywords': [
+                {'key': 'Childcare', 'score': 10},
+            ],
+            'links': [
+                {'url': 'Time planner.pdf/xls'},
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'As you feel you are lacking in technical skills, improving them would be very useful. Visit the follwoing website for help in doing this.',
+            'keywords': [
+                {'key': 'Technical Skills', 'score': 10},
+            ],
+            'links': [
+                {'url': ''},
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'As you feel you are lacking in Leadership skills, it may be useful to try and improve these. Try to take on more leadership roles in order to improve, and you may find the follwoing sites of use.',
+            'keywords': [
+                {'key': 'Leadership Skills', 'score': 10},
+            ],
+            'links': [
+                {'url': ''},
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'We suggest the following jib searching sites for flexible working jobs',
+            'keywords': [
+                {'key': 'Flexibility', 'score': 10},
+            ],
+            'links': [
+                {'url': 'https://timewise.co.uk/'},
+                {'url': 'https://www.2to3days.com/'}
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'If you are struggling with workplace culture it may be worth speaking to your colleagues or HR to try improve the situation. Workplace culture varies greatly between different companies, and even different departments or locations. Seeking a job with a workplace culture you fit in with ay be a good idea, wether that be working at a different store, a different department or a new job entirely. ',
+            'keywords': [
+                {'key': 'Workplace culture', 'score': 10},
+            ],
+            'links': [
+                {'url': 'https://innovationmanagement.se/2017/05/04/struggling-with-company-culture-here-are-3-ways-to-improve-your-work-environment/'},
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'The following websites have great tips on how to build your confidence to excel in the workplace.',
+            'keywords': [
+                {'key': 'Confidence', 'score': 10},
+            ],
+            'links': [
+                {'url': ''},
+            ],
+            'actions': []
+        },
+        #parars for area of interest
+        #'HR', 'Risk Management', 'Accountancy', 'Law', 'Marketing',
+        #'Coaching', 'IT', 'Nursing', 'Medicine'
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'As you are interested in a HR role, the following networks would be very useful for you: ',
+            'keywords': [
+                {'key': 'HR', 'score': 10},
+            ],
+            'links': [
+                {'url': 'https://www.cipd.co.uk/careers/career-options?gclid=Cj0KCQjwmIuDBhDXARIsAFITC_6uKMpU0ovLi8LhOG1tuJdnR7Z01uSmniXehsX-9z1_YV5sUNFFqKIaArGbEALw_wcB'},
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'As you are interested in a risk managment role, the following networks would be very useful for you: ',
+            'keywords': [
+                {'key': 'Risk Management', 'score': 10},
+            ],
+            'links': [
+                {'url': 'https://www.reed.co.uk/jobs/risk-management-jobs'},
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'As you are interested in an accountancy role, the following networks would be very useful for you: ',
+            'keywords': [
+                {'key': 'HR', 'score': 10},
+            ],
+            'links': [
+                {'url': 'https://www.reed.co.uk/jobs/accountancy-jobs-in-edinburgh'},
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'As you are interested in a marketing job, the following networks would be very useful for you: ',
+            'keywords': [
+                {'key': 'Marketing', 'score': 10},
+            ],
+            'links': [
+                {'url': 'https://uk.indeed.com/Marketing-jobs-in-Edinburgh'},
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'As you are interested in a coaching role for your next job, the following networks would be very useful for you: ',
+            'keywords': [
+                {'key': 'Coaching', 'score': 10},
+            ],
+            'links': [
+                {'url': 'https://uk.indeed.com/Coach-jobs-in-Edinburgh'},
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'As you are interested in an IT role, the following networks would be very useful for you: ',
+            'keywords': [
+                {'key': 'IT', 'score': 10},
+            ],
+            'links': [
+                {'url': 'https://www.reed.co.uk/jobs/it-jobs-in-edinburgh'},
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'As you are interested in a role practicing law, the following networks would be very useful for you: ',
+            'keywords': [
+                {'key': 'Law', 'score': 10},
+            ],
+            'links': [
+                {'url': 'https://www.prospects.ac.uk/jobs-and-work-experience/job-sectors/law-sector/law-careers'},
+            ],
+            'actions': []
+        },
+        {
+            'users': ['greid@gmail.com', ],
+            'admin': 'Suzie Mulligan',
+            'text': 'As you are interested in a role in the nursing profession, the following networks would be very useful for you: ',
+            'keywords': [
+                {'key': 'Nursing', 'score': 10},
+            ],
+            'links': [
+                {'url': 'https://www.healthcareers.nhs.uk/we-are-the-nhs/nursing-careers'},
+            ],
+            'actions': []
+        },
+            #Re-establish career', 'Learn New Skills', 'Give Something Back', 'Confidence',
+            #'Realise Full Potential', 'Promotion', 'Work/Life Balance', 'Ease', 'Good Salary',
+            #'Working From Home', 'Low Stress', 'Flexibility', 'Greater Autonomy', 'More Responsibility',
+            #'Less Responsibility
+
         {
             'users': ['greid@gmail.com', ],
             'admin': 'Suzie Mulligan',
@@ -116,23 +460,6 @@ def populate():
                 {'url': 'https://www.2to3days.com/'}
             ],
             'actions': []
-        },
-        {
-            'users': ['greid@gmail.com', ],
-            'admin': 'Suzie Mulligan',
-            'text': 'The following organisations are also well known for supporting flexible working and women returners so it is well worth checking their individual career pages too: ',
-            'keywords':[
-                # triggered if someone has been out of work for any amount of time
-                # score increases with time length
-                {'key': '1-6 Months since last work', 'score': 4},
-                {'key': '7-12 Months since last work', 'score': 5},
-                {'key': '1-2 Years since last work', 'score': 6},
-                {'key': '3-5 Years since last work', 'score': 7},
-                {'key': '5-10 Years since last work', 'score': 8},
-                {'key': '10+ Years since last work', 'score': 9},
-            ],
-            'links': [],
-            'actions':[]
         },
         {
             'users': ['greid@gmail.com', ],
