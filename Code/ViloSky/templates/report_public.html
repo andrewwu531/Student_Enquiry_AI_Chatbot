@@ -24,7 +24,7 @@
                             {% for item in list %}
                                 <li>
                                         {% if item.title == null %}
-                                            {{ item.url }}
+                                            <a href='{{ item.url }}' target="_blank">{{ item.url }}</a>
                                         {% endif %}
                                         {% if item.url == null %}
                                             {{item.title}}

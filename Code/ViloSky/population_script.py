@@ -1,20 +1,64 @@
 import os
 import datetime
-import pytz
 import json
+import pytz
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE','ViloSky.settings')
 
 import django
+from django.contrib.auth import get_user_model
+from django.utils import timezone
 django.setup()
 
 from ViloSkyApp.models import CustomUser, UserProfile, Qualification, Keyword, Link, Paragraph, Report, Action, AdminInput, \
     DropdownAdminInput, CheckboxAdminInput, TextAdminInput, TextareaAdminInput, MultiselectAdminInput, Session, PartialInput, UserAction
-from django.contrib.auth import get_user_model
-from django.utils import timezone
 timezone.now()
 
+from pathway_1 import paragraphs as pathway_1
+from pathway_2 import paragraphs as pathway_2
+
+pathways = [pathway_1,pathway_2]
+
 User = get_user_model()
+
+
+def load_pathway(paragraphs):
+    for paragraph in paragraphs:
+        admin = UserProfile.objects.get(
+            user=CustomUser.objects.get(email=paragraph['created_by']))
+
+        created_paragraph = Paragraph.objects.get_or_create(
+            created_by=admin, static_text=paragraph['text'])[0]
+        created_paragraph.save()
+
+        create_and_add_keywords_to_paragraph(
+            paragraph['keywords'], created_paragraph)
+        create_and_add_links_to_paragraph(
+            paragraph['links'], created_paragraph)
+        create_and_add_actions_to_paragraph(
+            paragraph['actions'], created_paragraph)
+
+
+def create_and_add_keywords_to_paragraph(keywords, paragraph):
+    for keyword in keywords:
+        created_keyword = Keyword.objects.get_or_create(
+            paragraph=paragraph, key=keyword['key'],
+            score=keyword['score'])[0]
+        created_keyword.save()
+
+
+def create_and_add_links_to_paragraph(links, paragraph):
+    for link in links:
+        created_link = Link.objects.get_or_create(
+            paragraph=paragraph, url=link['url'])[0]
+        created_link.save()
+
+
+def create_and_add_actions_to_paragraph(actions, paragraph):
+    for action in actions:
+        created_action = Action.objects.get_or_create(
+            paragraph=paragraph, title=action['title'])[0]
+        created_action.save()
 
 
 def populate():
@@ -61,23 +105,23 @@ def populate():
 
     """ Declaring paragraphs prior to users as paragraphs is a member of the users dictionaries"""
 
-
     paragraphs = [
-        #gender related paragraphs
+        # gender related paragraphs
         {
             'users': ['greid@gmail.com', ],
             'admin': 'Suzie Mulligan',
             'text': 'The following guide may be some use to you, as a Transgender individual. It also include tips for employers, so you may wish to share this guide with your workplace to help promote an inclusive environment. ',
             'keywords': [
-                {'key': 'Transgender Male', 'score': 10},
-                {'key': 'Transgender Female', 'score': 10},
+                {'key': 'Transgender', 'score': 10},
             ],
-            'links': ['http://www.lgbthealth.org.uk/wp-content/uploads/2016/07/TWSP-Info-Guide-Final.pdf'],
-            'actions':[]
+            'links': [
+                {'url': 'http://www.lgbthealth.org.uk/wp-content/uploads/2016/07/TWSP-Info-Guide-Final.pdf'}
+            ],
+            'actions': []
         },
 
 
-        #paragraphs for time out of work
+        # paragraphs for time out of work
         {
             'users': ['greid@gmail.com', ],
             'admin': 'Suzie Mulligan',
@@ -85,8 +129,10 @@ def populate():
             'keywords': [
                 {'key': '1-6 Months since last work', 'score': 5},
             ],
-            'links': ['https://www.gov.uk/government/publications/help-and-support-for-returning-to-work'],
-            'actions':[]
+            'links': [
+                {'url': 'https://www.gov.uk/government/publications/help-and-support-for-returning-to-work'}
+            ],
+            'actions': []
         },
         {
             'users': ['greid@gmail.com', ],
@@ -95,8 +141,10 @@ def populate():
             'keywords': [
                 {'key': '1-2 Years since last work', 'score': 5},
             ],
-            'links': ['https://www.gov.uk/government/publications/help-and-support-for-returning-to-work'],
-            'actions':[]
+            'links': [
+                {'url': 'https://www.gov.uk/government/publications/help-and-support-for-returning-to-work'}
+            ],
+            'actions': []
         },
         {
             'users': ['greid@gmail.com', ],
@@ -105,8 +153,10 @@ def populate():
             'keywords': [
                 {'key': '3-5 Years since last work', 'score': 5},
             ],
-            'links': ['https://www.gov.uk/government/publications/help-and-support-for-returning-to-work'],
-            'actions':[]
+            'links': [
+                {'url': 'https://www.gov.uk/government/publications/help-and-support-for-returning-to-work'}
+            ],
+            'actions': []
         },
         {
             'users': ['greid@gmail.com', ],
@@ -115,8 +165,10 @@ def populate():
             'keywords': [
                 {'key': '5-10 Years since last work', 'score': 5},
             ],
-            'links': ['https://www.gov.uk/government/publications/help-and-support-for-returning-to-work'],
-            'actions':[]
+            'links': [
+                {'url': 'https://www.gov.uk/government/publications/help-and-support-for-returning-to-work'}
+            ],
+            'actions': []
         },
         {
             'users': ['greid@gmail.com', ],
@@ -125,12 +177,14 @@ def populate():
             'keywords': [
                 {'key': '10+ Years since last work', 'score': 5},
             ],
-            'links': ['https://www.gov.uk/government/publications/help-and-support-for-returning-to-work'],
-            'actions':[]
+            'links': [
+                {'url': 'https://www.gov.uk/government/publications/help-and-support-for-returning-to-work'}
+            ],
+            'actions': []
         },
-        #industry related paragraphs
-        #'Retail', 'Fashion', 'Media', 'Banking&Finance', 'Construction',
-        #'Manufacturing', 'Law', 'Medical', 'Education', 'IT'
+        # industry related paragraphs
+        # 'Retail', 'Fashion', 'Media', 'Banking&Finance', 'Construction',
+        #' Manufacturing', 'Law', 'Medical', 'Education', 'IT'
         {
             'users': ['greid@gmail.com', ],
             'admin': 'Suzie Mulligan',
@@ -138,9 +192,7 @@ def populate():
             'keywords': [
                 {'key': 'Retail', 'score': 10},
             ],
-            'links': [
-                {'url': ''},
-            ],
+            'links': [],
             'actions': []
         },
         {
@@ -150,9 +202,7 @@ def populate():
             'keywords': [
                 {'key': 'Fashion', 'score': 10},
             ],
-            'links': [
-                {'url': ''},
-            ],
+            'links': [],
             'actions': []
         },
         {
@@ -160,7 +210,7 @@ def populate():
             'admin': 'Suzie Mulligan',
             'text': 'As you are interested in a role in Media, the following networks would be very useful for you: ',
             'keywords': [
-                {'key': 'Banking&Finance', 'score': 7},
+                {'key': 'Media', 'score': 7},
             ],
             'links': [
                 {'url': 'https://www.wibf.org.uk'},
@@ -170,7 +220,7 @@ def populate():
         {
             'users': ['greid@gmail.com', ],
             'admin': 'Suzie Mulligan',
-            'text': 'As you are interested in a role in Banking & Finance, the following networks would be very useful for you: ',
+            'text': 'As you are interested in a role in banking and finance, the following networks would be very useful for you: ',
             'keywords': [
                 {'key': 'Banking&Finance', 'score': 7},
             ],
@@ -186,9 +236,7 @@ def populate():
             'keywords': [
                 {'key': 'Construction', 'score': 10},
             ],
-            'links': [
-                {'url': ''},},
-            ],
+            'links': [],
             'actions': []
         },
         {
@@ -198,9 +246,7 @@ def populate():
             'keywords': [
                 {'key': 'Manufacturing', 'score': 10},
             ],
-            'links': [
-                {'url': ''},
-            ],
+            'links': [],
             'actions': []
         },
         {
@@ -210,9 +256,7 @@ def populate():
             'keywords': [
                 {'key': 'Law', 'score': 10},
             ],
-            'links': [
-                {'url': ''},
-            ],
+            'links': [],
             'actions': []
         },
         {
@@ -234,26 +278,12 @@ def populate():
             'keywords': [
                 {'key': 'Education', 'score': 10},
             ],
-            'links': [
-                {'url': ''},
-            ],
+            'links': [],
             'actions': []
         },
-        {
-            'users': ['greid@gmail.com', ],
-            'admin': 'Suzie Mulligan',
-            'text': 'As you are interested in a role in the IT sector, the following networks would be very useful for you: ',
-            'keywords': [
-                {'key': 'IT', 'score': 10},
-            ],
-            'links': [
-                {'url': ''},
-            ],
-            'actions': []
-        },
-        #paras regarding work barriers
-        #'Childcare', 'Carer Responsibilities', 'Technical Skills',
-        #'Leadership Skills', 'Flexibility', 'Workplace Culture', 'Confidence'
+        # paras regarding work barriers
+        # 'Childcare', 'Carer Responsibilities', 'Technical Skills',
+        # 'Leadership Skills', 'Flexibility', 'Workplace Culture', 'Confidence'
         {
             'users': ['greid@gmail.com', ],
             'admin': 'Suzie Mulligan',
@@ -262,7 +292,7 @@ def populate():
                 {'key': 'Childcare', 'score': 10},
             ],
             'links': [
-                {'url': 'Time planner.pdf/xls'},
+                {'url': 'https://www.employersforchildcare.org/app/uploads/2016/10/Employment-Rights-For-Working-Parents.pdf'},
             ],
             'actions': []
         },
@@ -271,10 +301,10 @@ def populate():
             'admin': 'Suzie Mulligan',
             'text': 'The following template might also help plan your carer responsibilities when you are at work: ',
             'keywords': [
-                {'key': 'Childcare', 'score': 10},
+                {'key': 'Carer Responsibilities', 'score': 10},
             ],
             'links': [
-                {'url': 'Time planner.pdf/xls'},
+                {'url': 'https://www.skillsforcare.org.uk/Careers-in-care/Job-roles/Roles/Care-worker.aspx'},
             ],
             'actions': []
         },
@@ -286,9 +316,14 @@ def populate():
                 {'key': 'Technical Skills', 'score': 10},
             ],
             'links': [
-                {'url': ''},
+                {"url":"https://www.indeed.com/career-advice/resumes-cover-letters/technical-skills"},
+                {"url":"https://www.udemy.com/course/python-class/"},
             ],
-            'actions': []
+            'actions': [
+                {"title":"Try analyze your previous interests to narrow down the field you may be interested in."},
+                {"title":"Engage in basic programming courses to establish initial understanding of the matter."},
+                {"title":"Make sure this is for you, go on with courses when you feel confident!"},
+            ]
         },
         {
             'users': ['greid@gmail.com', ],
@@ -297,28 +332,13 @@ def populate():
             'keywords': [
                 {'key': 'Leadership Skills', 'score': 10},
             ],
-            'links': [
-                {'url': ''},
-            ],
+            'links': [],
             'actions': []
         },
         {
             'users': ['greid@gmail.com', ],
             'admin': 'Suzie Mulligan',
-            'text': 'We suggest the following jib searching sites for flexible working jobs',
-            'keywords': [
-                {'key': 'Flexibility', 'score': 10},
-            ],
-            'links': [
-                {'url': 'https://timewise.co.uk/'},
-                {'url': 'https://www.2to3days.com/'}
-            ],
-            'actions': []
-        },
-        {
-            'users': ['greid@gmail.com', ],
-            'admin': 'Suzie Mulligan',
-            'text': 'If you are struggling with workplace culture it may be worth speaking to your colleagues or HR to try improve the situation. Workplace culture varies greatly between different companies, and even different departments or locations. Seeking a job with a workplace culture you fit in with ay be a good idea, wether that be working at a different store, a different department or a new job entirely. ',
+            'text': 'If you are struggling with workplace culture it may be worth speaking to your colleagues or HR to try improve the situation. Workplace culture varies greatly between different companies, and even different departments or locations. Seeking a job with a workplace culture you fit in with ay be a good idea, wether that be working at a different store, a different department or a new job entirely.',
             'keywords': [
                 {'key': 'Workplace culture', 'score': 10},
             ],
@@ -327,21 +347,9 @@ def populate():
             ],
             'actions': []
         },
-        {
-            'users': ['greid@gmail.com', ],
-            'admin': 'Suzie Mulligan',
-            'text': 'The following websites have great tips on how to build your confidence to excel in the workplace.',
-            'keywords': [
-                {'key': 'Confidence', 'score': 10},
-            ],
-            'links': [
-                {'url': ''},
-            ],
-            'actions': []
-        },
-        #parars for area of interest
-        #'HR', 'Risk Management', 'Accountancy', 'Law', 'Marketing',
-        #'Coaching', 'IT', 'Nursing', 'Medicine'
+        # parars for area of interest
+        # 'HR', 'Risk Management', 'Accountancy', 'Law', 'Marketing',
+        # 'Coaching', 'IT', 'Nursing', 'Medicine'
         {
             'users': ['greid@gmail.com', ],
             'admin': 'Suzie Mulligan',
@@ -411,6 +419,7 @@ def populate():
             ],
             'links': [
                 {'url': 'https://www.reed.co.uk/jobs/it-jobs-in-edinburgh'},
+                {'url': 'https://www.newhorizons.com/article/7-it-roles-every-modern-company-needs-to-stay-competitive'},
             ],
             'actions': []
         },
@@ -437,115 +446,6 @@ def populate():
                 {'url': 'https://www.healthcareers.nhs.uk/we-are-the-nhs/nursing-careers'},
             ],
             'actions': []
-        },
-            #Re-establish career', 'Learn New Skills', 'Give Something Back', 'Confidence',
-            #'Realise Full Potential', 'Promotion', 'Work/Life Balance', 'Ease', 'Good Salary',
-            #'Working From Home', 'Low Stress', 'Flexibility', 'Greater Autonomy', 'More Responsibility',
-            #'Less Responsibility
-
-        {
-            'users': ['greid@gmail.com', ],
-            'admin': 'Suzie Mulligan',
-
-            'text': 'As you are looking for flexibility and a shorter working week (20hrs), we suggest the following job search sites: ',
-            'keywords': [
-                {'key': 'Flexibility', 'score': 10},
-                {'key': 'Work/Life Balance', 'score': 7},
-                {'key': 'Low Stress', 'score': 5},
-                {'key': 'Ease', 'score': 7},
-                {'key': '20', 'score': 10}
-            ],
-            'links': [
-                {'url': 'https://timewise.co.uk/'},
-                {'url': 'https://www.2to3days.com/'}
-            ],
-            'actions': []
-        },
-        {
-            'users': ['greid@gmail.com', ],
-            'admin': 'Suzie Mulligan',
-            'text': 'To support ongoing career progression and to help with challenges such as learning new skills, regaining confidence and adapting to workplace cultures, we are strong advocates of creating a support network.',
-            'keywords':[
-                {'key': 'Learn New Skills', 'score': 8},
-                {'key': 'Develop Confidence', 'score': 8},
-                {'key': 'Re-establish Career', 'score': 10},
-                {'key': 'Confidence', 'score': 9},
-                {'key': 'Workplace Culture', 'score': 7}
-            ],
-            'links': [],
-            'actions':[]
-        },
-        {
-            'users': ['greid@gmail.com', ],
-            'admin': 'Suzie Mulligan',
-            'text': 'We would like to offer you a free coaching session or put you in touch with one of our associate coaches/mentors so please send us a note if you would like to discuss that further - info@vilosky.com.',
-            'keywords':[],
-            'links': [],
-            'actions':[]
-        },
-
-        # the following paragraphs have actions and form an action plan
-        {
-            'users': ['greid@gmail.com', ],
-            'admin':'Suzie Mulligan',
-            'text': 'Next few weeks:',
-            'keywords':[
-                {'key': 'regaining confidence', 'score': 4},
-                {'key': 'Risk Management', 'score': 8},
-                {'key': 'Finance', 'score': 8},
-            ],
-            'links': [
-                {'url': 'https://www.udemy.com/topic/financial-risk-manager-frm/'}
-            ],
-            'actions': [
-                {'title': 'Decide what you want from your next role.'},
-                {'title': 'List your amazing skills and experience in the finance and risk management sector.'},
-                {'title': 'Start working on some Udemy finance courses to refresh your memory and gain confidence.'},
-            ],
-        },
-        {
-            'users': ['greid@gmail.com', ],
-            'admin': 'Suzie Mulligan',
-            'text': '1+ months:',
-            'keywords':[
-                {'key': 'regaining confidence', 'score': 4},
-                {'key': 'Risk Management', 'score': 8},
-                {'key': 'Finance', 'score': 8},
-            ],
-            'links': [
-                {'url': 'https://www.indeed.co.uk/Finance-Risk-jobs'},
-                {'url': 'https://www.facebook.com/Accounting-and-Finance-Webinar-Series-199716536749210/'}
-            ],
-            'actions': [
-                {'title': 'Complete the Udemy courses you started.'},
-                {'title': 'Attend a webinar on Risk Management, or some networking events.'},
-                {'title': 'Start compiling a list of employers and vacances, look at companies such as RBS.'},
-                {'title': 'Update your CV - refer to Helen for CV advice'},
-                {'title': 'Start your search'}
-            ]
-        },
-        {
-            'users': ['greid@gmail.com', ],
-            'admin':'Suzie Mulligan',
-            'text':'6 months:',
-            'keywords':[],
-            'links':[
-                {'url': 'https://jobs.theguardian.com/careers/job-hunting-advice/'},
-                {'url': 'https://www.careercast.com/job-hunting-advice'}
-            ],
-            'actions': [
-                {'title': 'If the ideal role has not yet appeared, give yourself a few week’s break. It’s hard work, full of ups and downs, but the right role will turn up. The following might help you at this point:'}
-            ]
-        },
-        {
-            'users': ['greid@gmail.com', ],
-            'admin':'Suzie Mulligan',
-            'text':'7 months:',
-            'keywords':[],
-            'links':[],
-            'actions':[
-                {'title': 'Back to it!'}
-            ]
         }
     ]
 
@@ -593,7 +493,7 @@ def populate():
         },
         {
             'created_by': 'suzieMul23@gmail.com',
-            'label': 'Physical/Mental Abiltiy (optional)',
+            'label': 'Do you have any physical or mental disabilities (optional)?',
             'input_type': AdminInput.AdminInputTypes.TEXT,
             'is_required': False,
             'choices': [],
@@ -614,7 +514,7 @@ def populate():
         },
         {
             'created_by': 'suzieMul23@gmail.com',
-            'label': 'What best describes current work barriers (select all that apply):',
+            'label': 'What best describes current work barriers (select all that apply)',
             'input_type': AdminInput.AdminInputTypes.MULTISELECT,
             'is_required': False,
             'choices': json.dumps(['Childcare', 'Carer Responsibilities', 'Technical Skills',
@@ -637,7 +537,7 @@ def populate():
         },
         {
             'created_by': 'suzieMul23@gmail.com',
-            'label': 'Industry interested in (select all that apply):',
+            'label': 'Industry interested in (select all that apply)',
             'input_type': AdminInput.AdminInputTypes.MULTISELECT,
             'is_required': False,
             'choices': json.dumps(['Retail', 'Fashion', 'Media', 'Banking&Finance', 'Construction',
@@ -648,7 +548,7 @@ def populate():
         },
         {
             'created_by': 'suzieMul23@gmail.com',
-            'label': 'Area of interest:',
+            'label': 'Area of interest',
             'input_type': AdminInput.AdminInputTypes.DROPDOWN,
             'is_required': True,
             'choices': json.dumps(['HR', 'Risk Management', 'Accountancy', 'Law', 'Marketing',
@@ -659,7 +559,7 @@ def populate():
         },
         {
             'created_by': 'suzieMul23@gmail.com',
-            'label': 'Do you have relevant formal qualifications in the area you are interested in:',
+            'label': 'Do you have relevant formal qualifications in the area you are interested in',
             'input_type': AdminInput.AdminInputTypes.CHECKBOX,
             'is_required': False,
             'default_value': True,
@@ -669,7 +569,7 @@ def populate():
         },
         {
             'created_by': 'suzieMul23@gmail.com',
-            'label': 'How many year’s experience do you have in the area you are interested in:',
+            'label': 'How many year’s experience do you have in the area you are interested in',
             'input_type': AdminInput.AdminInputTypes.DROPDOWN,
             'is_required': True,
             'choices': json.dumps(['0', '1-6 Months', '7-12 Months', '1-2 Years', '3-5 Years', '5-10 Years', '10+ Years']),
@@ -679,7 +579,7 @@ def populate():
         },
         {
             'created_by': 'suzieMul23@gmail.com',
-            'label': 'Hours per week you want to work:',
+            'label': 'Hours per week you want to work',
             'input_type': AdminInput.AdminInputTypes.TEXT,
             'is_required': True,
             'max_length': 50,
@@ -980,7 +880,7 @@ def populate():
     reports = [
         {
             'user': 'greid@gmail.com',
-            'datetime_created': datetime.datetime(2021, 11, 1, tzinfo=pytz.UTC),
+            'datetime_created': datetime.datetime(2021, 3, 1, tzinfo=pytz.UTC),
         },
     ]
 
@@ -1011,3 +911,7 @@ def populate():
 if __name__ == '__main__':
     print('Starting population script...')
     populate()
+    print('Populating modular pathways...')
+    for i, pathway in enumerate(pathways):
+        load_pathway(pathway)
+        print(f"Loaded pathway module {i+1}")

@@ -650,37 +650,54 @@ def get_paragraphs(inputs_dictionary):
     paragraphs_list = []
     scores_dict = {}
     counter = 0
+    for question_label, answer in inputs_dictionary.items():
+        question = models.AdminInput.objects.filter(
+            label=question_label).first()
 
-    for question in question_list:
-        if question.input_type == 'CHECKBOX':
-            if answers[counter] == 'True':
-                counter += 1
-        elif question.input_type == 'DROPDOWN':
+        if question.input_type == models.AdminInput.AdminInputTypes.CHECKBOX:
+            # Re-define the input with the format below and search for matching keywords
+            if answer:
+                inputs_dictionary[question_label] = f"{question_label}:True"
+            else:
+                inputs_dictionary[question_label] = f"{question_label}:False"
             for keyword in keywords:
-                if keyword == answers[counter]:
+                # Search for answers that match a keyword directly!
+                if (keyword.paragraph not in paragraphs_list and
+                        keyword.key.lower() == inputs_dictionary[question_label].lower()):
                     paragraphs_list.append(keyword.paragraph)
-            counter += 1
-        elif question.input_type == 'MULTISELECT':
+
+        elif question.input_type == models.AdminInput.AdminInputTypes.DROPDOWN:
             for keyword in keywords:
-                if keyword.key in answers[counter]:
+                # Search for answers that match a keyword directly!
+                if (keyword.paragraph not in paragraphs_list and
+                        keyword.key.lower() == answer.lower()):
                     paragraphs_list.append(keyword.paragraph)
-            counter += 1
+
+        elif question.input_type == models.AdminInput.AdminInputTypes.MULTISELECT:
+            for keyword in keywords:
+                # This is needed as the answer here is a !list! of values (even if empty)
+                for ans in answer:
+                    # Search for answers that match a keyword directly!
+                    if (keyword.paragraph not in paragraphs_list and
+                            keyword.key.lower() == ans.lower()):
+                        paragraphs_list.append(keyword.paragraph)
+
+        # For Char or Textarea answers, we perform similarity score matching
         else:
             for keyword in keywords:
-                score = similarity(answers[counter], keyword.key)
+                score = similarity(answer.lower(), keyword.key.lower())
                 para = keyword.paragraph
                 if para not in scores_dict.keys():
-                    scores_dict[para] = score
+                    scores_dict[para] = score * keyword.score
                 else:
-                    scores_dict[para] += score
-            counter += 1
-
+                    scores_dict[para] += score * keyword.score
     num_paras = 5
-
     for _ in range(num_paras):
-        highest_score = max(scores_dict, key=scores_dict.get)
-        paragraphs_list.append(highest_score)
-        del scores_dict[highest_score]
+        if scores_dict:
+            highest_score = max(scores_dict, key=scores_dict.get)
+            if scores_dict[highest_score] > 10 and highest_score not in paragraphs_list:
+                paragraphs_list.append(highest_score)
+                del scores_dict[highest_score]
     return paragraphs_list
 
 
@@ -772,6 +789,13 @@ def create_report(request, inputs, is_authenticated=False):
         for p in paras:
             rep.paragraphs.add(p)
 
+        # Create user actions for every relevant action we need
+        report_actions = models.Action.objects.filter(paragraph__in=paras)
+        for paragraph_action in report_actions:
+            new_action = models.UserAction.objects.create(
+                title=paragraph_action.title, report=rep, is_completed=False)
+            new_action.save()
+
     # if a user is not logged in
     else:
         # serialize the paragraphs and save them to the session
@@ -836,7 +860,7 @@ def get_context_from_paragraphs(paras):
     return links_dict
 
 
-@login_required(login_url='login')
+@ login_required(login_url='login')
 def create_paragraphs(request):
     LinksFormSet = formset_factory(NewLinkForm, extra=3)
     ActionFormSet = formset_factory(NewActionForm, extra=3)
